@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Doctor sign in to view appointments and schedule.">
+  <title>Doctor Sign In — Clinic Scheduler</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/doctor.css">
+</head>
+<body>
+
+  <div class="login-container">
+
+    <div class="login-card">
+      <div class="login-icon">🩺</div>
+      <h1 class="login-title">Doctor Sign In</h1>
+      <p class="login-subtitle">Access your schedule and appointments.</p>
+
+      <!-- Error message -->
+      <div id="login-error" class="login-error hidden" role="alert"></div>
+
+      <form id="login-form" class="login-form" novalidate>
+        <div class="form-group">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" name="email"
+                 placeholder="doctor@clinic.com" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" name="password"
+                 placeholder="Enter your password" required autocomplete="current-password">
+        </div>
+        <button type="submit" id="login-btn" class="login-btn">Sign In</button>
+      </form>
+
+      <div class="login-footer">
+        <a href="booking-api.html">← Back to Booking</a>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    window.DOCTOR_API_BASE = 'http://localhost:5050/api';
+  </script>
+  <script src="/js/doctor/doctorLogin.js"></script>
+</body>
+</html>

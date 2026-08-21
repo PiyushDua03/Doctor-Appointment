@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+server/.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Uploads (user-generated content)
+uploads/*
+!uploads/.gitkeep
+
+# Logs
+*.log
+npm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+
+# Misc
+folder-1/

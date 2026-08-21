@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Admin sign in to manage clinic system.">
+  <title>Admin Sign In — Clinic Scheduler</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/doctor.css">
+</head>
+<body>
+
+  <div class="login-container">
+
+    <div class="login-card">
+      <div class="login-icon">🔐</div>
+      <h1 class="login-title">Admin Sign In</h1>
+      <p class="login-subtitle">Clinic management portal</p>
+
+      <!-- Error message -->
+      <div id="login-error" class="login-error hidden" role="alert"></div>
+
+      <form id="login-form" class="login-form" novalidate>
+        <div class="form-group">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" name="email"
+                 placeholder="admin@clinic.dev" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" name="password"
+                 placeholder="Enter your password" required autocomplete="current-password">
+        </div>
+        <button type="submit" id="login-btn" class="login-btn">Sign In</button>
+      </form>
+
+      <div class="login-footer">
+        <a href="/">← Back to Home</a>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    /**
+     * Admin Login — Vanilla JS, syllabus-compliant
+     */
+    'use strict';
+
+    var API_BASE = 'http://localhost:5050/api';
+    var isSubmitting = false;
+
+    function $(sel) {
+      return document.querySelector(sel);
+    }
+
+    function showError(msg) {
+      var el = $('#login-error');
+      if (el) {
+        el.textContent = msg;
+        el.classList.remove('hidden');
+      }
+    }
+
+    function hideError() {
+      var el = $('#login-error');
+      if (el) {
+        el.classList.add('hidden');
+      }
+    }
+
+    function checkAuth() {
+      var token = sessionStorage.getItem('adminToken');
+      var role = sessionStorage.getItem('adminRole');
+      if (token && role === 'admin') {
+        window.location.href = '/admin/dashboard';
+      }
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      if (isSubmitting) return;
+      hideError();
+
+      var email = $('#login-email').value.trim();
+      var password = $('#login-password').value;
+
+      if (!email) { showError('Email is required.'); return; }
+      if (!password) { showError('Password is required.'); return; }
+
+      isSubmitting = true;
+      var btn = $('#login-btn');
+      var origText = btn.textContent;
+      btn.textContent = 'Signing in...';
+      btn.disabled = true;
+
+      try {
+        var res = await fetch(API_BASE + '/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email, password: password })
+        });
+
+        var data = await res.json();
+
+        if (res.status === 200 && data.success) {
+          if (data.user.role !== 'admin') {
+            showError('This login is for administrators only.');
+            return;
+          }
+          sessionStorage.setItem('adminToken', data.token);
+          sessionStorage.setItem('adminRole', data.user.role);
+          sessionStorage.setItem('adminName', data.user.name);
+          window.location.href = '/admin/dashboard';
+        } else if (res.status === 401) {
+          showError('Email or password is incorrect.');
+        } else {
+          showError(data.message || 'Something went wrong.');
+        }
+      } catch (err) {
+        showError('Could not connect to the server.');
+      } finally {
+        isSubmitting = false;
+        btn.textContent = origText;
+        btn.disabled = false;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      checkAuth();
+      var form = $('#login-form');
+      if (form) {
+        form.addEventListener('submit', handleLogin);
+      }
+    });
+  </script>
+</body>
+</html>

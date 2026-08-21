@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — Clinic Scheduler</title>
+  <link rel="stylesheet" href="/css/doctor.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="admin-header">
+    <span class="admin-brand">Clinic <span class="accent">Admin</span></span>
+    <div class="admin-header-right">
+      <span id="admin-name">Admin</span>
+      <button id="btn-logout" class="btn-logout">Logout</button>
+    </div>
+  </header>
+
+  <!-- TABS -->
+  <nav class="admin-tabs">
+    <button class="tab active" data-tab="overview">Overview</button>
+    <button class="tab" data-tab="schedule">Schedule</button>
+    <button class="tab" data-tab="doctors">Manage Doctors</button>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="admin-main">
+
+    <!-- ════════════════════════════
+         OVERVIEW TAB
+         ════════════════════════════ -->
+    <section id="tab-overview">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">📋</div>
+          <div class="stat-info">
+            <div class="stat-value" id="stat-total">–</div>
+            <div class="stat-label">Total Appointments</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📅</div>
+          <div class="stat-info">
+            <div class="stat-value" id="stat-today">–</div>
+            <div class="stat-label">Today</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⏳</div>
+          <div class="stat-info">
+            <div class="stat-value" id="stat-upcoming">–</div>
+            <div class="stat-label">Upcoming</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">👨‍⚕️</div>
+          <div class="stat-info">
+            <div class="stat-value" id="stat-doctors">–</div>
+            <div class="stat-label">Doctors</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="overview-grid">
+        <div class="overview-card">
+          <h3>Today's Appointments</h3>
+          <div id="today-list" class="today-list">
+            <div class="loading-msg">Loading...</div>
+          </div>
+        </div>
+        <div class="overview-card">
+          <h3>Appointments by Doctor</h3>
+          <div id="doctor-breakdown" class="doctor-breakdown">
+            <div class="loading-msg">Loading...</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="overview-card" style="margin-top:20px">
+        <h3>Recent Bookings</h3>
+        <div class="recent-table-wrap">
+          <table class="doctors-table" id="recent-table">
+            <thead>
+              <tr>
+                <th>Patient</th>
+                <th>Doctor</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Room</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="recent-tbody">
+              <tr><td colspan="6" class="loading-msg">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════
+         SCHEDULE TAB
+         ════════════════════════════ -->
+    <section id="tab-schedule" class="hidden">
+      <div class="schedule-header">
+        <h2>All Doctors — Weekly Schedule</h2>
+        <div class="week-nav">
+          <button id="btn-prev">← Prev</button>
+          <span id="week-label"></span>
+          <button id="btn-next">Next →</button>
+          <button id="btn-today">Today</button>
+        </div>
+      </div>
+      <div id="legend" class="schedule-legend"></div>
+      <div class="schedule-scroll">
+        <div id="schedule-grid" class="schedule-grid"></div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════
+         DOCTORS TAB
+         ════════════════════════════ -->
+    <section id="tab-doctors" class="hidden">
+      <div class="doctors-header">
+        <h2>Doctor Management</h2>
+        <button class="btn btn-primary btn-sm" id="btn-add-doctor">+ Add Doctor</button>
+      </div>
+      <div class="doctors-table-wrap">
+        <table class="doctors-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Specialty</th>
+              <th>Availability</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="doctors-tbody">
+            <tr><td colspan="5" class="loading-msg">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- DOCTOR MODAL -->
+  <div class="modal-overlay hidden" id="doctor-modal">
+    <div class="modal-box modal-wide">
+      <h3 id="modal-title">Add Doctor</h3>
+      <div id="modal-error" class="login-error hidden"></div>
+      <form id="doctor-form">
+
+        <!-- Row 1: ID + Name -->
+        <div class="modal-row">
+          <div class="modal-field">
+            <label for="f-docId">Doctor ID</label>
+            <input type="text" id="f-docId" placeholder="D7">
+          </div>
+          <div class="modal-field">
+            <label for="f-name">Full Name</label>
+            <input type="text" id="f-name" placeholder="Dr. Full Name">
+          </div>
+        </div>
+
+        <!-- Row 2: Specialty + Photo -->
+        <div class="modal-row">
+          <div class="modal-field">
+            <label for="f-specialty">Specialty</label>
+            <select id="f-specialty">
+              <option value="">Select specialty...</option>
+              <option value="Cardiology">Cardiology</option>
+              <option value="Dermatology">Dermatology</option>
+              <option value="General Medicine">General Medicine</option>
+              <option value="Neurology">Neurology</option>
+              <option value="Orthopedics">Orthopedics</option>
+              <option value="Pediatrics">Pediatrics</option>
+              <option value="ENT">ENT</option>
+              <option value="Ophthalmology">Ophthalmology</option>
+              <option value="Psychiatry">Psychiatry</option>
+              <option value="Gynecology">Gynecology</option>
+            </select>
+          </div>
+          <div class="modal-field">
+            <label for="f-photo">Doctor Photo <span class="field-hint">(optional)</span></label>
+            <div class="photo-upload-area">
+              <div class="photo-preview-wrap" id="photo-preview-wrap">
+                <img id="photo-preview" class="photo-preview" src="" alt="">
+                <span id="photo-placeholder" class="photo-placeholder">No photo</span>
+              </div>
+              <div class="photo-upload-right">
+                <label for="f-photo" class="btn btn-browse">Browse</label>
+                <input type="file" id="f-photo" accept="image/*" class="file-input-hidden">
+                <span class="photo-filename" id="photo-filename">No file chosen</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Availability -->
+        <div class="modal-field">
+          <label>Weekly Availability</label>
+          <p class="field-desc">Check the days the doctor is available and set duty timings.</p>
+          <div class="avail-grid" id="avail-grid">
+            <div class="avail-row avail-header">
+              <span class="avail-check-col"></span>
+              <span class="avail-day-col">Day</span>
+              <span class="avail-time-col">Start</span>
+              <span class="avail-time-col">End</span>
+            </div>
+            <div class="avail-row" data-day="Monday">
+              <label class="avail-check-col"><input type="checkbox" class="day-check" data-day="Monday"></label>
+              <span class="avail-day-col">Monday</span>
+              <input type="time" class="avail-start" data-day="Monday" value="09:00">
+              <input type="time" class="avail-end" data-day="Monday" value="17:00">
+            </div>
+            <div class="avail-row" data-day="Tuesday">
+              <label class="avail-check-col"><input type="checkbox" class="day-check" data-day="Tuesday"></label>
+              <span class="avail-day-col">Tuesday</span>
+              <input type="time" class="avail-start" data-day="Tuesday" value="09:00">
+              <input type="time" class="avail-end" data-day="Tuesday" value="17:00">
+            </div>
+            <div class="avail-row" data-day="Wednesday">
+              <label class="avail-check-col"><input type="checkbox" class="day-check" data-day="Wednesday"></label>
+              <span class="avail-day-col">Wednesday</span>
+              <input type="time" class="avail-start" data-day="Wednesday" value="09:00">
+              <input type="time" class="avail-end" data-day="Wednesday" value="17:00">
+            </div>
+            <div class="avail-row" data-day="Thursday">
+              <label class="avail-check-col"><input type="checkbox" class="day-check" data-day="Thursday"></label>
+              <span class="avail-day-col">Thursday</span>
+              <input type="time" class="avail-start" data-day="Thursday" value="09:00">
+              <input type="time" class="avail-end" data-day="Thursday" value="17:00">
+            </div>
+            <div class="avail-row" data-day="Friday">
+              <label class="avail-check-col"><input type="checkbox" class="day-check" data-day="Friday"></label>
+              <span class="avail-day-col">Friday</span>
+              <input type="time" class="avail-start" data-day="Friday" value="09:00">
+              <input type="time" class="avail-end" data-day="Friday" value="17:00">
+            </div>
+            <div class="avail-row" data-day="Saturday">
+              <label class="avail-check-col"><input type="checkbox" class="day-check" data-day="Saturday"></label>
+              <span class="avail-day-col">Saturday</span>
+              <input type="time" class="avail-start" data-day="Saturday" value="09:00">
+              <input type="time" class="avail-end" data-day="Saturday" value="13:00">
+            </div>
+            <div class="avail-row" data-day="Sunday">
+              <label class="avail-check-col"><input type="checkbox" class="day-check" data-day="Sunday"></label>
+              <span class="avail-day-col">Sunday</span>
+              <input type="time" class="avail-start" data-day="Sunday" value="10:00">
+              <input type="time" class="avail-end" data-day="Sunday" value="13:00">
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn" id="btn-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Doctor</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/admin/adminDashboard.js"></script>
+</body>
+</html>

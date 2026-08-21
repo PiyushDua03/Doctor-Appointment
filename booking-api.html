@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Book an appointment with our doctors. Choose specialty, doctor, date, and time for conflict-free scheduling.">
+  <title>Book Appointment — Clinic Scheduler</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Uses existing design tokens from styles.css + booking-specific styles -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/booking-api.css">
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════
+       NOTIFICATION BAR
+       ═══════════════════════════════════ -->
+  <div id="notification-bar" class="notification-bar hidden" role="alert">
+    <span id="notification-msg"></span>
+    <button type="button" class="notif-close" id="notification-close-btn" aria-label="Close notification">✕</button>
+  </div>
+
+  <div class="page-wrapper">
+
+    <!-- ═══════════════════════════════════
+         HEADER
+         ═══════════════════════════════════ -->
+    <header class="page-header">
+      <h1>Clinic <span class="header-accent">Scheduler</span></h1>
+      <p>Find the right doctor and schedule your appointment.</p>
+      <nav class="header-nav" aria-label="Main Navigation">
+        <a href="booking-api.html" class="nav-link nav-active">Book Appointment</a>
+        <a href="login.html" class="nav-link">Doctor Login</a>
+      </nav>
+    </header>
+
+    <main>
+
+      <!-- ═══════════════════════════════════
+           BOOKING FORM
+           ═══════════════════════════════════ -->
+      <section class="booking-card" aria-label="Book Appointment">
+        <div class="card-header">
+          <h2>Book an Appointment</h2>
+          <p>Select your doctor, date and time — we'll handle the rest.</p>
+        </div>
+
+        <form id="booking-form" novalidate>
+
+          <!-- Patient Information -->
+          <fieldset class="form-section">
+            <legend>Patient Information</legend>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="patientName">Patient Name</label>
+                <input type="text" id="patientName" name="patientName"
+                       placeholder="Enter your full name" required autocomplete="name">
+              </div>
+              <div class="form-group">
+                <label for="patientEmail">Email</label>
+                <input type="email" id="patientEmail" name="patientEmail"
+                       placeholder="your@email.com" required autocomplete="email">
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Appointment Details -->
+          <fieldset class="form-section">
+            <legend>Appointment Details</legend>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="specialty">Specialty</label>
+                <select id="specialty" name="specialty" required>
+                  <option value="">Loading...</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="doctorId">Doctor</label>
+                <select id="doctorId" name="doctorId" required>
+                  <option value="">Select Doctor</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" id="date" name="date" required>
+              </div>
+
+              <div class="form-group">
+                <label for="startTime">Time</label>
+                <select id="startTime" name="startTime" required>
+                  <option value="">Select Time</option>
+                </select>
+              </div>
+
+              <div class="form-group form-group-full">
+                <label for="duration">Duration</label>
+                <select id="duration" name="duration" required>
+                  <option value="">Select Duration</option>
+                </select>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Room auto-assignment notice -->
+          <div class="room-notice">
+            <span class="notice-icon">🏥</span>
+            <span>Room will be assigned automatically based on availability.</span>
+          </div>
+
+          <!-- Actions -->
+          <div class="form-actions">
+            <button type="submit" id="btn-book" class="btn btn-primary">Book Appointment</button>
+            <button type="button" id="btn-suggest-slot" class="btn btn-secondary">Suggest Next Available</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- ═══════════════════════════════════
+           CONFLICT / SUGGESTION AREA
+           ═══════════════════════════════════ -->
+      <section id="conflict-area" class="conflict-area hidden" aria-label="Conflict Information" aria-live="polite">
+        <div id="conflict-details"></div>
+      </section>
+
+    </main>
+
+    <footer class="page-footer">
+      <p>Multi-Doctor Appointment Conflict Scheduler &mdash; Vanilla JavaScript Project</p>
+    </footer>
+
+  </div>
+
+  <!-- ═══════════════════════════════════
+       SCRIPTS
+       ═══════════════════════════════════ -->
+  <script>
+    // Configure API base URL (matches backend server port)
+    window.BOOKING_API_BASE = 'http://localhost:5050/api';
+  </script>
+  <script src="js/booking/bookingApi.js"></script>
+</body>
+</html>

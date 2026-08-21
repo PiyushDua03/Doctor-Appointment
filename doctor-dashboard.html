@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Doctor dashboard — view appointments and weekly schedule.">
+  <title>Dashboard — Clinic Scheduler</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/doctor.css">
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════
+       HEADER
+       ═══════════════════════════════════ -->
+  <header class="doc-header">
+    <div class="doc-header-brand">Clinic <span class="accent">Scheduler</span></div>
+    <div class="doc-header-right">
+      <span class="doc-header-name" id="header-doc-name"></span>
+      <button type="button" id="btn-logout" class="btn-logout">Logout</button>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════
+       DASHBOARD LAYOUT
+       ═══════════════════════════════════ -->
+  <div class="dashboard">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" aria-label="Dashboard Navigation">
+      <ul class="sidebar-nav">
+        <li><a href="#" data-view="appointments" class="active">
+          <span class="nav-icon">📋</span> Appointments
+        </a></li>
+        <li><a href="#" data-view="schedule">
+          <span class="nav-icon">📅</span> Schedule
+        </a></li>
+        <li><a href="#" data-action="logout">
+          <span class="nav-icon">🚪</span> Logout
+        </a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dash-main" id="dash-main">
+
+      <!-- Greeting -->
+      <div class="dash-greeting" id="greeting"></div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-today">–</div>
+          <div class="stat-label">Today</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-upcoming">–</div>
+          <div class="stat-label">Upcoming</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-completed">–</div>
+          <div class="stat-label">Completed</div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════
+           APPOINTMENT LIST SECTION
+           ═══════════════════════════════════ -->
+      <section id="section-appointments" aria-label="Appointments">
+        <div class="section-header">
+          <h3>Appointments</h3>
+          <div class="section-tabs">
+            <button class="tab-btn active" data-filter="today">Today</button>
+            <button class="tab-btn" data-filter="upcoming">Upcoming</button>
+            <button class="tab-btn" data-filter="all">All</button>
+          </div>
+        </div>
+        <div class="apt-list" id="apt-list">
+          <div class="loading-msg">Loading appointments...</div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════
+           WEEKLY SCHEDULE SECTION
+           ═══════════════════════════════════ -->
+      <section id="section-schedule" class="hidden" aria-label="Weekly Schedule">
+        <div class="section-header">
+          <h3>Weekly Schedule</h3>
+        </div>
+        <div class="week-nav">
+          <button type="button" class="week-nav-btn" id="btn-prev-week">← Prev</button>
+          <span class="week-label" id="week-label"></span>
+          <button type="button" class="week-nav-btn" id="btn-this-week">Today</button>
+          <button type="button" class="week-nav-btn" id="btn-next-week">Next →</button>
+        </div>
+        <div class="cal-container">
+          <div class="week-grid" id="cal-container"></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    window.DOCTOR_API_BASE = 'http://localhost:5050/api';
+  </script>
+  <script src="/js/doctor/doctorDashboard.js"></script>
+</body>
+</html>
