@@ -70,6 +70,12 @@ A vibrant, user-friendly interface for patients to select departments, doctors, 
 5. **Open the frontend:**
    Simply open `landing.html` in your favorite browser to access the client interface!
 
+## 👥 Contributors
+
+- **Piyush Dua** - [@PiyushDua03](https://github.com/PiyushDua03)
+- **Vanshdeep Verma** - [@vanshdeepverma](https://github.com/vanshdeepverma)
+- **Vansh Mahajan** - [@Vansh-2020](https://github.com/Vansh-2020)
+
 ## 📜 License
 
 This project is licensed under the ISC License.
