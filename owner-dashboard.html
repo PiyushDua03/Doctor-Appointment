@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hospital Owner & Operations Command Center — PulseCare OS</title>
+  <meta name="description" content="Dedicated Hospital Owner and Operations Executive Command Center for PulseCare OS. Campus bed capacity, ER throughput, physician rosters, and revenue telemetry.">
+
+  <!-- Google Fonts: Inter, Plus Jakarta Sans, IBM Plex Mono -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Dedicated Hospital Executive Portal Theme */
+    body.owner-portal-body {
+      background-color: #080d16;
+      color: #e2e8f0;
+      min-height: 100vh;
+      margin: 0;
+      font-family: var(--font-body);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .owner-nav-header {
+      background: rgba(13, 20, 32, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 14px 28px;
+    }
+
+    .owner-nav-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .owner-brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .owner-role-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(59, 130, 246, 0.2);
+      color: #93c5fd;
+      border: 1px solid rgba(59, 130, 246, 0.35);
+      letter-spacing: 0.05em;
+    }
+
+    .owner-nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .owner-main-layout {
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 28px 24px 60px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Executive Command Hero Banner */
+    .owner-hero-banner {
+      background: linear-gradient(135deg, rgba(16, 26, 44, 0.95) 0%, rgba(10, 16, 28, 0.95) 100%);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      border-radius: 20px;
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .owner-hero-banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+    }
+
+    .owner-hero-identity {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .owner-campus-badge-circle {
+      width: 76px;
+      height: 76px;
+      border-radius: 18px;
+      background: rgba(59, 130, 246, 0.15);
+      border: 2px solid #3b82f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+    }
+
+    .owner-hero-text h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0 0 4px;
+      letter-spacing: -0.02em;
+    }
+
+    .owner-hero-text p {
+      font-size: 13.5px;
+      color: rgba(255, 255, 255, 0.65);
+      margin: 0;
+    }
+
+    .owner-hero-tags {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .owner-tag-pill {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .owner-hero-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* Executive KPI Strip */
+    .owner-kpis-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 1100px) {
+      .owner-kpis-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .owner-kpis-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .owner-kpi-card {
+      background: rgba(16, 24, 38, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 20px;
+      transition: all 0.2s ease;
+    }
+
+    .owner-kpi-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(59, 130, 246, 0.4);
+    }
+
+    .owner-kpi-title {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: rgba(255, 255, 255, 0.55);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .owner-kpi-val {
+      font-family: var(--font-mono);
+      font-size: 26px;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 6px 0 2px;
+    }
+
+    .owner-kpi-sub {
+      font-size: 11.5px;
+      color: var(--accent-emerald);
+    }
+
+    /* Workspace 2-Column Split */
+    .owner-workspace-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1.5fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 1100px) {
+      .owner-workspace-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .owner-card-dark {
+      background: rgba(16, 24, 38, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .owner-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .owner-card-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Department Capacity Item */
+    .dept-capacity-item {
+      background: rgba(10, 16, 26, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .dept-capacity-item:hover {
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+
+    .dept-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .dept-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: #ffffff;
+    }
+
+    .dept-numbers {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .dept-bar-track {
+      width: 100%;
+      height: 7px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .dept-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: #3b82f6;
+      transition: width 0.3s ease;
+    }
+
+    .dept-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11.5px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Executive Roster Table */
+    .owner-roster-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    .owner-roster-table th {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .owner-roster-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      vertical-align: middle;
+    }
+
+    .owner-roster-table tr:hover td {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    /* Live Telemetry Log */
+    .telemetry-event-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .telemetry-event-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: rgba(10, 16, 26, 0.6);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 12.5px;
+    }
+  </style>
+</head>
+<body class="owner-portal-body">
+
+  <!-- Unauthenticated Gate View -->
+  <div id="unauth-owner-gate" class="auth-gate-fullscreen" style="display: none;">
+    <div class="auth-standalone-card hospital-theme" style="text-align: center;">
+      <div class="auth-card-badge hospital-badge" style="justify-content: center;">
+        <span>🔐</span><span>EXECUTIVE ACCESS CONTROL</span>
+      </div>
+      <h2 class="auth-card-title">Hospital Administrator Access Protected</h2>
+      <p class="auth-card-subtitle">
+        Executive clearance is required to view hospital bed capacity, emergency department throughput, and clinical revenue telemetry.
+      </p>
+      
+      <div class="auth-demo-box hospital-theme" style="text-align: left;">
+        <div class="auth-demo-box-header">
+          <span class="auth-demo-label"><span>⚡</span> Verified Executive Credentials</span>
+          <button type="button" class="auth-demo-autofill-btn" onclick="quickOwnerLoginAndReload()">1-Click Unlock</button>
+        </div>
+        <div class="auth-demo-creds">
+          <div>Email: admin@mayoclinic.org</div>
+          <div>Password: hospital123</div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 20px;">
+        <a href="owner-login.html" class="auth-submit-btn" style="text-decoration: none; flex: 1; background: #ffffff; color: #0b1120;">
+          Sign In to Executive Portal →
+        </a>
+        <a href="index.html" class="auth-secondary-btn" style="text-decoration: none; flex: 1;">
+          Public Portal
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Authenticated Hospital Executive Portal -->
+  <div id="authenticated-owner-portal" style="display: block;">
+    
+    <!-- Top Executive Navigation Bar -->
+    <header class="owner-nav-header">
+      <div class="owner-nav-inner">
+        <div class="owner-brand-group">
+          <a href="index.html" class="site-logo" aria-label="PulseCare OS Home">
+            <div class="logo-badge" style="background: rgba(59, 130, 246, 0.2); border-color: rgba(59, 130, 246, 0.4);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.5">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+              </svg>
+            </div>
+            <span>PulseCare</span>
+            <span class="os-tag" style="background: rgba(59, 130, 246, 0.2); color: #93c5fd; border-color: rgba(59, 130, 246, 0.3);">HOSPITAL</span>
+          </a>
+          <span class="owner-role-tag">🏥 EXECUTIVE COMMAND CENTER</span>
+        </div>
+
+        <div class="owner-nav-actions">
+          <a href="index.html" class="glass-single-pill" style="text-decoration: none; color: #ffffff; font-size: 12.5px;">
+            ← Patient Portal
+          </a>
+          <a href="doctor-portal.html" class="glass-single-pill" style="text-decoration: none; color: var(--accent-teal-light); border-color: rgba(13, 148, 136, 0.3); font-size: 12.5px;">
+            🩺 Doctor Portal →
+          </a>
+          <div class="auth-active-user-strip" style="background: rgba(255,255,255,0.06); border-color: #3b82f6; color: #ffffff; white-space: nowrap;">
+            <span style="color: var(--accent-emerald);">●</span>
+            <span>Mayo Clinic Operations</span>
+            <button type="button" class="btn-signout" onclick="handleOwnerLogout()" title="Sign Out">Sign Out</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Executive Command Center Shell -->
+    <main class="owner-main-layout">
+      
+      <!-- Top Campus Executive Banner -->
+      <section class="owner-hero-banner">
+        <div class="owner-hero-identity">
+          <div class="owner-campus-badge-circle">🏥</div>
+          <div class="owner-hero-text">
+            <h1>Mayo Clinic Health System — Operations Command</h1>
+            <p>Rochester Campus Main Flagship • Comprehensive Level 1 Trauma Center</p>
+            <div class="owner-hero-tags">
+              <span class="owner-tag-pill">Facility ID: MAYO-MN-MAIN</span>
+              <span class="owner-tag-pill" style="color: #60a5fa;">Clearance Level: Tier-3 Executive</span>
+              <span class="owner-tag-pill" style="color: var(--accent-emerald);">● All Clinical Systems Normal</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="owner-hero-actions">
+          <button type="button" class="cta-btn-primary" style="height: 40px; font-size: 13px; background: #3b82f6; color: #ffffff;" onclick="addSurgeBedsModal()">
+            ⚡ Adjust Bed Capacity
+          </button>
+          <button type="button" class="cta-btn-glass" style="height: 40px; font-size: 13px;" onclick="exportAuditReport()">
+            📄 Export CMS Audit
+          </button>
+        </div>
+      </section>
+
+      <!-- Key Executive KPIs Strip -->
+      <section class="owner-kpis-grid">
+        <div class="owner-kpi-card">
+          <div class="owner-kpi-title">TOTAL APPOINTMENTS</div>
+          <div class="owner-kpi-val" id="kpi-total-app">248</div>
+          <div class="owner-kpi-sub">↑ 12% vs last week</div>
+        </div>
+
+        <div class="owner-kpi-card">
+          <div class="owner-kpi-title">INPATIENT OCCUPANCY</div>
+          <div class="owner-kpi-val" id="kpi-occupancy" style="color: #60a5fa;">84.2%</div>
+          <div class="owner-kpi-sub">1,061 / 1,260 Inpatient Beds</div>
+        </div>
+
+        <div class="owner-kpi-card">
+          <div class="owner-kpi-title">ACTIVE PHYSICIANS</div>
+          <div class="owner-kpi-val">32</div>
+          <div class="owner-kpi-sub">4 on emergency reserve</div>
+        </div>
+
+        <div class="owner-kpi-card">
+          <div class="owner-kpi-title">DAILY GROSS REVENUE</div>
+          <div class="owner-kpi-val" style="color: var(--accent-emerald);">$48,200</div>
+          <div class="owner-kpi-sub">↑ $4,200 vs baseline</div>
+        </div>
+
+        <div class="owner-kpi-card">
+          <div class="owner-kpi-title">AVG EMERGENCY ER WAIT</div>
+          <div class="owner-kpi-val" style="color: var(--accent-teal-light);">8 mins</div>
+          <div class="owner-kpi-sub">Top 1% National Benchmark</div>
+        </div>
+      </section>
+
+      <!-- Workspace 2-Column Split: Bed Capacity & Physician Rosters -->
+      <div class="owner-workspace-grid">
+        
+        <!-- Left: Department Bed Capacity & Triage -->
+        <section class="owner-card-dark">
+          <div class="owner-card-header">
+            <div class="owner-card-title">
+              <span>🛏️</span>
+              <span>Department Bed Capacity & ER Throughput</span>
+            </div>
+            <button type="button" class="mini-doc-action-btn" style="background: rgba(255,255,255,0.08); font-size: 11.5px; color: #ffffff;" onclick="refreshCapacity()">
+              ↻ Refresh
+            </button>
+          </div>
+
+          <!-- Department Items -->
+          <div id="dept-list-container">
+            <div class="dept-capacity-item">
+              <div class="dept-header-row">
+                <span class="dept-name">Cardiovascular Care Institute</span>
+                <span class="dept-numbers">142 / 160 Beds (88%)</span>
+              </div>
+              <div class="dept-bar-track">
+                <div class="dept-bar-fill" style="width: 88%; background: var(--accent-teal);"></div>
+              </div>
+              <div class="dept-meta-row">
+                <span>Avg Stay: 3.2 days</span>
+                <span style="color: var(--accent-emerald);">Optimal Capacity</span>
+              </div>
+            </div>
+
+            <div class="dept-capacity-item">
+              <div class="dept-header-row">
+                <span class="dept-name">Emergency Medicine & Trauma Center</span>
+                <span class="dept-numbers" style="color: var(--accent-amber);">48 / 50 Beds (96%)</span>
+              </div>
+              <div class="dept-bar-track">
+                <div class="dept-bar-fill" style="width: 96%; background: var(--accent-amber);"></div>
+              </div>
+              <div class="dept-meta-row">
+                <span>ER Wait: 8 mins</span>
+                <span style="color: var(--accent-amber);">High Throughput</span>
+              </div>
+            </div>
+
+            <div class="dept-capacity-item">
+              <div class="dept-header-row">
+                <span class="dept-name">Intensive Care Unit (ICU)</span>
+                <span class="dept-numbers">78 / 85 Beds (91%)</span>
+              </div>
+              <div class="dept-bar-track">
+                <div class="dept-bar-fill" style="width: 91%; background: #3b82f6;"></div>
+              </div>
+              <div class="dept-meta-row">
+                <span>Critical Vitals Monitoring</span>
+                <span>7 Beds Standby</span>
+              </div>
+            </div>
+
+            <div class="dept-capacity-item">
+              <div class="dept-header-row">
+                <span class="dept-name">Pediatric Pavilion</span>
+                <span class="dept-numbers">92 / 120 Beds (76%)</span>
+              </div>
+              <div class="dept-bar-track">
+                <div class="dept-bar-fill" style="width: 76%; background: var(--accent-emerald);"></div>
+              </div>
+              <div class="dept-meta-row">
+                <span>Avg Stay: 2.1 days</span>
+                <span style="color: var(--accent-emerald);">Ample Capacity</span>
+              </div>
+            </div>
+
+            <div class="dept-capacity-item">
+              <div class="dept-header-row">
+                <span class="dept-name">Orthopedics & Joint Replacement</span>
+                <span class="dept-numbers">64 / 80 Beds (80%)</span>
+              </div>
+              <div class="dept-bar-track">
+                <div class="dept-bar-fill" style="width: 80%; background: #60a5fa;"></div>
+              </div>
+              <div class="dept-meta-row">
+                <span>Elective & Trauma Surgery</span>
+                <span>16 Beds Open</span>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- Right: Physician On-Duty Rosters & Operations Telemetry -->
+        <section class="owner-card-dark">
+          <div class="owner-card-header">
+            <div class="owner-card-title">
+              <span>🩺</span>
+              <span>Physician Roster & Shift Status</span>
+            </div>
+            <span class="owner-role-tag" style="font-size: 10px;">32 PHYSICIANS ACTIVE</span>
+          </div>
+
+          <div class="table-responsive" style="margin-bottom: 24px;">
+            <table class="owner-roster-table">
+              <thead>
+                <tr>
+                  <th>Physician</th>
+                  <th>Department</th>
+                  <th>Shift Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="owner-roster-tbody">
+                <tr>
+                  <td>
+                    <strong style="color: #ffffff;">Dr. Sarah Chen, MD</strong>
+                    <div style="font-size: 11px; color: rgba(255,255,255,0.5);">Cardiology</div>
+                  </td>
+                  <td>Pavilion 4</td>
+                  <td><span style="font-family: var(--font-mono); font-size: 11.5px; color: var(--accent-emerald);">● On Duty</span></td>
+                  <td>
+                    <button class="mini-doc-action-btn" style="background: rgba(255,255,255,0.08); font-size: 11px;" onclick="toggleDocShift(this, 'Dr. Sarah Chen')">Reassign</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong style="color: #ffffff;">Dr. Robert Sterling, MD</strong>
+                    <div style="font-size: 11px; color: rgba(255,255,255,0.5);">Cardiology</div>
+                  </td>
+                  <td>Cath Lab 2</td>
+                  <td><span style="font-family: var(--font-mono); font-size: 11.5px; color: var(--accent-amber);">● In Surgery</span></td>
+                  <td>
+                    <button class="mini-doc-action-btn" style="background: rgba(255,255,255,0.08); font-size: 11px;" onclick="toggleDocShift(this, 'Dr. Robert Sterling')">Reassign</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong style="color: #ffffff;">Dr. Marcus Vance, MD</strong>
+                    <div style="font-size: 11px; color: rgba(255,255,255,0.5);">Neurology</div>
+                  </td>
+                  <td>Brain Center</td>
+                  <td><span style="font-family: var(--font-mono); font-size: 11.5px; color: var(--accent-emerald);">● On Duty</span></td>
+                  <td>
+                    <button class="mini-doc-action-btn" style="background: rgba(255,255,255,0.08); font-size: 11px;" onclick="toggleDocShift(this, 'Dr. Marcus Vance')">Reassign</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong style="color: #ffffff;">Dr. Elena Rostova, MD</strong>
+                    <div style="font-size: 11px; color: rgba(255,255,255,0.5);">Dermatology</div>
+                  </td>
+                  <td>Outpatient Clinic</td>
+                  <td><span style="font-family: var(--font-mono); font-size: 11.5px; color: var(--accent-emerald);">● On Duty</span></td>
+                  <td>
+                    <button class="mini-doc-action-btn" style="background: rgba(255,255,255,0.08); font-size: 11px;" onclick="toggleDocShift(this, 'Dr. Elena Rostova')">Reassign</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Real-Time Campus Inpatient Flow Log -->
+          <div style="padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08);">
+            <div style="font-size: 12.5px; font-weight: 700; color: #ffffff; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+              <span>Real-Time Inpatient Telemetry Stream</span>
+              <span style="font-family: var(--font-mono); font-size: 10.5px; color: var(--accent-emerald);">● LIVE FEED</span>
+            </div>
+            <div class="telemetry-event-list">
+              <div class="telemetry-event-item">
+                <span>🚑 Ambulance Inbound (Trauma Bay 2)</span>
+                <span style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-amber);">ETA 4 mins</span>
+              </div>
+              <div class="telemetry-event-item">
+                <span>🛏️ Bed 412 Discharged & Sanitized</span>
+                <span style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-emerald);">Ready for Admission</span>
+              </div>
+              <div class="telemetry-event-item">
+                <span>🧪 Lab Results Sync (Panel #89421)</span>
+                <span style="font-family: var(--font-mono); font-size: 11px; color: #60a5fa;">Delivered to EHR</span>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script>
+    // Owner Portal State & Verification
+    function checkOwnerAuth() {
+      const savedUser = localStorage.getItem('pulsecare_user');
+      if (savedUser) {
+        try {
+          const user = JSON.parse(savedUser);
+          if (user && user.role === 'hospital') {
+            document.getElementById('unauth-owner-gate').style.display = 'none';
+            document.getElementById('authenticated-owner-portal').style.display = 'block';
+            return;
+          }
+        } catch (e) {
+          console.error('Session parse error', e);
+        }
+      }
+
+      // If not authenticated, display protection gate
+      document.getElementById('unauth-owner-gate').style.display = 'flex';
+      document.getElementById('authenticated-owner-portal').style.display = 'none';
+    }
+
+    function quickOwnerLoginAndReload() {
+      const ownerUser = {
+        name: 'Mayo Clinic Operations',
+        email: 'admin@mayoclinic.org',
+        role: 'hospital',
+        hospital: 'Mayo Clinic Health System',
+        clearanceLevel: 'Executive Tier-3',
+        facilityId: 'MAYO-MN-MAIN'
+      };
+      localStorage.setItem('pulsecare_user', JSON.stringify(ownerUser));
+      checkOwnerAuth();
+      showToast('Executive Clearance Verified: Mayo Clinic Operations', 'success');
+    }
+
+    function handleOwnerLogout() {
+      localStorage.removeItem('pulsecare_user');
+      showToast('Signed out from hospital operations command center.', 'info');
+      setTimeout(() => {
+        window.location.href = 'owner-login.html';
+      }, 400);
+    }
+
+    function addSurgeBedsModal() {
+      const count = prompt('Enter surge inpatient bed adjustment (+10, +20):', '+15');
+      if (count) {
+        showToast(`Capacity Updated: ${count} surge beds provisioned in Emergency Observation`, 'success');
+      }
+    }
+
+    function exportAuditReport() {
+      showToast('Generating CMS Compliance and Bed Utilization Audit PDF...', 'info');
+      setTimeout(() => {
+        showToast('CMS Compliance Report Dispatched to Board Registrar.', 'success');
+      }, 1200);
+    }
+
+    function refreshCapacity() {
+      showToast('Department telemetry synchronizing with campus EHR...', 'info');
+      setTimeout(() => {
+        showToast('All 6 department bed capacities updated.', 'success');
+      }, 600);
+    }
+
+    function toggleDocShift(btn, docName) {
+      const current = btn.textContent;
+      if (current === 'Reassign') {
+        btn.textContent = 'On Call';
+        showToast(`${docName} reassigned to Emergency On-Call standby`, 'info');
+      } else {
+        btn.textContent = 'Reassign';
+        showToast(`${docName} returned to active duty schedule`, 'success');
+      }
+    }
+
+    // Toast helper
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+      const color = type === 'success' ? 'var(--accent-emerald)' : type === 'error' ? '#ef4444' : '#60a5fa';
+      toast.innerHTML = `<span style="color: ${color}; font-weight: 700;">${icon}</span> <span>${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(8px)';
+        toast.style.transition = 'all 0.25s ease';
+        setTimeout(() => toast.remove(), 250);
+      }, 3000);
+    }
+
+    window.addEventListener('DOMContentLoaded', checkOwnerAuth);
+  </script>
+</body>
+</html>

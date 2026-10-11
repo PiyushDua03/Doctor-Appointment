@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PulseCare OS — The Modern Healthcare Operating System</title>
+  <meta name="description" content="PulseCare is a clinical care orchestration platform for patients, doctors, and hospitals. Instant specialist booking, verified hospital directory, smart scheduling, and encrypted telehealth.">
+  <meta name="keywords" content="doctor appointment, hospital scheduling, telehealth platform, healthcare operating system, medical clinic software, hospital directory">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="PulseCare OS — The Modern Healthcare Operating System">
+  <meta property="og:description" content="Orchestrate patient care and doctor appointments with clinical precision.">
+  <meta property="og:type" content="website">
+
+  <!-- Google Fonts: Inter, Plus Jakarta Sans, IBM Plex Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- =========================================================================
+       HEADER / NAVBAR (Cofounder Visual Benchmark)
+       ========================================================================= -->
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      
+      <!-- Brand Logo -->
+      <a href="#top" class="site-logo" aria-label="PulseCare OS Home">
+        <div class="logo-badge">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+          </svg>
+        </div>
+        <span>PulseCare</span>
+        <span class="os-tag">OS</span>
+      </a>
+
+      <!-- Center Segmented Glass Pill Navigation -->
+      <nav class="header-nav" aria-label="Main Navigation">
+        <div class="glass-pill-bar">
+          <span class="nav-category">Platform</span>
+          <span class="nav-divider"></span>
+          <a href="#stages" class="nav-link-btn">Find Care</a>
+          <span class="nav-divider"></span>
+          <a href="#hospitals" class="nav-link-btn">Hospitals</a>
+          <span class="nav-divider"></span>
+          <a href="#product-portals" class="nav-link-btn">Dashboards</a>
+          <span class="nav-divider"></span>
+          <a href="#overview" class="nav-link-btn">Orchestration</a>
+        </div>
+
+      </nav>
+
+      <!-- Right Actions: Auth Status, Role Switcher & CTA -->
+      <div class="header-actions">
+        <!-- Dynamic Clinical Sign In / User Status Badge -->
+        <div id="header-auth-status"></div>
+
+
+
+        <button type="button" class="cta-btn-primary" onclick="openBookingModal('doc-1')" id="nav-cta-book">
+          Book Appointment
+        </button>
+
+        <button type="button" class="mobile-menu-toggle" id="mobile-menu-btn" aria-label="Toggle mobile menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       HERO SECTION (Dark Atmospheric Artwork with Cofounder Proportions)
+       ========================================================================= -->
+  <section class="hero-section" id="top">
+    <div class="hero-art-backdrop"></div>
+    <div class="hero-art-overlay"></div>
+
+    <div class="hero-content-wrapper">
+      
+      <!-- Left Hero Text & CTAs -->
+      <div class="hero-left">
+        <div class="hero-badge-pill">
+          <span class="status-dot"></span>
+          <span>2,400+ VERIFIED SPECIALISTS ON DUTY TODAY</span>
+        </div>
+
+        <h1 class="hero-title">
+          PulseCare lets you orchestrate patient care and appointments seamlessly
+        </h1>
+
+        <p class="hero-subtitle">
+          From instant specialist discovery and automated digital intake to multi-provider hospital scheduling and encrypted HD telehealth — all in one unified healthcare platform.
+        </p>
+
+        <div class="hero-cta-group">
+          <button type="button" class="cta-btn-primary" onclick="openBookingModal('doc-1')" id="hero-primary-cta">
+            Book an Appointment
+          </button>
+          <a href="#product-portals" class="cta-btn-glass" id="hero-secondary-cta">
+            Explore Live Dashboards
+          </a>
+        </div>
+
+        <div class="hero-metrics-strip">
+          <div class="hero-metric-item">
+            <span class="hero-metric-number">480+</span>
+            <span class="hero-metric-label">Hospital Networks</span>
+          </div>
+          <div class="hero-metric-item">
+            <span class="hero-metric-number">14,200+</span>
+            <span class="hero-metric-label">Verified Doctors</span>
+          </div>
+          <div class="hero-metric-item">
+            <span class="hero-metric-number">99.98%</span>
+            <span class="hero-metric-label">System Uptime</span>
+          </div>
+          <div class="hero-metric-item">
+            <span class="hero-metric-number">&lt; 30s</span>
+            <span class="hero-metric-label">Average Booking Time</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Hero Floating Glass Notification Stack (Cofounder Benchmark) -->
+      <div class="hero-notif-stage">
+        
+        <!-- Notification Card 1 -->
+        <div class="floating-glass-card" id="hero-card-1">
+          <div class="card-header-line">
+            <span class="card-tag">APPOINTMENT CONFIRMED</span>
+            <span class="card-time">Just now</span>
+          </div>
+          <div class="card-body-flex">
+            <img src="images/doctor-1.jpg" alt="Dr. Sarah Chen" class="card-avatar">
+            <div>
+              <div class="card-text-title">Dr. Sarah Chen, MD (Cardiology)</div>
+              <div class="card-text-desc">Tomorrow, 10:30 AM • Encrypted Telehealth</div>
+            </div>
+          </div>
+          <div class="badge-live-sync">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+            <span>Calendar synced & intake transmitted</span>
+          </div>
+        </div>
+
+        <!-- Notification Card 2 -->
+        <div class="floating-glass-card" id="hero-card-2">
+          <div class="card-header-line">
+            <span class="card-tag" style="background: rgba(245, 158, 11, 0.2); color: #f59e0b; border-color: rgba(245, 158, 11, 0.3);">HOSPITAL CAPACITY ALERT</span>
+            <span class="card-time">2 mins ago</span>
+          </div>
+          <div class="card-body-flex">
+            <div class="card-avatar-placeholder">🏥</div>
+            <div>
+              <div class="card-text-title">St. Jude Medical Center</div>
+              <div class="card-text-desc">Emergency Clinic Capacity: 94% • 4 Telehealth Doctors Available</div>
+            </div>
+          </div>
+          <div class="badge-live-sync" style="color: #f59e0b;">
+            <span>⚡ Automated patient triage load balancing active</span>
+          </div>
+        </div>
+
+        <!-- Notification Card 3 -->
+        <div class="floating-glass-card" id="hero-card-3">
+          <div class="card-header-line">
+            <span class="card-tag" style="background: rgba(37, 99, 235, 0.2); color: #60a5fa; border-color: rgba(37, 99, 235, 0.3);">DIGITAL INTAKE VERIFIED</span>
+            <span class="card-time">5 mins ago</span>
+          </div>
+          <div class="card-body-flex">
+            <div class="card-avatar-placeholder" style="background: linear-gradient(135deg, #2563eb, #7c3aed);">📋</div>
+            <div>
+              <div class="card-text-title">Alexandra Hayes (Patient #89421)</div>
+              <div class="card-text-desc">Vitals, symptoms & Blue Cross insurance pre-authorized</div>
+            </div>
+          </div>
+          <div class="badge-live-sync" style="color: #60a5fa;">
+            <span>🔒 256-bit HIPAA compliance verified</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       TRUST STRIP / SOCIAL PROOF (Cofounder Style)
+       ========================================================================= -->
+  <section class="trust-strip-section" id="trust-strip">
+    <div class="trust-strip-header">
+      <p class="trust-shimmer-tag">
+        <span class="shimmer-text">Over 480+ verified health systems & 14,000+ physicians</span> coordinate appointments on PulseCare
+      </p>
+    </div>
+
+    <div class="hospital-logo-grid">
+      <div class="hospital-tile" onclick="filterDoctorsByHospital('Mayo Clinic Health System')" title="View Doctors at Mayo Clinic">
+        <div class="hospital-name">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93"/></svg>
+          <span>Mayo Clinic Health</span>
+        </div>
+        <span class="hospital-tile-badge">Verified JCI</span>
+      </div>
+
+      <div class="hospital-tile" onclick="filterDoctorsByHospital('Johns Hopkins Medicine')" title="View Doctors at Johns Hopkins">
+        <div class="hospital-name">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M6 12h12"/></svg>
+          <span>Johns Hopkins</span>
+        </div>
+        <span class="hospital-tile-badge">Top Ranked</span>
+      </div>
+
+      <div class="hospital-tile" onclick="filterDoctorsByHospital('Cleveland Clinic')" title="View Doctors at Cleveland Clinic">
+        <div class="hospital-name">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 7v10M7 12h10"/></svg>
+          <span>Cleveland Clinic</span>
+        </div>
+        <span class="hospital-tile-badge">Direct Sync</span>
+      </div>
+
+      <div class="hospital-tile" onclick="filterDoctorsByHospital('Mount Sinai Health System')" title="View Doctors at Mount Sinai">
+        <div class="hospital-name">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l7-4 7 4v14"/></svg>
+          <span>Mount Sinai Care</span>
+        </div>
+        <span class="hospital-tile-badge">Regional Hub</span>
+      </div>
+
+      <div class="hospital-tile" onclick="filterDoctorsByHospital('Kaiser Permanente Regional')" title="View Doctors at Kaiser Permanente">
+        <div class="hospital-name">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          <span>Kaiser Permanente</span>
+        </div>
+        <span class="hospital-tile-badge">Integrated EHR</span>
+      </div>
+
+      <div class="hospital-tile" onclick="filterDoctorsByHospital('Mass General Brigham')" title="View Doctors at Mass General">
+        <div class="hospital-name">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>Mass General</span>
+        </div>
+        <span class="hospital-tile-badge">Teaching Clinic</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       NEW SECTION: VERIFIED HOSPITALS & MEDICAL CENTERS DIRECTORY
+       ========================================================================= -->
+  <section class="hospitals-section" id="hospitals">
+    <div class="section-container">
+      <div class="section-header-centered">
+        <div class="section-tag">Partner Health Networks</div>
+        <h2 class="section-title">
+          Hospitals Listed on PulseCare
+        </h2>
+        <p class="section-description">
+          Accredited medical campuses offering direct outpatient booking, emergency triage status, and synchronized specialist appointments.
+        </p>
+      </div>
+
+      <div class="hospital-cards-grid" id="hospitals-directory-grid">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       PRODUCT OVERVIEW & ORCHESTRATION FRAME (Cofounder Benchmark)
+       ========================================================================= -->
+  <section class="overview-section" id="overview">
+    <div class="section-container">
+      <div class="section-header-centered">
+        <div class="section-tag">Clinical Orchestration Platform</div>
+        <h2 class="section-title">
+          PulseCare connects patients, doctors, and hospitals<br>
+          <span class="subtle-line">into one unified, intelligent continuum</span>
+        </h2>
+        <p class="section-description">
+          Start with the outcome you need: an immediate specialist appointment, balanced doctor load, or real-time clinic capacity oversight.
+        </p>
+      </div>
+
+      <!-- Orchestration Hub Frame -->
+      <div class="orch-frame">
+        <div class="orch-frame-bar">
+          <div class="orch-window-dots">
+            <span class="orch-dot red"></span>
+            <span class="orch-dot yellow"></span>
+            <span class="orch-dot green"></span>
+          </div>
+          <div class="orch-url-bar">
+            <span>🔒 pulsecare.app/orchestration/hub</span>
+          </div>
+          <div class="orch-status-indicator">
+            <span class="status-dot"></span>
+            <span>Live Mesh Telemetry</span>
+          </div>
+        </div>
+
+        <div class="orch-content-stage">
+          <!-- Interactive Orchestration Map Visual -->
+          <div class="care-map-visual">
+            <div class="care-hub-center">
+              <span class="hub-title">CARE HUB</span>
+              <span class="hub-sub">Active Sync 99.9%</span>
+            </div>
+
+            <!-- Interactive Orbit Nodes -->
+            <div class="care-node care-node-top active" data-node="patient-intake" title="Click to inspect Patient Intake node">
+              <div class="node-icon">👤</div>
+              <div class="node-title">Patient Triage</div>
+              <div class="node-metric">94 Intakes/hr</div>
+            </div>
+
+            <div class="care-node care-node-right" data-node="doctor-roster" title="Click to inspect Doctor Roster node">
+              <div class="node-icon">🩺</div>
+              <div class="node-title">Doctor Roster</div>
+              <div class="node-metric">32 On-Duty</div>
+            </div>
+
+            <div class="care-node care-node-bottom" data-node="clinic-capacity" title="Click to inspect Clinic Capacity node">
+              <div class="node-icon">🏥</div>
+              <div class="node-title">Clinic Rooms</div>
+              <div class="node-metric">84% Occupancy</div>
+            </div>
+
+            <div class="care-node care-node-left" data-node="telehealth-mesh" title="Click to inspect Telehealth node">
+              <div class="node-icon">📹</div>
+              <div class="node-title">Telehealth HD</div>
+              <div class="node-metric">18 Encrypted Calls</div>
+            </div>
+          </div>
+
+          <!-- Orchestration Live Activity Feed -->
+          <div class="orch-feed-panel">
+            <div class="feed-header">
+              <span class="feed-title">Automated Event Pipeline</span>
+              <span style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-teal);">Real-time Telemetry</span>
+            </div>
+
+            <div class="feed-item">
+              <div class="feed-item-icon teal">🩺</div>
+              <div class="feed-item-content">
+                <div class="feed-item-title">Cardiology Slot Synchronized</div>
+                <div class="feed-item-desc">Dr. Sarah Chen's 10:30 AM telehealth slot confirmed with Alexandra Hayes.</div>
+              </div>
+              <span class="feed-item-time">12s ago</span>
+            </div>
+
+            <div class="feed-item">
+              <div class="feed-item-icon amber">🏥</div>
+              <div class="feed-item-content">
+                <div class="feed-item-title">Clinic Suite 410 Dispatched</div>
+                <div class="feed-item-desc">Orthopedic consultation room prepped and sterilized at Cleveland Clinic.</div>
+              </div>
+              <span class="feed-item-time">1m ago</span>
+            </div>
+
+            <div class="feed-item">
+              <div class="feed-item-icon blue">📋</div>
+              <div class="feed-item-content">
+                <div class="feed-item-title">EHR Data Harmonization</div>
+                <div class="feed-item-desc">Lab results and vitals securely forwarded to attending physician.</div>
+              </div>
+              <span class="feed-item-time">3m ago</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       THREE NUMBERED FEATURE STAGES (1.0 Find care, 2.0 Book, 3.0 Manage)
+       ========================================================================= -->
+  <section class="stages-section" id="stages">
+    <div class="section-container">
+      
+      <!-- STAGE 1: 1.0 — FIND CARE -->
+      <div class="stage-block" data-stage="1">
+        <div class="stage-grid">
+          <div class="stage-info">
+            <div class="stage-number-tag">1.0 — FIND CARE</div>
+            <h3 class="stage-heading">
+              Find the right doctor, clinic, and specialty in seconds
+            </h3>
+            <p class="stage-description">
+              Search top specialists by specialty, real-time availability, insurance coverage, and patient reviews. Transparent consultation fees and zero wait time.
+            </p>
+
+            <div class="stage-selectors">
+              <button type="button" class="stage-selector-btn active" data-view="directory">
+                <div class="selector-left">
+                  <div class="selector-icon">🩺</div>
+                  <div>
+                    <div class="selector-title">Specialist Directory & Filters</div>
+                    <div class="selector-sub">Filter by 12+ medical disciplines and verified credentials</div>
+                  </div>
+                </div>
+                <span class="selector-arrow">→</span>
+              </button>
+
+              <button type="button" class="stage-selector-btn" data-view="availability">
+                <div class="selector-left">
+                  <div class="selector-icon">⏰</div>
+                  <div>
+                    <div class="selector-title">Live Slot Availability</div>
+                    <div class="selector-sub">Real-time calendar updates with zero double-booking</div>
+                  </div>
+                </div>
+                <span class="selector-arrow">→</span>
+              </button>
+
+              <button type="button" class="stage-selector-btn" data-view="insurance">
+                <div class="selector-left">
+                  <div class="selector-icon">💳</div>
+                  <div>
+                    <div class="selector-title">Insurance & Pricing Transparency</div>
+                    <div class="selector-sub">Instant in-network copay check and clear consultation pricing</div>
+                  </div>
+                </div>
+                <span class="selector-arrow">→</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Stage 1 Polished Interface Preview -->
+          <div class="stage-preview-card">
+            <div class="preview-header-bar">
+              <span class="preview-title">
+                <span>🔍</span><span>Live Specialist Finder</span>
+              </span>
+              <span style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-emerald);">● 8 Doctors Available</span>
+            </div>
+            <div class="preview-container" id="stage1-preview-dynamic">
+              <div class="preview-search-row">
+                <input type="text" class="preview-search-input" placeholder="Search cardiology, dermatology, doctor name..." value="Cardiology">
+              </div>
+              <div class="preview-filter-chips">
+                <button class="chip-btn active">All Specialists</button>
+                <button class="chip-btn">Next 24h</button>
+                <button class="chip-btn">Top Rated (4.9+)</button>
+                <button class="chip-btn">Telehealth Ready</button>
+              </div>
+              <div class="doctor-preview-cards">
+                <div class="mini-doctor-card">
+                  <div class="mini-doc-left">
+                    <img src="images/doctor-1.jpg" alt="Dr. Sarah Chen" class="mini-doc-avatar">
+                    <div>
+                      <div class="mini-doc-name">Dr. Sarah Chen, MD</div>
+                      <div class="mini-doc-spec">Cardiology • Mayo Clinic</div>
+                    </div>
+                  </div>
+                  <div style="text-align: right;">
+                    <div class="mini-doc-badge">★ 4.95 (312 reviews)</div>
+                    <button class="mini-doc-action-btn" onclick="openBookingModal('doc-1')">Book Slot</button>
+                  </div>
+                </div>
+
+                <div class="mini-doctor-card">
+                  <div class="mini-doc-left">
+                    <img src="images/doctor-8.jpg" alt="Dr. Robert Sterling" class="mini-doc-avatar">
+                    <div>
+                      <div class="mini-doc-name">Dr. Robert Sterling, MD</div>
+                      <div class="mini-doc-spec">Cardiology • Stanford Health</div>
+                    </div>
+                  </div>
+                  <div style="text-align: right;">
+                    <div class="mini-doc-badge">★ 4.99 (680 reviews)</div>
+                    <button class="mini-doc-action-btn" onclick="openBookingModal('doc-8')">Book Slot</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STAGE 2: 2.0 — BOOK AN APPOINTMENT -->
+      <div class="stage-block" data-stage="2">
+        <div class="stage-grid">
+          <div class="stage-info">
+            <div class="stage-number-tag">2.0 — BOOK AN APPOINTMENT</div>
+            <h3 class="stage-heading">
+              Frictionless scheduling with instant confirmation & intake
+            </h3>
+            <p class="stage-description">
+              Book in under 60 seconds. Choose between in-clinic consultation or encrypted HD telehealth. Automatic calendar synchronization, SMS reminders, and zero double-bookings.
+            </p>
+
+            <div class="stage-selectors">
+              <button type="button" class="stage-selector-btn active" data-view="calendar">
+                <div class="selector-left">
+                  <div class="selector-icon">📅</div>
+                  <div>
+                    <div class="selector-title">Smart Calendar & Slot Matrix</div>
+                    <div class="selector-sub">Interactive slot selection synchronized across clinic rosters</div>
+                  </div>
+                </div>
+                <span class="selector-arrow">→</span>
+              </button>
+
+              <button type="button" class="stage-selector-btn" data-view="telehealth">
+                <div class="selector-left">
+                  <div class="selector-icon">📹</div>
+                  <div>
+                    <div class="selector-title">Telehealth vs In-Clinic Mode</div>
+                    <div class="selector-sub">One-click switch between in-person visit and encrypted HD video room</div>
+                  </div>
+                </div>
+                <span class="selector-arrow">→</span>
+              </button>
+
+              <button type="button" class="stage-selector-btn" data-view="intake">
+                <div class="selector-left">
+                  <div class="selector-icon">📋</div>
+                  <div>
+                    <div class="selector-title">Instant Digital Intake & Vitals</div>
+                    <div class="selector-sub">Secure symptom intake and insurance verification prior to visit</div>
+                  </div>
+                </div>
+                <span class="selector-arrow">→</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Stage 2 Polished Interface Preview -->
+          <div class="stage-preview-card">
+            <div class="preview-header-bar">
+              <span class="preview-title">
+                <span>📅</span><span>Appointment Booking Flow Preview</span>
+              </span>
+              <span style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-teal);">Slot Lock: Active</span>
+            </div>
+            <div class="preview-container" id="stage2-preview-dynamic">
+              <div class="booking-calendar-preview">
+                <div>
+                  <span style="font-size:12px; font-weight:600; color:var(--ink-secondary); margin-bottom:8px; display:block;">Select Date (October 2026):</span>
+                  <div class="date-slider-preview">
+                    <div class="date-pill active"><div class="day-name">Thu</div><div class="day-num">09</div></div>
+                    <div class="date-pill"><div class="day-name">Fri</div><div class="day-num">10</div></div>
+                    <div class="date-pill"><div class="day-name">Sat</div><div class="day-num">11</div></div>
+                    <div class="date-pill"><div class="day-name">Mon</div><div class="day-num">13</div></div>
+                    <div class="date-pill"><div class="day-name">Tue</div><div class="day-num">14</div></div>
+                  </div>
+                </div>
+                <div>
+                  <span style="font-size:12px; font-weight:600; color:var(--ink-secondary); margin-bottom:8px; display:block;">Available Slots with Dr. Sarah Chen:</span>
+                  <div class="slot-pills-grid">
+                    <div class="slot-pill active">09:00 AM</div>
+                    <div class="slot-pill">10:30 AM</div>
+                    <div class="slot-pill booked">12:00 PM (Booked)</div>
+                    <div class="slot-pill">02:00 PM</div>
+                    <div class="slot-pill">04:15 PM</div>
+                    <div class="slot-pill booked">05:00 PM (Booked)</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STAGE 3: 3.0 — MANAGE CARE -->
+      <div class="stage-block" data-stage="3">
+        <div class="stage-grid">
+          <div class="stage-info">
+            <div class="stage-number-tag">3.0 — MANAGE CARE</div>
+            <h3 class="stage-heading">
+              End-to-end care coordination across all stakeholders
+            </h3>
+            <p class="stage-description">
+              Keep patients engaged with follow-up reminders, give doctors an uncluttered queue of today's patients, and empower hospital administrators with real-time clinic capacity oversight.
+            </p>
+
+            <div class="stage-selectors">
+              <button type="button" class="stage-selector-btn active" data-view="patient-hub">
+                <div class="selector-left">
+                  <div class="selector-icon">👤</div>
+                  <div>
+                    <div class="selector-title">Patient Health Portal</div>
+                    <div class="selector-sub">View upcoming appointments, one-click telehealth entry, and prescription tracking</div>
+                  </div>
+                </div>
+                <span class="selector-arrow">→</span>
+              </button>
+
+              <button type="button" class="stage-selector-btn" data-view="doctor-queue">
+                <div class="selector-left">
+                  <div class="selector-icon">🩺</div>
+                  <div>
+                    <div class="selector-title">Doctor Daily Consultation Queue</div>
+                    <div class="selector-sub">Today's schedule, patient symptom notes, and telehealth call launcher</div>
+                  </div>
+                </div>
+                <span class="selector-arrow">→</span>
+              </button>
+
+              <button type="button" class="stage-selector-btn" data-view="hospital-ops">
+                <div class="selector-left">
+                  <div class="selector-icon">🏥</div>
+                  <div>
+                    <div class="selector-title">Hospital Operations & Capacity</div>
+                    <div class="selector-sub">Monitor bed occupancy, physician rosters, and throughput metrics</div>
+                  </div>
+                </div>
+                <span class="selector-arrow">→</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Stage 3 Polished Interface Preview -->
+          <div class="stage-preview-card">
+            <div class="preview-header-bar">
+              <span class="preview-title">
+                <span>📊</span><span>Care Management Console</span>
+              </span>
+              <span style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-emerald);">● Synchronized EHR</span>
+            </div>
+            <div class="preview-container" id="stage3-preview-dynamic">
+              <div style="background:#fcfcfb; border:1px solid var(--ink-border); border-radius:12px; padding:18px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                  <h4 style="font-size:14px; font-weight:700;">Patient Care Dashboard</h4>
+                  <span style="font-family:var(--font-mono); font-size:11px; background:rgba(16,185,129,0.12); color:var(--accent-emerald); padding:2px 8px; border-radius:4px;">1 Upcoming</span>
+                </div>
+                <div style="background:#ffffff; border:1px solid var(--ink-border); border-radius:10px; padding:12px; margin-bottom:10px;">
+                  <div style="display:flex; justify-content:space-between;">
+                    <strong style="font-size:13px;">Dr. Sarah Chen, MD</strong>
+                    <span style="font-family:var(--font-mono); font-size:11px; color:var(--accent-teal);">Tomorrow 10:30 AM</span>
+                  </div>
+                  <p style="font-size:12px; color:var(--ink-secondary); margin-top:4px;">Cardiology Telehealth Consultation</p>
+                  <div style="display:flex; gap:8px; margin-top:10px;">
+                    <button class="mini-doc-action-btn" style="padding:4px 10px; font-size:12px;" onclick="openTelehealthSimulator('Alexandra Hayes')">Join Video Call</button>
+                    <button style="padding:4px 10px; font-size:12px; background:#f1f1ee; border-radius:6px;" onclick="showToast('Calendar invite re-sent to email', 'info')">Sync Calendar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       PRODUCT SECTION: MULTI-ROLE LIVE DASHBOARDS (CREDENTIAL PROTECTED)
+       ========================================================================= -->
+  <section class="product-portals-section" id="product-portals">
+    <div class="portals-container">
+      
+      <!-- Portals Header & Role Switcher Toolbar -->
+      <div class="section-header-centered" style="margin-bottom: 32px;">
+        <div class="section-tag">Interactive Product Experience</div>
+        <h2 class="section-title">
+          Built for every role in healthcare
+        </h2>
+        <p class="section-description">
+          Experience the platform live. Browse as a Patient, or authenticate with credentials to access the Doctor Consultation Queue and Hospital Owner Operations portal.
+        </p>
+      </div>
+
+      <div class="portals-toolbar">
+        <div class="portal-tabs-nav" role="tablist">
+          <button type="button" class="portal-tab-btn active" data-role="patient" role="tab" id="tab-patient-portal">
+            <span>👤</span><span>Patient Portal (Public)</span>
+          </button>
+          <button type="button" class="portal-tab-btn" data-role="doctor" role="tab" id="tab-doctor-dashboard">
+            <span>🩺</span><span>Doctor Dashboard (Protected 🔒)</span>
+          </button>
+          <button type="button" class="portal-tab-btn" data-role="hospital" role="tab" id="tab-hospital-dashboard">
+            <span>🏥</span><span>Hospital Owner Dashboard (Protected 🔒)</span>
+          </button>
+        </div>
+
+        <div class="portal-status-badge">
+          <span>● Credential Auth Guard Active</span>
+        </div>
+      </div>
+
+      <!-- VIEW 1: PATIENT PORTAL (PUBLIC) -->
+      <div class="portal-view active" id="view-patient" role="tabpanel">
+        
+        <!-- Active Hospital Filter Banner if filtered -->
+        <div id="patient-hospital-filter-banner" style="display: none; align-items: center; justify-content: space-between; background: #ffffff; border: 1px solid var(--accent-teal); border-radius: 12px; padding: 12px 18px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(13,148,136,0.1);"></div>
+
+        <div class="patient-dashboard-grid">
+          
+          <!-- Left: Available Doctors Roster -->
+          <div class="patient-main-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+              <h3 style="font-size: 18px; font-weight: 700; color: var(--ink);">Available Specialists</h3>
+              <span style="font-family: var(--font-mono); font-size: 12px; color: var(--accent-teal);">Direct Booking Enabled</span>
+            </div>
+
+            <div class="doc-cards-grid" id="patient-doctor-cards-grid">
+              <!-- Rendered dynamically by app.js -->
+            </div>
+          </div>
+
+          <!-- Right: Patient Upcoming Appointments & Quick Pass -->
+          <div class="patient-sidebar">
+            <div class="patient-sidebar-card">
+              <div class="sidebar-title">
+                <span>My Appointments</span>
+                <span style="font-family: var(--font-mono); font-size: 11px; background: rgba(13, 148, 136, 0.1); color: var(--accent-teal); padding: 2px 8px; border-radius: 4px;">Live</span>
+              </div>
+
+              <div id="patient-appointments-list">
+                <!-- Rendered dynamically by app.js -->
+              </div>
+
+              <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--ink-border);">
+                <button type="button" class="cta-btn-primary" style="width: 100%; height: 38px; font-size: 13px;" onclick="openBookingModal('doc-1')">
+                  + Book Another Doctor
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- VIEW 2: DOCTOR DASHBOARD (CREDENTIAL PROTECTED) -->
+      <div class="portal-view" id="view-doctor" role="tabpanel">
+        
+        <!-- Protected Gate (Shown when unauthenticated) -->
+        <div id="doctor-auth-gate" class="auth-gate-card">
+          <div class="auth-lock-circle">🔒</div>
+          <h3 class="auth-gate-title">Physician Credentials Required</h3>
+          <p class="auth-gate-desc">
+            This dashboard contains confidential patient medical history, today’s appointment triage queue, and clinical EHR notes. Please authenticate with your medical staff credentials to proceed.
+          </p>
+
+          <div class="demo-credentials-banner">
+            <div class="demo-credentials-banner-title">
+              <span>⚡</span><span>Quick Demo Evaluation Access</span>
+            </div>
+            <div class="demo-cred-row">
+              <span>Physician: <strong>dr.chen@mayoclinic.org</strong> | Password: <strong>doctor123</strong></span>
+              <button type="button" class="demo-quick-btn" onclick="quickDemoLogin('doctor')">One-Click Auto Login</button>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+            <a href="doctor-portal.html" class="cta-btn-primary" style="text-decoration: none; height: 44px; padding: 0 24px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+              <span>🩺 Open Dedicated Doctor Page</span>
+              <span>↗</span>
+            </a>
+            <a href="doctor-login.html" class="cta-btn-glass" style="text-decoration: none; height: 44px; padding: 0 20px; display: inline-flex; align-items: center;">
+              <span>Doctor Sign In Page →</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Authenticated Doctor Content (Shown only after login) -->
+        <div id="doctor-authenticated-content" style="display: none;">
+          <div class="doctor-dashboard-container">
+            
+            <!-- Doctor Profile Banner -->
+            <div class="doctor-profile-banner">
+              <div class="doctor-banner-left">
+                <img src="images/doctor-1.jpg" alt="Dr. Sarah Chen" class="doctor-banner-avatar">
+                <div class="doctor-banner-details">
+                  <h3>Dr. Sarah Chen, MD</h3>
+                  <p>Cardiology Specialist • Mayo Clinic Health System (Lic. #MD-84920)</p>
+                </div>
+              </div>
+
+              <div class="doctor-availability-toggle-box">
+                <span style="font-size: 13px; font-weight: 600;">Consultation Status:</span>
+                <div class="toggle-switch on" id="doctor-status-toggle" onclick="this.classList.toggle('on'); showToast(this.classList.contains('on') ? 'Status: Accepting Telehealth & Clinic Patients' : 'Status: Paused / In Surgery', 'info');">
+                  <div class="toggle-knob"></div>
+                </div>
+                <span style="font-family: var(--font-mono); font-size: 12px; color: var(--accent-emerald);">Accepting Appointments</span>
+              </div>
+            </div>
+
+            <!-- Doctor Key Stats -->
+            <div class="doctor-stats-row">
+              <div class="stat-card">
+                <div class="stat-card-title">Today's Appointments</div>
+                <div class="stat-card-value">6 Patients</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-card-title">Telehealth Calls</div>
+                <div class="stat-card-value" style="color: var(--accent-teal);">4 Sessions</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-card-title">In-Clinic Consults</div>
+                <div class="stat-card-value">2 Scheduled</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-card-title">Patient Satisfaction</div>
+                <div class="stat-card-value" style="color: var(--accent-amber);">4.95 / 5.0</div>
+              </div>
+            </div>
+
+            <!-- Doctor Consultation Queue Table -->
+            <div class="doctor-queue-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                <h4 style="font-size: 16px; font-weight: 700; color: var(--ink);">Today's Patient Queue</h4>
+                <button class="mini-doc-action-btn" style="background: #f1f1ee; color: var(--ink); font-size: 12px;" onclick="renderDoctorDashboard(); showToast('Patient Queue Refreshed', 'info');">
+                  ↻ Refresh Queue
+                </button>
+              </div>
+
+              <div class="table-responsive">
+                <table class="doctor-table">
+                  <thead>
+                    <tr>
+                      <th>Patient Name</th>
+                      <th>Time & Date</th>
+                      <th>Mode</th>
+                      <th>Status</th>
+                      <th>Symptoms / Intake Notes</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="doctor-queue-tbody">
+                    <!-- Rendered dynamically by app.js -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- VIEW 3: HOSPITAL OWNER DASHBOARD (CREDENTIAL PROTECTED) -->
+      <div class="portal-view" id="view-hospital" role="tabpanel">
+        
+        <!-- Protected Gate (Shown when unauthenticated) -->
+        <div id="hospital-auth-gate" class="auth-gate-card">
+          <div class="auth-lock-circle">🔐</div>
+          <h3 class="auth-gate-title">Hospital Administrator Credentials Required</h3>
+          <p class="auth-gate-desc">
+            This dashboard manages hospital bed capacity, emergency department throughput, clinical physician rosters, and revenue telemetry. Executive administrative clearance is required.
+          </p>
+
+          <div class="demo-credentials-banner">
+            <div class="demo-credentials-banner-title">
+              <span>⚡</span><span>Quick Demo Evaluation Access</span>
+            </div>
+            <div class="demo-cred-row">
+              <span>Administrator: <strong>admin@mayoclinic.org</strong> | Password: <strong>hospital123</strong></span>
+              <button type="button" class="demo-quick-btn" onclick="quickDemoLogin('hospital')">One-Click Auto Login</button>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+            <a href="owner-dashboard.html" class="cta-btn-primary" style="text-decoration: none; height: 44px; padding: 0 24px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #3b82f6; color: #ffffff;">
+              <span>🏥 Open Dedicated Hospital Owner Page</span>
+              <span>↗</span>
+            </a>
+            <a href="owner-login.html" class="cta-btn-glass" style="text-decoration: none; height: 44px; padding: 0 20px; display: inline-flex; align-items: center;">
+              <span>Owner Sign In Page →</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Authenticated Hospital Content (Shown only after login) -->
+        <div id="hospital-authenticated-content" style="display: none;">
+          <div class="hospital-dashboard-container">
+            
+            <!-- Hospital Owner KPIs -->
+            <div class="hospital-kpis-grid">
+              <div class="kpi-card">
+                <div class="kpi-title">TOTAL APPOINTMENTS</div>
+                <div class="kpi-value">248</div>
+                <div class="kpi-sub">↑ 12% vs last week</div>
+              </div>
+
+              <div class="kpi-card">
+                <div class="kpi-title">BED OCCUPANCY RATE</div>
+                <div class="kpi-value">84.2%</div>
+                <div class="kpi-sub">Optimal capacity</div>
+              </div>
+
+              <div class="kpi-card">
+                <div class="kpi-title">ACTIVE DOCTORS</div>
+                <div class="kpi-value">32</div>
+                <div class="kpi-sub">4 on emergency reserve</div>
+              </div>
+
+              <div class="kpi-card">
+                <div class="kpi-title">DAILY GROSS REVENUE</div>
+                <div class="kpi-value">$42,800</div>
+                <div class="kpi-sub">↑ 8.4% daily target</div>
+              </div>
+
+              <div class="kpi-card">
+                <div class="kpi-title">PATIENT NPS SCORE</div>
+                <div class="kpi-value" style="color: var(--accent-emerald);">4.9 / 5.0</div>
+                <div class="kpi-sub">98.2% positive feedback</div>
+              </div>
+            </div>
+
+            <!-- Roster and Department Capacity Overview -->
+            <div class="hospital-roster-split">
+              
+              <!-- Doctor Roster Management -->
+              <div class="stat-card" style="padding: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                  <h4 style="font-size: 16px; font-weight: 700;">Physician Roster Overview</h4>
+                  <button class="mini-doc-action-btn" style="background: var(--ink); font-size: 12px;" onclick="showToast('Add Physician modal opening...', 'info')">
+                    + Add Physician
+                  </button>
+                </div>
+
+                <div class="table-responsive">
+                  <table class="doctor-table">
+                    <thead>
+                      <tr>
+                        <th>Doctor</th>
+                        <th>Status</th>
+                        <th>Today's Openings</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="hospital-roster-tbody">
+                      <!-- Rendered dynamically by app.js -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Department Utilization Gauges -->
+              <div class="stat-card" style="padding: 24px;">
+                <h4 style="font-size: 16px; font-weight: 700; margin-bottom: 18px;">Department Capacity Live</h4>
+
+                <div style="display: flex; flex-direction: column; gap: 18px;">
+                  <div>
+                    <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                      <strong>Cardiology Clinic</strong>
+                      <span style="font-family: var(--font-mono); color: var(--accent-teal); font-weight: 600;">92%</span>
+                    </div>
+                    <div class="capacity-progress-bar">
+                      <div class="capacity-fill" style="width: 92%;"></div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                      <strong>Orthopedics & Sports Medicine</strong>
+                      <span style="font-family: var(--font-mono); color: var(--accent-teal); font-weight: 600;">78%</span>
+                    </div>
+                    <div class="capacity-progress-bar">
+                      <div class="capacity-fill" style="width: 78%;"></div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                      <strong>Pediatrics & Family Care</strong>
+                      <span style="font-family: var(--font-mono); color: var(--accent-teal); font-weight: 600;">65%</span>
+                    </div>
+                    <div class="capacity-progress-bar">
+                      <div class="capacity-fill" style="width: 65%;"></div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                      <strong>Emergency & Trauma Center</strong>
+                      <span style="font-family: var(--font-mono); color: var(--accent-rose); font-weight: 600;">96% (High Load)</span>
+                    </div>
+                    <div class="capacity-progress-bar">
+                      <div class="capacity-fill" style="width: 96%; background: var(--accent-rose);"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       RESOURCES & FAQ SECTION (Cofounder Style)
+       ========================================================================= -->
+  <section class="resources-faq-section" id="resources">
+    <div class="section-container">
+      
+      <div class="section-header-centered">
+        <div class="section-tag">Clinical Intelligence & Guidance</div>
+        <h2 class="section-title">
+          Healthcare Resources & Architecture
+        </h2>
+        <p class="section-description">
+          Best practices, clinical operating guides, and compliance standards for modern healthcare delivery.
+        </p>
+      </div>
+
+      <!-- Resource Cards Grid -->
+      <div class="resources-grid">
+        <div class="resource-card">
+          <div>
+            <span class="resource-tag">CLINICAL GUIDE</span>
+            <h4 class="resource-title">Modern Appointment Orchestration 2026</h4>
+            <p class="resource-snippet">How top hospitals reduce patient no-show rates by 42% through automated multi-channel scheduling and intake.</p>
+          </div>
+          <div class="resource-meta">
+            <span>6 min read</span>
+            <a href="#product-portals" style="color: var(--accent-teal); font-weight: 600;">Read Guide →</a>
+          </div>
+        </div>
+
+        <div class="resource-card">
+          <div>
+            <span class="resource-tag">SECURITY & COMPLIANCE</span>
+            <h4 class="resource-title">HIPAA & SOC-2 Architecture Brief</h4>
+            <p class="resource-snippet">Zero-knowledge end-to-end encryption protocols protecting sensitive Protected Health Information (PHI).</p>
+          </div>
+          <div class="resource-meta">
+            <span>4 min read</span>
+            <a href="#product-portals" style="color: var(--accent-teal); font-weight: 600;">Read Guide →</a>
+          </div>
+        </div>
+
+        <div class="resource-card">
+          <div>
+            <span class="resource-tag">TELEHEALTH</span>
+            <h4 class="resource-title">HD Encrypted Telehealth Playbook</h4>
+            <p class="resource-snippet">Standard operating procedures for remote consultations, vitals capture, and real-time electronic prescribing.</p>
+          </div>
+          <div class="resource-meta">
+            <span>5 min read</span>
+            <a href="#product-portals" style="color: var(--accent-teal); font-weight: 600;">Read Guide →</a>
+          </div>
+        </div>
+
+        <div class="resource-card">
+          <div>
+            <span class="resource-tag">OPERATIONS</span>
+            <h4 class="resource-title">Hospital Bed & Roster Optimization</h4>
+            <p class="resource-snippet">Balancing peak outpatient loads with emergency department bed reserves without physician burnout.</p>
+          </div>
+          <div class="resource-meta">
+            <span>7 min read</span>
+            <a href="#product-portals" style="color: var(--accent-teal); font-weight: 600;">Read Guide →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ Accordion -->
+      <div class="section-header-centered" style="margin-bottom: 32px;">
+        <h3 style="font-size: 24px; font-weight: 700; color: var(--ink);">Frequently Asked Questions</h3>
+      </div>
+
+      <div class="faq-accordion-container">
+        
+        <div class="faq-item open">
+          <button type="button" class="faq-question-btn">
+            <span>How does PulseCare ensure zero double-booking across hospital schedules?</span>
+            <span class="faq-icon-chevron">▼</span>
+          </button>
+          <div class="faq-answer-panel">
+            PulseCare uses atomic calendar slot locking directly tied into hospital electronic medical record systems (EHR/EMR). When a patient selects a slot, it is temporarily reserved with sub-second locking until payment/intake confirmation is complete.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question-btn">
+            <span>Is patient data encrypted and HIPAA compliant?</span>
+            <span class="faq-icon-chevron">▼</span>
+          </button>
+          <div class="faq-answer-panel">
+            Yes. All communication, digital intake records, and telehealth audio/video streams use 256-bit TLS encryption in transit and AES-256 at rest. PulseCare signs comprehensive Business Associate Agreements (BAAs) with all medical providers.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question-btn">
+            <span>Can doctors toggle between telehealth and in-clinic consultation slots?</span>
+            <span class="faq-icon-chevron">▼</span>
+          </button>
+          <div class="faq-answer-panel">
+            Physicians have granular control over their daily schedule. Within the Doctor Dashboard, doctors can assign specific time blocks for remote video visits, in-clinic physical examinations, or emergency reserve buffers.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question-btn">
+            <span>How do hospital administrators manage multi-department doctor rosters?</span>
+            <span class="faq-icon-chevron">▼</span>
+          </button>
+          <div class="faq-answer-panel">
+            The Hospital Owner Dashboard provides real-time oversight of doctor shifts, department room allocation, patient throughput, and automated bed occupancy tracking across cardiology, dermatology, pediatrics, and surgical suites.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question-btn">
+            <span>What happens when a patient books an appointment?</span>
+            <span class="faq-icon-chevron">▼</span>
+          </button>
+          <div class="faq-answer-panel">
+            The patient receives an instant confirmation pass with calendar sync links, automated SMS reminders, and an encrypted telehealth room link if virtual. The doctor's queue and clinic schedule update simultaneously.
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       PROMINENT FINAL SIGN-UP CTA BANNER (Cofounder Mirror)
+       ========================================================================= -->
+  <section class="final-cta-section">
+    <div class="final-cta-card">
+      <div class="cta-glow-effect"></div>
+
+      <h2 class="final-cta-title">
+        Run modern patient care with intelligent scheduling
+      </h2>
+      <p class="final-cta-desc">
+        Join over 480 verified hospital networks and 14,000 physicians delivering frictionless doctor discovery, booking, and telehealth.
+      </p>
+
+      <div class="final-cta-buttons">
+        <button type="button" class="cta-btn-primary" onclick="openBookingModal('doc-1')" id="final-cta-patient">
+          Book an Appointment Now
+        </button>
+        <button type="button" class="cta-btn-glass" onclick="switchRole('hospital'); document.getElementById('product-portals').scrollIntoView({behavior:'smooth'});" id="final-cta-hospital">
+          Request Hospital Demo
+        </button>
+      </div>
+
+      <div class="trust-badges-row">
+        <div class="trust-badge-item">
+          <span>🔒</span><span>HIPAA Compliant</span>
+        </div>
+        <div class="trust-badge-item">
+          <span>🛡️</span><span>SOC-2 Type II Certified</span>
+        </div>
+        <div class="trust-badge-item">
+          <span>⚡</span><span>256-bit TLS Encryption</span>
+        </div>
+        <div class="trust-badge-item">
+          <span>🏥</span><span>JCI Accredited Network</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       STRUCTURED FOOTER (Cofounder Grid Benchmark)
+       ========================================================================= -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-grid">
+        
+        <!-- Brand Column -->
+        <div class="footer-brand-col">
+          <a href="#top" class="site-logo">
+            <div class="logo-badge">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+              </svg>
+            </div>
+            <span>PulseCare</span>
+            <span class="os-tag">OS</span>
+          </a>
+          <p class="footer-brand-desc">
+            The clinical care operating system designed to unify doctor appointments, patient management, and hospital operations.
+          </p>
+          <div class="footer-status-tag">
+            <span class="status-dot"></span>
+            <span>All Systems Operational • HIPAA Verified</span>
+          </div>
+        </div>
+
+        <!-- Col 1: Solutions -->
+        <div>
+          <div class="footer-col-title">Solutions</div>
+          <ul class="footer-links-list">
+            <li><a href="#stages">Patient Discovery</a></li>
+            <li><a href="#hospitals">Hospital Directory</a></li>
+            <li><a href="#stages">Instant Booking Flow</a></li>
+            <li><a href="#stages">Encrypted Telehealth</a></li>
+            <li><a href="#stages">Digital Vitals Intake</a></li>
+            <li><a href="#stages">Hospital Scheduling</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 2: Specialties -->
+        <div>
+          <div class="footer-col-title">Specialties</div>
+          <ul class="footer-links-list">
+            <li><a href="#stages">Cardiology</a></li>
+            <li><a href="#stages">Neurology</a></li>
+            <li><a href="#stages">Dermatology</a></li>
+            <li><a href="#stages">Orthopedics</a></li>
+            <li><a href="#stages">Pediatrics</a></li>
+            <li><a href="#stages">Internal Medicine</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Portals & Workstations -->
+        <div>
+          <div class="footer-col-title">Portals & Workstations</div>
+          <ul class="footer-links-list">
+            <li><a href="doctor-portal.html" style="color: var(--accent-teal);">🩺 Dedicated Doctor Portal Page</a></li>
+            <li><a href="owner-dashboard.html" style="color: #60a5fa;">🏥 Dedicated Hospital Owner Page</a></li>
+            <li><a href="doctor-login.html">Doctor Sign In Page</a></li>
+            <li><a href="owner-login.html">Hospital Owner Sign In Page</a></li>
+            <li><a href="#product-portals" onclick="switchRole('patient')">Patient Experience</a></li>
+            <li><a href="#overview">Orchestration Hub</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Compliance & Legal -->
+        <div>
+          <div class="footer-col-title">Security & Legal</div>
+          <ul class="footer-links-list">
+            <li><a href="#resources">Privacy Policy</a></li>
+            <li><a href="#resources">Terms of Service</a></li>
+            <li><a href="#resources">HIPAA Security Notice</a></li>
+            <li><a href="#resources">Business Associate (BAA)</a></li>
+            <li><a href="#resources">Accessibility Statement</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom-bar">
+        <div>
+          © 2026 PulseCare Technologies, Inc. All rights reserved.
+        </div>
+        <div style="font-family: var(--font-mono); font-size: 11.5px;">
+          Version 2.5.0-healthcare • Inspired by Cofounder Design Systems
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       MODAL 1: INTERACTIVE APPOINTMENT BOOKING MODAL
+       ========================================================================= -->
+  <div class="modal-overlay" id="booking-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="booking-modal-title">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 class="modal-title" id="booking-modal-title">Schedule Doctor Appointment</h3>
+        <button type="button" class="modal-close-btn" id="booking-modal-close" aria-label="Close dialog">✕</button>
+      </div>
+
+      <div class="modal-body">
+        
+        <!-- Doctor Info Header -->
+        <div style="display: flex; align-items: center; gap: 14px; padding: 14px; background: #fbfbf8; border: 1px solid var(--ink-border); border-radius: 12px; margin-bottom: 20px;">
+          <img src="images/doctor-1.jpg" alt="Selected Doctor" id="modal-doctor-avatar" style="width: 52px; height: 52px; border-radius: 10px; object-fit: cover;">
+          <div>
+            <h4 id="modal-doctor-name" style="font-size: 15.5px; font-weight: 700; color: var(--ink);">Dr. Sarah Chen, MD</h4>
+            <p id="modal-doctor-spec" style="font-size: 12.5px; color: var(--accent-teal); font-weight: 600;">Cardiology • Mayo Clinic Health System</p>
+          </div>
+        </div>
+
+        <form id="appointment-booking-form">
+          <input type="hidden" id="booking-selected-time" value="09:00 AM">
+
+          <div class="form-group">
+            <label for="booking-doctor-select" class="form-label">Select Specialist</label>
+            <select id="booking-doctor-select" class="form-select" required>
+              <option value="doc-1">Dr. Sarah Chen, MD (Cardiology — $180)</option>
+              <option value="doc-2">Dr. Marcus Vance, MD (Neurology — $220)</option>
+              <option value="doc-3">Dr. Elena Rostova, MD (Dermatology — $160)</option>
+              <option value="doc-4">Dr. Julian Thorne, MD (Orthopedics — $210)</option>
+              <option value="doc-5">Dr. Amara Okafor, MD (Pediatrics — $150)</option>
+              <option value="doc-6">Dr. David Lindqvist, MD (General Medicine — $130)</option>
+              <option value="doc-7">Dr. Sophia Patel, MD (Endocrinology — $190)</option>
+              <option value="doc-8">Dr. Robert Sterling, MD (Cardiology — $250)</option>
+            </select>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div class="form-group">
+              <label for="booking-date" class="form-label">Preferred Date</label>
+              <input type="date" id="booking-date" class="form-input" value="2026-10-10" required>
+            </div>
+
+            <div class="form-group">
+              <label for="booking-type" class="form-label">Consultation Mode</label>
+              <select id="booking-type" class="form-select" required>
+                <option value="Telehealth">📹 Encrypted HD Telehealth</option>
+                <option value="In-Clinic">🏥 In-Clinic Visit</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Time Slot Selection Pills -->
+          <div class="form-group">
+            <label class="form-label">Available Time Slots</label>
+            <div id="modal-slot-selection" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+
+          <!-- Patient Information -->
+          <div class="form-group">
+            <label for="booking-patient-name" class="form-label">Patient Full Name</label>
+            <input type="text" id="booking-patient-name" class="form-input" placeholder="e.g. Alexandra Hayes" required value="Alexandra Hayes">
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div class="form-group">
+              <label for="booking-patient-email" class="form-label">Email Address</label>
+              <input type="email" id="booking-patient-email" class="form-input" placeholder="alexandra@example.com" required value="alexandra.h@example.com">
+            </div>
+
+            <div class="form-group">
+              <label for="booking-patient-phone" class="form-label">Mobile Phone</label>
+              <input type="tel" id="booking-patient-phone" class="form-input" placeholder="+1 (555) 234-8901" required value="+1 (555) 234-8901">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="booking-symptoms" class="form-label">Symptoms & Reason for Visit</label>
+            <textarea id="booking-symptoms" class="form-textarea" rows="2" placeholder="Briefly describe your symptoms or reason for visit...">Routine heart health check and follow-up consultation.</textarea>
+          </div>
+
+          <button type="submit" class="cta-btn-primary" style="width: 100%; height: 44px; margin-top: 10px;">
+            Confirm & Generate Appointment Pass
+          </button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 2: CONFIRMATION PASS MODAL
+       ========================================================================= -->
+  <div class="modal-overlay" id="confirmation-pass-overlay" role="dialog" aria-modal="true" aria-labelledby="conf-pass-title">
+    <div class="modal-container" style="max-width: 480px; text-align: center;">
+      <div class="modal-body" style="padding: 36px 28px;">
+        
+        <div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(16, 185, 129, 0.12); color: var(--accent-emerald); font-size: 28px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+          ✓
+        </div>
+
+        <h3 id="conf-pass-title" style="font-size: 22px; font-weight: 700; color: var(--ink); margin-bottom: 6px;">Appointment Confirmed</h3>
+        <p style="font-size: 13.5px; color: var(--ink-secondary); margin-bottom: 24px;">Your appointment has been locked and calendar invitations sent.</p>
+
+        <!-- Digital Ticket Pass -->
+        <div style="background: #fbfbf8; border: 2px dashed var(--ink-border-strong); border-radius: 14px; padding: 20px; text-align: left; margin-bottom: 24px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid var(--ink-border); padding-bottom: 10px;">
+            <div>
+              <span style="font-size: 11px; font-family: var(--font-mono); color: var(--ink-faint);">PASS REFERENCE</span>
+              <div id="conf-pass-id" style="font-family: var(--font-mono); font-size: 16px; font-weight: 700; color: var(--accent-teal);">PC-89421</div>
+            </div>
+            <div style="text-align: right;">
+              <span style="font-size: 11px; font-family: var(--font-mono); color: var(--accent-emerald);">● VERIFIED</span>
+              <div style="font-size: 12px; font-weight: 600;">HIPAA Lock</div>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 8px;">
+            <span style="font-size: 11px; color: var(--ink-faint);">PATIENT:</span>
+            <strong id="conf-patient-name" style="font-size: 13.5px; display: block;">Alexandra Hayes</strong>
+          </div>
+
+          <div style="margin-bottom: 8px;">
+            <span style="font-size: 11px; color: var(--ink-faint);">PHYSICIAN:</span>
+            <strong id="conf-doc-name" style="font-size: 13.5px; display: block;">Dr. Sarah Chen, MD</strong>
+          </div>
+
+          <div style="margin-bottom: 8px;">
+            <span style="font-size: 11px; color: var(--ink-faint);">SCHEDULED FOR:</span>
+            <strong id="conf-datetime" style="font-size: 13.5px; display: block;">Tomorrow, Oct 10 at 10:30 AM (Telehealth)</strong>
+          </div>
+
+          <div>
+            <span style="font-size: 11px; color: var(--ink-faint);">LOCATION:</span>
+            <span id="conf-hospital" style="font-size: 12.5px; color: var(--ink-secondary); display: block;">Mayo Clinic Health System</span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <button type="button" class="cta-btn-primary" style="flex: 1;" onclick="closeConfirmationPass()">
+            Done & View Dashboard
+          </button>
+          <button type="button" class="cta-btn-glass" style="background: #f1f1ee; color: var(--ink); border-color: var(--ink-border);" onclick="window.print()">
+            🖨️ Print Pass
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 3: TELEHEALTH HD VIDEO ROOM SIMULATOR
+       ========================================================================= -->
+  <div class="modal-overlay" id="telehealth-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="telehealth-modal-title">
+    <div class="telehealth-modal-container">
+      
+      <!-- Video Room Header -->
+      <div style="padding: 14px 20px; background: #141820; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span class="status-dot"></span>
+          <span id="telehealth-modal-title" style="font-size: 14px; font-weight: 600;">PulseCare HD Clinical Session</span>
+          <span style="font-family: var(--font-mono); font-size: 11px; background: rgba(13,148,136,0.2); color: var(--accent-teal-light); padding: 2px 6px; border-radius: 4px;">256-Bit Encrypted</span>
+        </div>
+        <div style="font-family: var(--font-mono); font-size: 13px; color: rgba(255,255,255,0.7);" id="telehealth-call-timer">
+          00:00
+        </div>
+      </div>
+
+      <!-- Main Video Screen Split -->
+      <div class="video-screen-grid">
+        <!-- Main Patient Video -->
+        <div class="main-video-feed">
+          <div style="text-align: center;">
+            <div class="video-patient-avatar">👤</div>
+            <div id="telehealth-patient-name" style="font-size: 16px; font-weight: 600; margin-top: 14px;">Alexandra Hayes</div>
+            <div style="font-size: 12px; color: rgba(255,255,255,0.6); font-family: var(--font-mono); margin-top: 4px;">Patient Video Feed Connected (1080p 60fps)</div>
+          </div>
+
+          <!-- Doctor Picture-in-Picture -->
+          <div class="video-pip-doctor">
+            <img src="images/doctor-1.jpg" alt="Dr. Sarah Chen">
+          </div>
+        </div>
+
+        <!-- Clinical Notes Panel on the right -->
+        <div class="telehealth-notes-panel">
+          <h4 style="font-size: 13.5px; font-weight: 700; color: #ffffff; margin-bottom: 10px;">Attending Physician Notes</h4>
+          <div style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-teal-light); margin-bottom: 8px;">Vitals: BP 122/78 • HR 74 bpm • SpO2 98%</div>
+          <textarea style="flex: 1; width: 100%; background: #0c0f14; border: 1px solid rgba(255,255,255,0.14); border-radius: 8px; padding: 10px; color: #ffffff; font-size: 12px; resize: none;" placeholder="Record clinical observation, prescription modifications, and follow-up timeline...">Patient reports stable cardiovascular tolerance. Blood pressure and resting pulse remain within standard threshold. Recommend continuing daily lifestyle regimen and 3-month recurrence check.</textarea>
+          
+          <button type="button" class="mini-doc-action-btn" style="margin-top: 10px; background: var(--accent-teal);" onclick="showToast('Clinical notes uploaded to Patient EHR', 'success')">
+            Save to Patient Record
+          </button>
+        </div>
+      </div>
+
+      <!-- Video Call Controls Toolbar -->
+      <div class="telehealth-toolbar">
+        <button type="button" class="call-control-btn" id="btn-toggle-mute" title="Mute/Unmute Mic">
+          🎤
+        </button>
+        <button type="button" class="call-control-btn" id="btn-toggle-cam" title="Toggle Camera">
+          📹
+        </button>
+        <button type="button" class="call-control-btn" onclick="showToast('Screen sharing activated', 'info')" title="Share Screen">
+          🖥️
+        </button>
+        <button type="button" class="call-control-btn end-call" id="btn-end-call" title="End Call">
+          📞
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 4: CLINICAL CREDENTIAL AUTHENTICATION MODAL (DOCTOR & HOSPITAL)
+       ========================================================================= -->
+  <div class="modal-overlay" id="auth-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+    <div class="modal-container" style="max-width: 480px;">
+      
+      <!-- Role Tabs -->
+      <div class="auth-tabs-header">
+        <button type="button" class="auth-tab-btn active" data-role="doctor" id="auth-tab-doc">
+          <span>🩺</span><span>Physician Login</span>
+        </button>
+        <button type="button" class="auth-tab-btn" data-role="hospital" id="auth-tab-hosp">
+          <span>🏥</span><span>Hospital Admin</span>
+        </button>
+      </div>
+
+      <div class="modal-header" style="border-top: none;">
+        <div>
+          <h3 class="modal-title" id="auth-modal-title">Clinical Authentication</h3>
+          <p id="auth-modal-role-title" style="font-size: 12.5px; color: var(--accent-teal); font-weight: 600; margin-top: 2px;">Physician Portal Login</p>
+        </div>
+        <button type="button" class="modal-close-btn" id="auth-modal-close" aria-label="Close dialog">✕</button>
+      </div>
+
+      <div class="modal-body" style="padding-top: 18px;">
+        
+        <!-- Demo auto-fill banner -->
+        <div class="demo-credentials-banner" style="margin-bottom: 18px;">
+          <div class="demo-credentials-banner-title">
+            <span>⚡</span><span>Quick Demo Authentication</span>
+          </div>
+          <p style="font-size: 12px; color: var(--ink-secondary); margin-bottom: 8px;">Click below to load pre-configured credentials instantly:</p>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" class="demo-quick-btn" style="flex: 1; padding: 6px;" onclick="setAuthModalRole('doctor')">Fill Doctor</button>
+            <button type="button" class="demo-quick-btn" style="flex: 1; padding: 6px; background: #2563eb;" onclick="setAuthModalRole('hospital')">Fill Hospital Admin</button>
+          </div>
+        </div>
+
+        <form id="clinical-auth-form">
+          <input type="hidden" id="auth-target-role" value="doctor">
+
+          <div class="form-group">
+            <label for="auth-email" class="form-label">Clinical Email Address</label>
+            <input type="email" id="auth-email" class="form-input" required value="dr.chen@mayoclinic.org">
+          </div>
+
+          <div class="form-group">
+            <label for="auth-password" class="form-label">Password</label>
+            <input type="password" id="auth-password" class="form-input" required value="doctor123">
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-size: 12.5px;">
+            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+              <input type="checkbox" checked>
+              <span>Remember medical session</span>
+            </label>
+            <a href="#" style="color: var(--accent-teal); font-weight: 600;" onclick="showToast('Password reset token sent to institutional email', 'info'); return false;">Forgot?</a>
+          </div>
+
+          <button type="submit" class="cta-btn-primary" style="width: 100%; height: 44px;">
+            Authenticate & Access Dashboard
+          </button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 5: HOSPITAL FACILITY PROFILE MODAL
+       ========================================================================= -->
+  <div class="modal-overlay" id="hospital-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-hosp-name">
+    <div class="modal-container" style="max-width: 560px;">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="modal-hosp-name">Mayo Clinic Health System</h3>
+          <p id="modal-hosp-city" style="font-size: 12.5px; color: var(--accent-teal); font-weight: 600;">Rochester, MN • Verified Healthcare Campus</p>
+        </div>
+        <button type="button" class="modal-close-btn" onclick="closeHospitalModal()" aria-label="Close dialog">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <p id="modal-hosp-desc" style="font-size: 13.5px; color: var(--ink-secondary); line-height: 1.5; margin-bottom: 20px;">
+          Internationally recognized health network pioneering diagnostic precision, multidisciplinary clinical teamwork, and cardiac surgery excellence.
+        </p>
+
+        <div style="background: #fbfbf8; border: 1px solid var(--ink-border); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px;">
+            <div>
+              <span style="font-size: 11px; font-family: var(--font-mono); color: var(--ink-faint);">CERTIFIED CAPACITY</span>
+              <strong id="modal-hosp-beds" style="display: block; margin-top: 2px;">1,260 Inpatient Beds</strong>
+            </div>
+            <div>
+              <span style="font-size: 11px; font-family: var(--font-mono); color: var(--ink-faint);">QUALITY SCORE</span>
+              <strong id="modal-hosp-rating" style="display: block; margin-top: 2px; color: var(--accent-amber);">★ 4.98 Quality Index</strong>
+            </div>
+            <div>
+              <span style="font-size: 11px; font-family: var(--font-mono); color: var(--ink-faint);">EMERGENCY TRIAGE</span>
+              <strong id="modal-hosp-er" style="display: block; margin-top: 2px; color: var(--accent-emerald);">8 mins ER Wait Time</strong>
+            </div>
+            <div>
+              <span style="font-size: 11px; font-family: var(--font-mono); color: var(--ink-faint);">ADMISSIONS LINE</span>
+              <strong id="modal-hosp-phone" style="display: block; margin-top: 2px;">+1 (507) 284-2511</strong>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <button type="button" class="cta-btn-primary" style="flex: 1;" onclick="closeHospitalModal(); filterDoctorsByHospital(document.getElementById('modal-hosp-name').textContent);">
+            View Affiliated Doctors
+          </button>
+          <button type="button" class="cta-btn-glass" style="background: #f1f1ee; color: var(--ink); border-color: var(--ink-border);" onclick="closeHospitalModal(); showToast('Direct admission referral dispatched to hospital intake desk', 'success');">
+            Admissions Hotline
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Human Anatomy Explorer — Scroll-Driven 3D Experience</title>
+<meta name="description" content="A high-performance scroll-driven anatomical exploration using HTML5 Canvas."/>
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   RESET & FOUNDATIONS
+   ═══════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --bg: #f4f6f9;
+    --bg-white: #ffffff;
+    --text: #1e2a3a;
+    --text-sub: #5a6a7e;
+    --text-dim: #9aabb8;
+    --accent: #0077b6;
+    --accent-light: #90e0ef;
+    --accent-glow: rgba(0, 119, 182, 0.12);
+    --glass: rgba(255, 255, 255, 0.78);
+    --glass-border: rgba(0, 0, 0, 0.06);
+    --danger: #e63946;
+    --bone: #f1e8d8;
+    --muscle: #c1443e;
+    --organ: #8b1a1a;
+    --font: system-ui, 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif;
+}
+
+html { scroll-behavior: auto; }
+body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   SCROLL CONTAINER — 500vh of travel
+   ═══════════════════════════════════════════════════════════════════ */
+.scroll-spacer {
+    position: relative;
+    height: 500vh;
+    width: 100%;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   STICKY VIEWPORT — Pinned canvas + HUD
+   ═══════════════════════════════════════════════════════════════════ */
+.viewport {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+}
+
+canvas#anatomy-canvas {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   GLASSMORPHISM HUD PANEL
+   ═══════════════════════════════════════════════════════════════════ */
+.hud {
+    position: absolute;
+    top: 50%;
+    right: 28px;
+    transform: translateY(-50%);
+    width: 280px;
+    padding: 28px 24px;
+    border-radius: 20px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    box-shadow: 0 4px 32px rgba(0,0,0,0.05), 0 1px 0 inset rgba(255,255,255,0.9);
+    z-index: 20;
+    transition: opacity 0.4s ease;
+}
+
+.hud-brand {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.hud-brand::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 6px var(--accent);
+    animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.4); }
+}
+
+.hud-system {
+    font-size: 1.55rem;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin-bottom: 4px;
+    transition: color 0.5s ease;
+    min-height: 2.4em;
+}
+
+.hud-layer {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 18px;
+    transition: color 0.5s ease;
+}
+
+.hud-desc {
+    font-size: 0.82rem;
+    line-height: 1.65;
+    color: var(--text-sub);
+    margin-bottom: 22px;
+    min-height: 5.5em;
+    transition: opacity 0.4s ease;
+}
+
+/* Depth meter */
+.depth-meter {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+.depth-bar-track {
+    flex: 1;
+    height: 4px;
+    background: rgba(0,0,0,0.06);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.depth-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-light));
+    transition: width 0.15s ease-out;
+    box-shadow: 0 0 8px rgba(0,119,182,0.2);
+}
+.depth-pct {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 32px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Stat chips */
+.hud-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+.stat-chip {
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: rgba(0, 119, 182, 0.04);
+    border: 1px solid rgba(0, 119, 182, 0.06);
+    transition: background 0.3s, border-color 0.3s;
+}
+.stat-chip .sc-val {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--accent);
+    transition: color 0.5s;
+}
+.stat-chip .sc-lbl {
+    font-size: 0.55rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-top: 2px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   VERTICAL PROGRESS INDICATOR (LEFT)
+   ═══════════════════════════════════════════════════════════════════ */
+.progress-rail {
+    position: absolute;
+    left: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 240px;
+    background: rgba(0,0,0,0.06);
+    border-radius: 3px;
+    z-index: 20;
+    overflow: visible;
+}
+.progress-fill {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    border-radius: 3px;
+    background: linear-gradient(180deg, var(--accent), var(--accent-light));
+    box-shadow: 0 0 8px rgba(0,119,182,0.3);
+    transition: height 0.15s ease-out;
+}
+.progress-dot {
+    position: absolute;
+    left: 50%;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--bg-white);
+    border: 2.5px solid var(--accent);
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 0 4px rgba(0,119,182,0.12);
+    transition: top 0.15s ease-out;
+}
+/* Section markers */
+.progress-marker {
+    position: absolute;
+    left: 16px;
+    font-size: 0.55rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    white-space: nowrap;
+    transform: translateY(-50%);
+    transition: color 0.3s;
+}
+.progress-marker.active { color: var(--accent); font-weight: 700; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   SCROLL HINT
+   ═══════════════════════════════════════════════════════════════════ */
+.scroll-hint {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    z-index: 20;
+    transition: opacity 0.5s;
+}
+.scroll-hint span {
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+}
+.scroll-hint .arrow {
+    width: 18px; height: 18px;
+    border-right: 2px solid var(--accent);
+    border-bottom: 2px solid var(--accent);
+    transform: rotate(45deg);
+    animation: hint-bounce 2s ease-in-out infinite;
+    opacity: 0.5;
+}
+@keyframes hint-bounce {
+    0%, 100% { transform: rotate(45deg) translateY(0); opacity: 0.3; }
+    50% { transform: rotate(45deg) translateY(5px); opacity: 0.7; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   FRAME COUNTER (top-left)
+   ═══════════════════════════════════════════════════════════════════ */
+.frame-counter {
+    position: absolute;
+    top: 20px;
+    left: 28px;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    z-index: 20;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 860px) {
+    .hud {
+        top: auto; bottom: 16px; right: 16px; left: 16px;
+        transform: none; width: auto;
+        padding: 20px;
+    }
+    .hud-system { font-size: 1.2rem; min-height: auto; }
+    .hud-desc { min-height: auto; font-size: 0.78rem; margin-bottom: 14px; }
+    .progress-rail { display: none; }
+    .frame-counter { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SCROLL SPACER — 500vh of scrollable height
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="scroll-spacer" id="scroll-spacer">
+
+    <!-- Sticky viewport — always fills the screen -->
+    <div class="viewport" id="viewport">
+
+        <!-- The main rendering canvas -->
+        <canvas id="anatomy-canvas"></canvas>
+
+        <!-- Frame counter (top-left) -->
+        <div class="frame-counter" id="frame-counter">FRAME 001 / 120</div>
+
+        <!-- Vertical progress rail (left side) -->
+        <div class="progress-rail" id="progress-rail">
+            <div class="progress-fill" id="progress-fill" style="height:0%"></div>
+            <div class="progress-dot" id="progress-dot" style="top:0%"></div>
+            <div class="progress-marker" style="top:7.5%" id="pm-skin">Skin</div>
+            <div class="progress-marker" style="top:30%" id="pm-muscle">Muscles</div>
+            <div class="progress-marker" style="top:60%" id="pm-skeleton">Skeleton</div>
+            <div class="progress-marker" style="top:87.5%" id="pm-organs">Organs</div>
+        </div>
+
+        <!-- Glassmorphism HUD Panel (right side) -->
+        <div class="hud" id="hud">
+            <div class="hud-brand">Human Anatomy Explorer</div>
+            <div class="hud-system" id="hud-system">Integumentary System</div>
+            <div class="hud-layer" id="hud-layer">Layer 1 of 4 — Surface</div>
+            <div class="depth-meter">
+                <div class="depth-bar-track"><div class="depth-bar-fill" id="depth-fill" style="width:0%"></div></div>
+                <div class="depth-pct" id="depth-pct">0%</div>
+            </div>
+            <p class="hud-desc" id="hud-desc">The integumentary system — skin, hair, and nails — is the body's largest organ, forming a protective barrier against pathogens, UV radiation, and dehydration.</p>
+            <div class="hud-stats" id="hud-stats">
+                <div class="stat-chip"><div class="sc-val" id="stat1-val">1.7 m²</div><div class="sc-lbl" id="stat1-lbl">Surface area</div></div>
+                <div class="stat-chip"><div class="sc-val" id="stat2-val">~4 kg</div><div class="sc-lbl" id="stat2-lbl">Total weight</div></div>
+                <div class="stat-chip"><div class="sc-val" id="stat3-val">3</div><div class="sc-lbl" id="stat3-lbl">Layers</div></div>
+                <div class="stat-chip"><div class="sc-val" id="stat4-val">~300M</div><div class="sc-lbl" id="stat4-lbl">Skin cells</div></div>
+            </div>
+        </div>
+
+        <!-- Scroll hint -->
+        <div class="scroll-hint" id="scroll-hint">
+            <span>Scroll to explore</span>
+            <div class="arrow"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     JAVASCRIPT — Canvas rendering, frame scrubbing, fallback drawing
+     ═══════════════════════════════════════════════════════════════════ -->
+<script>
+(function() {
+    "use strict";
+
+    /* ═══════════════════════════════════════════════════════════
+       CONFIGURATION
+       ═══════════════════════════════════════════════════════════ */
+    const FRAME_COUNT = 120;
+    const FRAME_PATTERN = i => `assets/frames/human_${String(i).padStart(3, '0')}.webp`;
+
+    // Anatomical sections with data
+    const SECTIONS = [
+        {
+            name: "Integumentary System",
+            layer: "Layer 1 of 4 — Surface",
+            desc: "The integumentary system — skin, hair, and nails — is the body's largest organ, forming a protective barrier against pathogens, UV radiation, and dehydration.",
+            range: [0, 0.15],
+            color: "#d4a574",
+            stats: [
+                { val: "1.7 m²", lbl: "Surface area" },
+                { val: "~4 kg", lbl: "Total weight" },
+                { val: "3", lbl: "Layers" },
+                { val: "~300M", lbl: "Skin cells" },
+            ]
+        },
+        {
+            name: "Muscular System",
+            layer: "Layer 2 of 4 — Muscular",
+            desc: "Over 600 skeletal muscles work in pairs to enable movement, maintain posture, and generate heat. They account for approximately 40% of total body weight.",
+            range: [0.15, 0.45],
+            color: "#c1443e",
+            stats: [
+                { val: "600+", lbl: "Muscles" },
+                { val: "~40%", lbl: "Body mass" },
+                { val: "3", lbl: "Types" },
+                { val: "~640", lbl: "Named muscles" },
+            ]
+        },
+        {
+            name: "Skeletal Structure",
+            layer: "Layer 3 of 4 — Skeletal",
+            desc: "The adult skeleton comprises 206 bones providing structural support, protecting organs, anchoring muscles, and storing minerals essential for metabolic functions.",
+            range: [0.45, 0.75],
+            color: "#b8a88a",
+            stats: [
+                { val: "206", lbl: "Bones" },
+                { val: "~15%", lbl: "Body mass" },
+                { val: "360", lbl: "Joints" },
+                { val: "~2.6T", lbl: "Red blood cells/sec" },
+            ]
+        },
+        {
+            name: "Internal Organs",
+            layer: "Layer 4 of 4 — Visceral",
+            desc: "The body's vital organs — heart, lungs, liver, kidneys, stomach, and intestines — work in concert to sustain life through circulation, respiration, digestion, and filtration.",
+            range: [0.75, 1.0],
+            color: "#8b1a1a",
+            stats: [
+                { val: "78", lbl: "Organs",  },
+                { val: "5L", lbl: "Blood volume" },
+                { val: "100K", lbl: "Heartbeats/day" },
+                { val: "7.5m", lbl: "Intestine length" },
+            ]
+        }
+    ];
+
+    /* ═══════════════════════════════════════════════════════════
+       DOM REFERENCES
+       ═══════════════════════════════════════════════════════════ */
+    const canvas    = document.getElementById("anatomy-canvas");
+    const ctx       = canvas.getContext("2d");
+    const viewport  = document.getElementById("viewport");
+    const spacer    = document.getElementById("scroll-spacer");
+    const hudSystem = document.getElementById("hud-system");
+    const hudLayer  = document.getElementById("hud-layer");
+    const hudDesc   = document.getElementById("hud-desc");
+    const depthFill = document.getElementById("depth-fill");
+    const depthPct  = document.getElementById("depth-pct");
+    const progFill  = document.getElementById("progress-fill");
+    const progDot   = document.getElementById("progress-dot");
+    const frameCtr  = document.getElementById("frame-counter");
+    const scrollHint = document.getElementById("scroll-hint");
+    const stat1V = document.getElementById("stat1-val"), stat1L = document.getElementById("stat1-lbl");
+    const stat2V = document.getElementById("stat2-val"), stat2L = document.getElementById("stat2-lbl");
+    const stat3V = document.getElementById("stat3-val"), stat3L = document.getElementById("stat3-lbl");
+    const stat4V = document.getElementById("stat4-val"), stat4L = document.getElementById("stat4-lbl");
+    const markers = [
+        document.getElementById("pm-skin"),
+        document.getElementById("pm-muscle"),
+        document.getElementById("pm-skeleton"),
+        document.getElementById("pm-organs"),
+    ];
+
+    /* ═══════════════════════════════════════════════════════════
+       CANVAS SIZING — Retina-aware
+       ═══════════════════════════════════════════════════════════ */
+    const ASPECT = 0.48; // width/height ratio of the anatomical figure
+    let cw = 0, ch = 0, dpr = 1;
+    let drawW = 0, drawH = 0, drawX = 0, drawY = 0;
+
+    function resize() {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        cw = viewport.clientWidth;
+        ch = viewport.clientHeight;
+        canvas.width  = Math.round(cw * dpr);
+        canvas.height = Math.round(ch * dpr);
+        canvas.style.width  = cw + "px";
+        canvas.style.height = ch + "px";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        // Contain the figure with proper aspect ratio
+        const fitH = ch * 0.88;
+        const fitW = fitH * ASPECT;
+        if (fitW > cw * 0.45) {
+            drawW = cw * 0.45;
+            drawH = drawW / ASPECT;
+        } else {
+            drawW = fitW;
+            drawH = fitH;
+        }
+        drawX = (cw - drawW) / 2 - 60; // offset left to make room for HUD
+        drawY = (ch - drawH) / 2;
+    }
+    window.addEventListener("resize", resize);
+    resize();
+
+    /* ═══════════════════════════════════════════════════════════
+       FRAME LOADING — Try real images, fallback to procedural
+       ═══════════════════════════════════════════════════════════ */
+    const frames = new Array(FRAME_COUNT).fill(null);
+    let framesLoaded = 0;
+    let useProceduralFallback = true; // default to procedural
+
+    // Attempt to load first frame to test
+    const testImg = new Image();
+    testImg.onload = () => {
+        useProceduralFallback = false;
+        loadAllFrames();
+    };
+    testImg.onerror = () => {
+        useProceduralFallback = true;
+        console.log("[Anatomy] Image assets not found — using procedural rendering.");
+    };
+    testImg.src = FRAME_PATTERN(0);
+
+    function loadAllFrames() {
+        for (let i = 0; i < FRAME_COUNT; i++) {
+            const img = new Image();
+            img.onload = () => { frames[i] = img; framesLoaded++; };
+            img.src = FRAME_PATTERN(i);
+        }
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       PROCEDURAL FALLBACK — High-quality anatomical drawing
+       Draws a progressively detailed human figure based on
+       scroll progress (0..1), transitioning through 4 layers.
+       ═══════════════════════════════════════════════════════════ */
+    function drawProcedural(progress) {
+        const x = drawX, y = drawY, w = drawW, h = drawH;
+        const cx = x + w / 2;
+
+        // Compute layer opacities with smooth cross-fades
+        const skinA    = smoothRange(progress, 0, 0.12, 0.18, 0.30);
+        const muscleA  = smoothRange(progress, 0.12, 0.20, 0.42, 0.52);
+        const skelA    = smoothRange(progress, 0.40, 0.50, 0.72, 0.80);
+        const organA   = smoothRange(progress, 0.70, 0.78, 1.0, 1.0);
+
+        // ── Background body silhouette (always visible) ──
+        ctx.save();
+        ctx.globalAlpha = 0.08 + 0.12 * (1 - progress);
+        drawBodyOutline(cx, y, w, h, "#c8d0d8");
+        ctx.restore();
+
+        // ── Layer 1: Skin ──
+        if (skinA > 0.01) {
+            ctx.save();
+            ctx.globalAlpha = skinA;
+            drawSkinLayer(cx, y, w, h);
+            ctx.restore();
+        }
+
+        // ── Layer 2: Muscles ──
+        if (muscleA > 0.01) {
+            ctx.save();
+            ctx.globalAlpha = muscleA;
+            drawMuscleLayer(cx, y, w, h);
+            ctx.restore();
+        }
+
+        // ── Layer 3: Skeleton ──
+        if (skelA > 0.01) {
+            ctx.save();
+            ctx.globalAlpha = skelA;
+            drawSkeletonLayer(cx, y, w, h);
+            ctx.restore();
+        }
+
+        // ── Layer 4: Organs ──
+        if (organA > 0.01) {
+            ctx.save();
+            ctx.globalAlpha = organA;
+            drawOrganLayer(cx, y, w, h);
+            ctx.restore();
+        }
+
+        // ── Outline on top (always) ──
+        ctx.save();
+        ctx.globalAlpha = 0.25 + 0.15 * (1 - progress);
+        drawBodyOutline(cx, y, w, h, "#8898a8");
+        ctx.restore();
+    }
+
+    /** Smooth fade: ramps up from a1→a2, holds, ramps down from b1→b2 */
+    function smoothRange(p, a1, a2, b1, b2) {
+        if (p < a1) return 0;
+        if (p < a2) return smoothstep((p - a1) / (a2 - a1));
+        if (p < b1) return 1;
+        if (p < b2) return 1 - smoothstep((p - b1) / (b2 - b1));
+        return 0;
+    }
+    function smoothstep(t) { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); }
+
+    /* ─── BODY OUTLINE ─── */
+    function drawBodyOutline(cx, y, w, h) {
+        const s = w / 200; // scale factor
+        ctx.strokeStyle = arguments[4] || "#8898a8";
+        ctx.lineWidth = 1.5 * s;
+        ctx.lineJoin = "round";
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        // Head
+        ctx.ellipse(cx, y + 38*s, 26*s, 32*s, 0, 0, Math.PI*2);
+        ctx.stroke();
+        // Neck
+        ctx.beginPath();
+        ctx.moveTo(cx - 10*s, y + 68*s);
+        ctx.lineTo(cx - 10*s, y + 82*s);
+        ctx.moveTo(cx + 10*s, y + 68*s);
+        ctx.lineTo(cx + 10*s, y + 82*s);
+        ctx.stroke();
+        // Torso
+        ctx.beginPath();
+        ctx.moveTo(cx - 48*s, y + 86*s);
+        ctx.quadraticCurveTo(cx - 52*s, y + 100*s, cx - 48*s, y + 180*s);
+        ctx.quadraticCurveTo(cx - 45*s, y + 240*s, cx - 35*s, y + 280*s);
+        ctx.lineTo(cx - 28*s, y + 300*s);
+        ctx.moveTo(cx + 48*s, y + 86*s);
+        ctx.quadraticCurveTo(cx + 52*s, y + 100*s, cx + 48*s, y + 180*s);
+        ctx.quadraticCurveTo(cx + 45*s, y + 240*s, cx + 35*s, y + 280*s);
+        ctx.lineTo(cx + 28*s, y + 300*s);
+        ctx.stroke();
+        // Shoulders
+        ctx.beginPath();
+        ctx.moveTo(cx - 10*s, y + 82*s);
+        ctx.quadraticCurveTo(cx - 30*s, y + 80*s, cx - 48*s, y + 86*s);
+        ctx.moveTo(cx + 10*s, y + 82*s);
+        ctx.quadraticCurveTo(cx + 30*s, y + 80*s, cx + 48*s, y + 86*s);
+        ctx.stroke();
+        // Arms
+        ctx.beginPath();
+        ctx.moveTo(cx - 48*s, y + 86*s);
+        ctx.quadraticCurveTo(cx - 65*s, y + 130*s, cx - 68*s, y + 190*s);
+        ctx.quadraticCurveTo(cx - 70*s, y + 230*s, cx - 72*s, y + 260*s);
+        ctx.moveTo(cx + 48*s, y + 86*s);
+        ctx.quadraticCurveTo(cx + 65*s, y + 130*s, cx + 68*s, y + 190*s);
+        ctx.quadraticCurveTo(cx + 70*s, y + 230*s, cx + 72*s, y + 260*s);
+        ctx.stroke();
+        // Hips
+        ctx.beginPath();
+        ctx.moveTo(cx - 28*s, y + 300*s);
+        ctx.quadraticCurveTo(cx, y + 310*s, cx + 28*s, y + 300*s);
+        ctx.stroke();
+        // Legs
+        ctx.beginPath();
+        ctx.moveTo(cx - 28*s, y + 300*s);
+        ctx.quadraticCurveTo(cx - 30*s, y + 370*s, cx - 28*s, y + 440*s);
+        ctx.quadraticCurveTo(cx - 26*s, y + 500*s, cx - 24*s, y + 550*s);
+        ctx.lineTo(cx - 30*s, y + 560*s);
+        ctx.moveTo(cx + 28*s, y + 300*s);
+        ctx.quadraticCurveTo(cx + 30*s, y + 370*s, cx + 28*s, y + 440*s);
+        ctx.quadraticCurveTo(cx + 26*s, y + 500*s, cx + 24*s, y + 550*s);
+        ctx.lineTo(cx + 30*s, y + 560*s);
+        ctx.stroke();
+    }
+
+    /* ─── SKIN LAYER ─── */
+    function drawSkinLayer(cx, y, w, h) {
+        const s = w / 200;
+        // Filled body with skin tone
+        const grad = ctx.createLinearGradient(cx, y, cx, y + h);
+        grad.addColorStop(0, "#e8c8a8");
+        grad.addColorStop(0.3, "#dbb898");
+        grad.addColorStop(1, "#c8a078");
+        ctx.fillStyle = grad;
+        // Head
+        ctx.beginPath();
+        ctx.ellipse(cx, y + 38*s, 24*s, 30*s, 0, 0, Math.PI*2);
+        ctx.fill();
+        // Torso fill
+        ctx.beginPath();
+        ctx.moveTo(cx - 46*s, y + 86*s);
+        ctx.quadraticCurveTo(cx - 50*s, y + 100*s, cx - 46*s, y + 180*s);
+        ctx.quadraticCurveTo(cx - 43*s, y + 240*s, cx - 33*s, y + 280*s);
+        ctx.lineTo(cx - 26*s, y + 298*s);
+        ctx.quadraticCurveTo(cx, y + 308*s, cx + 26*s, y + 298*s);
+        ctx.lineTo(cx + 33*s, y + 280*s);
+        ctx.quadraticCurveTo(cx + 43*s, y + 240*s, cx + 46*s, y + 180*s);
+        ctx.quadraticCurveTo(cx + 50*s, y + 100*s, cx + 46*s, y + 86*s);
+        ctx.closePath();
+        ctx.fill();
+        // Neck
+        ctx.fillRect(cx - 10*s, y + 65*s, 20*s, 20*s);
+        // Arms
+        ctx.lineWidth = 18*s;
+        ctx.strokeStyle = "#dbb898";
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(cx - 48*s, y + 90*s);
+        ctx.quadraticCurveTo(cx - 63*s, y + 130*s, cx - 66*s, y + 190*s);
+        ctx.quadraticCurveTo(cx - 68*s, y + 230*s, cx - 70*s, y + 255*s);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(cx + 48*s, y + 90*s);
+        ctx.quadraticCurveTo(cx + 63*s, y + 130*s, cx + 66*s, y + 190*s);
+        ctx.quadraticCurveTo(cx + 68*s, y + 230*s, cx + 70*s, y + 255*s);
+        ctx.stroke();
+        // Legs
+        ctx.lineWidth = 20*s;
+        ctx.beginPath();
+        ctx.moveTo(cx - 20*s, y + 300*s);
+        ctx.quadraticCurveTo(cx - 28*s, y + 370*s, cx - 26*s, y + 440*s);
+        ctx.quadraticCurveTo(cx - 24*s, y + 500*s, cx - 22*s, y + 545*s);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(cx + 20*s, y + 300*s);
+        ctx.quadraticCurveTo(cx + 28*s, y + 370*s, cx + 26*s, y + 440*s);
+        ctx.quadraticCurveTo(cx + 24*s, y + 500*s, cx + 22*s, y + 545*s);
+        ctx.stroke();
+        // Subtle texture lines
+        ctx.strokeStyle = "rgba(160,120,80,0.12)";
+        ctx.lineWidth = 0.5*s;
+        for (let i = 0; i < 20; i++) {
+            const ly = y + 100*s + i * 10*s;
+            ctx.beginPath();
+            ctx.moveTo(cx - 40*s + Math.sin(i*1.3)*5*s, ly);
+            ctx.lineTo(cx + 40*s + Math.cos(i*0.9)*5*s, ly);
+            ctx.stroke();
+        }
+    }
+
+    /* ─── MUSCLE LAYER ─── */
+    function drawMuscleLayer(cx, y, w, h) {
+        const s = w / 200;
+        // Muscle fiber drawing helper
+        const fiber = (x1, y1, x2, y2, sw) => {
+            ctx.lineWidth = sw * s;
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        };
+        // Color setup
+        const mGrad = ctx.createLinearGradient(cx - 40*s, y, cx + 40*s, y + h);
+        mGrad.addColorStop(0, "#c84040");
+        mGrad.addColorStop(0.5, "#a83030");
+        mGrad.addColorStop(1, "#882828");
+        ctx.fillStyle = mGrad;
+        // Pectorals
+        ctx.beginPath();
+        ctx.moveTo(cx - 8*s, y + 92*s);
+        ctx.quadraticCurveTo(cx - 30*s, y + 90*s, cx - 44*s, y + 100*s);
+        ctx.quadraticCurveTo(cx - 45*s, y + 125*s, cx - 30*s, y + 135*s);
+        ctx.quadraticCurveTo(cx - 15*s, y + 130*s, cx - 8*s, y + 130*s);
+        ctx.closePath();
+        ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(cx + 8*s, y + 92*s);
+        ctx.quadraticCurveTo(cx + 30*s, y + 90*s, cx + 44*s, y + 100*s);
+        ctx.quadraticCurveTo(cx + 45*s, y + 125*s, cx + 30*s, y + 135*s);
+        ctx.quadraticCurveTo(cx + 15*s, y + 130*s, cx + 8*s, y + 130*s);
+        ctx.closePath();
+        ctx.fill();
+        // Abdominals
+        ctx.fillStyle = "#b83838";
+        for (let r = 0; r < 4; r++) {
+            for (let c = 0; c < 2; c++) {
+                const ax = cx + (c === 0 ? -14 : 4) * s;
+                const ay = y + (140 + r * 32) * s;
+                roundRect(ax, ay, 18*s, 26*s, 5*s);
+                ctx.fill();
+            }
+        }
+        // Deltoids
+        ctx.fillStyle = mGrad;
+        ctx.beginPath();
+        ctx.ellipse(cx - 52*s, y + 95*s, 14*s, 18*s, -0.2, 0, Math.PI*2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.ellipse(cx + 52*s, y + 95*s, 14*s, 18*s, 0.2, 0, Math.PI*2);
+        ctx.fill();
+        // Biceps
+        ctx.fillStyle = "#b03535";
+        ctx.beginPath();
+        ctx.ellipse(cx - 60*s, y + 140*s, 10*s, 22*s, 0.15, 0, Math.PI*2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.ellipse(cx + 60*s, y + 140*s, 10*s, 22*s, -0.15, 0, Math.PI*2);
+        ctx.fill();
+        // Quads
+        ctx.fillStyle = "#a83030";
+        ctx.beginPath();
+        ctx.ellipse(cx - 22*s, y + 370*s, 16*s, 50*s, 0, 0, Math.PI*2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.ellipse(cx + 22*s, y + 370*s, 16*s, 50*s, 0, 0, Math.PI*2);
+        ctx.fill();
+        // Calves
+        ctx.fillStyle = "#983030";
+        ctx.beginPath();
+        ctx.ellipse(cx - 24*s, y + 480*s, 10*s, 28*s, 0, 0, Math.PI*2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.ellipse(cx + 24*s, y + 480*s, 10*s, 28*s, 0, 0, Math.PI*2);
+        ctx.fill();
+        // Muscle fiber striations
+        ctx.strokeStyle = "rgba(100,20,20,0.18)";
+        ctx.lineWidth = 0.6*s;
+        for (let i = 0; i < 30; i++) {
+            const fy = y + (95 + i*6)*s;
+            ctx.beginPath();
+            ctx.moveTo(cx - 42*s, fy);
+            ctx.quadraticCurveTo(cx, fy + Math.sin(i*0.8)*3*s, cx + 42*s, fy);
+            ctx.stroke();
+        }
+    }
+
+    /* ─── SKELETON LAYER ─── */
+    function drawSkeletonLayer(cx, y, w, h) {
+        const s = w / 200;
+        ctx.strokeStyle = "#c8b898";
+        ctx.fillStyle = "#e8dcc8";
+        ctx.lineWidth = 2 * s;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        // Skull
+        ctx.beginPath();
+        ctx.ellipse(cx, y + 35*s, 22*s, 28*s, 0, 0, Math.PI*2);
+        ctx.fill(); ctx.stroke();
+        // Eye sockets
+        ctx.fillStyle = "#a89878";
+        ctx.beginPath();
+        ctx.ellipse(cx - 9*s, y + 30*s, 5*s, 4*s, 0, 0, Math.PI*2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.ellipse(cx + 9*s, y + 30*s, 5*s, 4*s, 0, 0, Math.PI*2);
+        ctx.fill();
+        // Nasal
+        ctx.fillStyle = "#b8a888";
+        ctx.beginPath();
+        ctx.moveTo(cx, y + 34*s);
+        ctx.lineTo(cx - 3*s, y + 42*s);
+        ctx.lineTo(cx + 3*s, y + 42*s);
+        ctx.closePath();
+        ctx.fill();
+        // Jaw
+        ctx.fillStyle = "#e0d4c0";
+        ctx.beginPath();
+        ctx.moveTo(cx - 18*s, y + 48*s);
+        ctx.quadraticCurveTo(cx - 16*s, y + 60*s, cx, y + 62*s);
+        ctx.quadraticCurveTo(cx + 16*s, y + 60*s, cx + 18*s, y + 48*s);
+        ctx.fill(); ctx.stroke();
+        // Spine
+        ctx.fillStyle = "#e8dcc8";
+        ctx.strokeStyle = "#c8b898";
+        ctx.lineWidth = 1.5*s;
+        for (let i = 0; i < 22; i++) {
+            const sy = y + (72 + i * 11) * s;
+            const sw = (i < 7 ? 6 : i < 14 ? 8 : 9) * s;
+            roundRect(cx - sw/2, sy, sw, 8*s, 2*s);
+            ctx.fill(); ctx.stroke();
+        }
+        // Ribcage
+        ctx.strokeStyle = "#d0c4a8";
+        ctx.lineWidth = 2.5*s;
+        for (let i = 0; i < 12; i++) {
+            const ry = y + (92 + i * 10) * s;
+            const rw = (28 - Math.abs(i - 5) * 1.5) * s;
+            ctx.beginPath();
+            ctx.ellipse(cx, ry, rw, 4*s, 0, 0, Math.PI);
+            ctx.stroke();
+        }
+        // Pelvis
+        ctx.fillStyle = "#e0d4c0";
+        ctx.strokeStyle = "#c8b898";
+        ctx.lineWidth = 2*s;
+        ctx.beginPath();
+        ctx.moveTo(cx - 32*s, y + 270*s);
+        ctx.quadraticCurveTo(cx - 34*s, y + 290*s, cx - 20*s, y + 305*s);
+        ctx.quadraticCurveTo(cx, y + 315*s, cx + 20*s, y + 305*s);
+        ctx.quadraticCurveTo(cx + 34*s, y + 290*s, cx + 32*s, y + 270*s);
+        ctx.closePath();
+        ctx.fill(); ctx.stroke();
+        // Femurs
+        ctx.strokeStyle = "#d0c4a8";
+        ctx.lineWidth = 5*s;
+        ctx.beginPath(); ctx.moveTo(cx - 18*s, y + 310*s); ctx.lineTo(cx - 22*s, y + 425*s); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx + 18*s, y + 310*s); ctx.lineTo(cx + 22*s, y + 425*s); ctx.stroke();
+        // Knee joints
+        ctx.fillStyle = "#e0d4c0";
+        ctx.beginPath(); ctx.arc(cx - 22*s, y + 425*s, 7*s, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+        ctx.beginPath(); ctx.arc(cx + 22*s, y + 425*s, 7*s, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+        // Tibia/Fibula
+        ctx.strokeStyle = "#d0c4a8";
+        ctx.lineWidth = 4*s;
+        ctx.beginPath(); ctx.moveTo(cx - 22*s, y + 432*s); ctx.lineTo(cx - 20*s, y + 540*s); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx + 22*s, y + 432*s); ctx.lineTo(cx + 20*s, y + 540*s); ctx.stroke();
+        // Humerus
+        ctx.lineWidth = 4*s;
+        ctx.beginPath(); ctx.moveTo(cx - 48*s, y + 90*s); ctx.lineTo(cx - 58*s, y + 170*s); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx + 48*s, y + 90*s); ctx.lineTo(cx + 58*s, y + 170*s); ctx.stroke();
+        // Radius/Ulna
+        ctx.lineWidth = 3*s;
+        ctx.beginPath(); ctx.moveTo(cx - 58*s, y + 175*s); ctx.lineTo(cx - 65*s, y + 245*s); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx - 58*s, y + 175*s); ctx.lineTo(cx - 60*s, y + 245*s); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx + 58*s, y + 175*s); ctx.lineTo(cx + 65*s, y + 245*s); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx + 58*s, y + 175*s); ctx.lineTo(cx + 60*s, y + 245*s); ctx.stroke();
+        // Clavicles
+        ctx.lineWidth = 3*s;
+        ctx.beginPath(); ctx.moveTo(cx - 5*s, y + 82*s); ctx.quadraticCurveTo(cx - 25*s, y + 78*s, cx - 46*s, y + 86*s); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx + 5*s, y + 82*s); ctx.quadraticCurveTo(cx + 25*s, y + 78*s, cx + 46*s, y + 86*s); ctx.stroke();
+        // Scapulae hint
+        ctx.fillStyle = "rgba(200,180,150,0.3)";
+        ctx.beginPath(); ctx.ellipse(cx - 32*s, y + 110*s, 12*s, 20*s, 0.1, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(cx + 32*s, y + 110*s, 12*s, 20*s, -0.1, 0, Math.PI*2); ctx.fill();
+    }
+
+    /* ─── ORGAN LAYER ─── */
+    function drawOrganLayer(cx, y, w, h) {
+        const s = w / 200;
+        // Brain
+        const brGrad = ctx.createRadialGradient(cx, y+30*s, 2*s, cx, y+30*s, 20*s);
+        brGrad.addColorStop(0, "#e8b8b8");
+        brGrad.addColorStop(1, "#c89898");
+        ctx.fillStyle = brGrad;
+        ctx.beginPath();
+        ctx.ellipse(cx, y + 30*s, 18*s, 18*s, 0, 0, Math.PI*2);
+        ctx.fill();
+        ctx.strokeStyle = "#a07070";
+        ctx.lineWidth = 0.7*s;
+        ctx.beginPath(); ctx.moveTo(cx, y+14*s); ctx.lineTo(cx, y+46*s); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx-14*s, y+24*s); ctx.quadraticCurveTo(cx, y+22*s, cx+14*s, y+24*s); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx-14*s, y+34*s); ctx.quadraticCurveTo(cx, y+32*s, cx+14*s, y+34*s); ctx.stroke();
+        // Trachea
+        ctx.strokeStyle = "#80b0c0";
+        ctx.lineWidth = 4*s;
+        ctx.beginPath(); ctx.moveTo(cx, y+66*s); ctx.lineTo(cx, y+102*s); ctx.stroke();
+        // Lungs
+        const lnGrad = ctx.createRadialGradient(cx-22*s, y+120*s, 5*s, cx-22*s, y+130*s, 30*s);
+        lnGrad.addColorStop(0, "#b84040");
+        lnGrad.addColorStop(1, "#782828");
+        ctx.fillStyle = lnGrad;
+        ctx.beginPath();
+        ctx.moveTo(cx - 6*s, y + 100*s);
+        ctx.quadraticCurveTo(cx - 38*s, y + 100*s, cx - 42*s, y + 130*s);
+        ctx.quadraticCurveTo(cx - 44*s, y + 165*s, cx - 20*s, y + 168*s);
+        ctx.quadraticCurveTo(cx - 6*s, y + 165*s, cx - 6*s, y + 145*s);
+        ctx.closePath();
+        ctx.fill();
+        const rnGrad = ctx.createRadialGradient(cx+22*s, y+120*s, 5*s, cx+22*s, y+130*s, 30*s);
+        rnGrad.addColorStop(0, "#b84040");
+        rnGrad.addColorStop(1, "#782828");
+        ctx.fillStyle = rnGrad;
+        ctx.beginPath();
+        ctx.moveTo(cx + 6*s, y + 100*s);
+        ctx.quadraticCurveTo(cx + 38*s, y + 100*s, cx + 42*s, y + 130*s);
+        ctx.quadraticCurveTo(cx + 44*s, y + 165*s, cx + 20*s, y + 168*s);
+        ctx.quadraticCurveTo(cx + 6*s, y + 165*s, cx + 6*s, y + 145*s);
+        ctx.closePath();
+        ctx.fill();
+        // Heart
+        const htGrad = ctx.createRadialGradient(cx, y+140*s, 3*s, cx, y+145*s, 14*s);
+        htGrad.addColorStop(0, "#e04848");
+        htGrad.addColorStop(1, "#901818");
+        ctx.fillStyle = htGrad;
+        ctx.beginPath();
+        ctx.moveTo(cx, y + 155*s);
+        ctx.quadraticCurveTo(cx - 16*s, y + 140*s, cx - 14*s, y + 130*s);
+        ctx.quadraticCurveTo(cx - 12*s, y + 122*s, cx - 5*s, y + 122*s);
+        ctx.quadraticCurveTo(cx, y + 125*s, cx, y + 130*s);
+        ctx.quadraticCurveTo(cx, y + 125*s, cx + 5*s, y + 122*s);
+        ctx.quadraticCurveTo(cx + 12*s, y + 122*s, cx + 14*s, y + 130*s);
+        ctx.quadraticCurveTo(cx + 16*s, y + 140*s, cx, y + 155*s);
+        ctx.fill();
+        // Aorta
+        ctx.strokeStyle = "#3060b0";
+        ctx.lineWidth = 2.5*s;
+        ctx.beginPath();
+        ctx.moveTo(cx, y + 125*s);
+        ctx.quadraticCurveTo(cx - 4*s, y + 115*s, cx - 10*s, y + 108*s);
+        ctx.stroke();
+        ctx.strokeStyle = "#b03040";
+        ctx.beginPath();
+        ctx.moveTo(cx, y + 125*s);
+        ctx.quadraticCurveTo(cx + 4*s, y + 115*s, cx + 10*s, y + 108*s);
+        ctx.stroke();
+        // Liver
+        const lvGrad = ctx.createLinearGradient(cx - 30*s, y + 175*s, cx + 10*s, y + 200*s);
+        lvGrad.addColorStop(0, "#a85530");
+        lvGrad.addColorStop(1, "#703018");
+        ctx.fillStyle = lvGrad;
+        ctx.beginPath();
+        ctx.moveTo(cx - 35*s, y + 180*s);
+        ctx.quadraticCurveTo(cx - 38*s, y + 172*s, cx - 20*s, y + 170*s);
+        ctx.quadraticCurveTo(cx + 5*s, y + 168*s, cx + 10*s, y + 178*s);
+        ctx.quadraticCurveTo(cx + 8*s, y + 195*s, cx - 10*s, y + 198*s);
+        ctx.quadraticCurveTo(cx - 30*s, y + 200*s, cx - 35*s, y + 190*s);
+        ctx.closePath();
+        ctx.fill();
+        // Stomach
+        ctx.fillStyle = "#d8a880";
+        ctx.beginPath();
+        ctx.ellipse(cx + 12*s, y + 192*s, 14*s, 18*s, 0.2, 0, Math.PI*2);
+        ctx.fill();
+        ctx.strokeStyle = "#b08060";
+        ctx.lineWidth = 0.7*s;
+        ctx.stroke();
+        // Kidneys
+        ctx.fillStyle = "#a04040";
+        ctx.beginPath();
+        ctx.ellipse(cx - 28*s, y + 215*s, 7*s, 12*s, 0, 0, Math.PI*2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.ellipse(cx + 28*s, y + 215*s, 7*s, 12*s, 0, 0, Math.PI*2);
+        ctx.fill();
+        // Ureters
+        ctx.strokeStyle = "#b06060";
+        ctx.lineWidth = 1.2*s;
+        ctx.beginPath(); ctx.moveTo(cx-28*s, y+227*s); ctx.quadraticCurveTo(cx-15*s, y+250*s, cx-5*s, y+270*s); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx+28*s, y+227*s); ctx.quadraticCurveTo(cx+15*s, y+250*s, cx+5*s, y+270*s); ctx.stroke();
+        // Intestines
+        ctx.strokeStyle = "#d8a0a0";
+        ctx.lineWidth = 3.5*s;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(cx - 18*s, y + 230*s);
+        for (let i = 0; i < 8; i++) {
+            const ix = cx + (i % 2 === 0 ? -15 : 15) * s;
+            const iy = y + (235 + i * 8) * s;
+            ctx.lineTo(ix, iy);
+        }
+        ctx.stroke();
+        // Bladder
+        ctx.fillStyle = "#c8b070";
+        ctx.beginPath();
+        ctx.ellipse(cx, y + 280*s, 8*s, 10*s, 0, 0, Math.PI*2);
+        ctx.fill();
+        // Major blood vessels hint
+        ctx.strokeStyle = "rgba(50,80,160,0.2)";
+        ctx.lineWidth = 1.5*s;
+        ctx.beginPath();
+        ctx.moveTo(cx, y + 155*s);
+        ctx.lineTo(cx, y + 280*s);
+        ctx.stroke();
+        ctx.strokeStyle = "rgba(180,50,50,0.2)";
+        ctx.beginPath();
+        ctx.moveTo(cx + 3*s, y + 155*s);
+        ctx.lineTo(cx + 3*s, y + 280*s);
+        ctx.stroke();
+    }
+
+    /** Rounded rectangle utility */
+    function roundRect(x, y, w, h, r) {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.lineTo(x + w - r, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+        ctx.lineTo(x + w, y + h - r);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+        ctx.lineTo(x + r, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+        ctx.lineTo(x, y + r);
+        ctx.quadraticCurveTo(x, y, x + r, y);
+        ctx.closePath();
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       HUD UPDATE
+       ═══════════════════════════════════════════════════════════ */
+    let lastSection = -1;
+
+    function updateHUD(progress) {
+        // Find current section
+        let idx = 0;
+        for (let i = 0; i < SECTIONS.length; i++) {
+            if (progress >= SECTIONS[i].range[0]) idx = i;
+        }
+
+        // Update depth meter
+        const pct = Math.round(progress * 100);
+        depthFill.style.width = pct + "%";
+        depthPct.textContent = pct + "%";
+        progFill.style.height = pct + "%";
+        progDot.style.top = pct + "%";
+
+        // Frame counter
+        const frameIdx = Math.floor(progress * (FRAME_COUNT - 1));
+        frameCtr.textContent = "FRAME " + String(frameIdx + 1).padStart(3, "0") + " / " + FRAME_COUNT;
+
+        // Scroll hint fade
+        scrollHint.style.opacity = progress < 0.03 ? "1" : "0";
+
+        // Section markers
+        markers.forEach((m, i) => m.classList.toggle("active", i === idx));
+
+        // Only update text if section changed
+        if (idx === lastSection) return;
+        lastSection = idx;
+        const sec = SECTIONS[idx];
+
+        hudSystem.textContent = sec.name;
+        hudSystem.style.color = sec.color;
+        hudLayer.textContent = sec.layer;
+        hudDesc.textContent = sec.desc;
+
+        stat1V.textContent = sec.stats[0].val; stat1L.textContent = sec.stats[0].lbl;
+        stat2V.textContent = sec.stats[1].val; stat2L.textContent = sec.stats[1].lbl;
+        stat3V.textContent = sec.stats[2].val; stat3L.textContent = sec.stats[2].lbl;
+        stat4V.textContent = sec.stats[3].val; stat4L.textContent = sec.stats[3].lbl;
+
+        document.querySelectorAll(".sc-val").forEach(el => el.style.color = sec.color);
+        document.querySelectorAll(".stat-chip").forEach(el => {
+            el.style.background = sec.color + "08";
+            el.style.borderColor = sec.color + "12";
+        });
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       MAIN RENDER LOOP — requestAnimationFrame
+       ═══════════════════════════════════════════════════════════ */
+    let targetProgress = 0;
+    let currentProgress = 0;
+    let lastRafTime = 0;
+
+    function getScrollProgress() {
+        const spacerRect = spacer.getBoundingClientRect();
+        const travel = spacerRect.height - window.innerHeight;
+        if (travel <= 0) return 0;
+        return Math.max(0, Math.min(1, -spacerRect.top / travel));
+    }
+
+    function render(now) {
+        requestAnimationFrame(render);
+        const dt = Math.min(0.05, (now - (lastRafTime || now)) / 1000);
+        lastRafTime = now;
+
+        targetProgress = getScrollProgress();
+        // Smooth interpolation for buttery scrolling
+        currentProgress += (targetProgress - currentProgress) * (1 - Math.exp(-dt * 12));
+
+        // Clear canvas
+        ctx.clearRect(0, 0, cw, ch);
+
+        const frameIdx = Math.floor(currentProgress * (FRAME_COUNT - 1));
+
+        if (!useProceduralFallback && frames[frameIdx]) {
+            // Draw loaded image frame with "contain" scaling
+            const img = frames[frameIdx];
+            const imgAspect = img.width / img.height;
+            let dw, dh;
+            if (imgAspect > cw / ch) {
+                dw = cw; dh = cw / imgAspect;
+            } else {
+                dh = ch; dw = ch * imgAspect;
+            }
+            ctx.drawImage(img, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
+        } else {
+            // Procedural fallback — always works
+            drawProcedural(currentProgress);
+        }
+
+        updateHUD(currentProgress);
+    }
+
+    // Start the loop
+    requestAnimationFrame(render);
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physician Clinical Portal — PulseCare OS</title>
+  <meta name="description" content="Dedicated Physician Workstation for PulseCare OS. Comprehensive clinical queue, EHR intake review, real-time vitals telemetry, and encrypted HD telehealth.">
+
+  <!-- Google Fonts: Inter, Plus Jakarta Sans, IBM Plex Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Dedicated Physician Portal Theme */
+    body.doctor-portal-body {
+      background-color: #0b0e14;
+      color: #e2e8f0;
+      min-height: 100vh;
+      margin: 0;
+      font-family: var(--font-body);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .doc-nav-header {
+      background: rgba(15, 20, 28, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 14px 28px;
+    }
+
+    .doc-nav-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .doc-brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .portal-role-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(13, 148, 136, 0.2);
+      color: var(--accent-teal-light);
+      border: 1px solid rgba(13, 148, 136, 0.35);
+      letter-spacing: 0.05em;
+    }
+
+    .doc-nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .doc-main-layout {
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 28px 24px 60px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Physician Profile Top Card */
+    .doc-hero-card {
+      background: linear-gradient(135deg, rgba(20, 26, 36, 0.95) 0%, rgba(13, 18, 25, 0.95) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .doc-hero-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent-teal), transparent);
+    }
+
+    .doc-hero-identity {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .doc-hero-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 16px;
+      object-fit: cover;
+      border: 2px solid var(--accent-teal);
+      box-shadow: 0 4px 16px rgba(13, 148, 136, 0.3);
+    }
+
+    .doc-hero-text h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0 0 4px;
+      letter-spacing: -0.02em;
+    }
+
+    .doc-hero-text p {
+      font-size: 13.5px;
+      color: rgba(255, 255, 255, 0.65);
+      margin: 0;
+    }
+
+    .doc-hero-badges {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .doc-hero-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .doc-status-widget {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px 18px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Stats Grid */
+    .doc-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 960px) {
+      .doc-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .doc-stat-box {
+      background: rgba(20, 26, 36, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 20px;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .doc-stat-box:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .doc-stat-label {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: rgba(255, 255, 255, 0.55);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .doc-stat-val {
+      font-family: var(--font-mono);
+      font-size: 28px;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 6px 0 2px;
+    }
+
+    .doc-stat-sub {
+      font-size: 12px;
+      color: var(--accent-emerald);
+    }
+
+    /* Workspace Columns: Queue + EHR Sidepanel */
+    .doc-workspace-grid {
+      display: grid;
+      grid-template-columns: 1.8fr 1.2fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 1100px) {
+      .doc-workspace-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .doc-card-dark {
+      background: rgba(20, 26, 36, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .doc-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .doc-card-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .doc-filter-pills {
+      display: flex;
+      gap: 6px;
+    }
+
+    .doc-filter-btn {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .doc-filter-btn.active, .doc-filter-btn:hover {
+      background: var(--accent-teal);
+      color: #ffffff;
+      border-color: var(--accent-teal);
+    }
+
+    /* Dark Table */
+    .doc-dark-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13.5px;
+    }
+
+    .doc-dark-table th {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .doc-dark-table td {
+      padding: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      vertical-align: middle;
+    }
+
+    .doc-dark-table tr:hover td {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .doc-dark-table tr.selected td {
+      background: rgba(13, 148, 136, 0.1);
+    }
+
+    /* Clinical Vitals Panel */
+    .vitals-monitor-strip {
+      background: rgba(12, 16, 22, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .vitals-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      text-align: center;
+    }
+
+    .vital-item {
+      background: rgba(255, 255, 255, 0.04);
+      padding: 10px 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .vital-title {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .vital-value {
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-top: 4px;
+    }
+
+    .ecg-line {
+      height: 32px;
+      width: 100%;
+      background: repeating-linear-gradient(90deg, transparent, transparent 15px, rgba(13, 148, 136, 0.2) 15px, rgba(13, 148, 136, 0.2) 30px);
+      position: relative;
+      margin-top: 12px;
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ecg-wave {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent-teal-light);
+      letter-spacing: 0.1em;
+      animation: pulseEcg 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseEcg {
+      0% { opacity: 0.6; }
+      50% { opacity: 1; }
+      100% { opacity: 0.6; }
+    }
+
+    .auth-gate-fullscreen {
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+  </style>
+</head>
+<body class="doctor-portal-body">
+
+  <!-- Unauthenticated Gate View (Displayed if session is not active) -->
+  <div id="unauth-gate" class="auth-gate-fullscreen" style="display: none;">
+    <div class="auth-standalone-card" style="text-align: center;">
+      <div class="auth-card-badge doctor-badge" style="justify-content: center;">
+        <span>🔒</span><span>AUTHENTICATION REQUIRED</span>
+      </div>
+      <h2 class="auth-card-title">Physician Access Protected</h2>
+      <p class="auth-card-subtitle">
+        This workstation contains confidential patient EHR medical records. Please authenticate with your medical staff credentials to unlock this portal.
+      </p>
+      
+      <div class="auth-demo-box" style="text-align: left;">
+        <div class="auth-demo-box-header">
+          <span class="auth-demo-label"><span>⚡</span> Verified Physician Credentials</span>
+          <button type="button" class="auth-demo-autofill-btn" onclick="quickLoginAndReload()">1-Click Unlock</button>
+        </div>
+        <div class="auth-demo-creds">
+          <div>Email: dr.chen@mayoclinic.org</div>
+          <div>Password: doctor123</div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 20px;">
+        <a href="doctor-login.html" class="auth-submit-btn" style="text-decoration: none; flex: 1;">
+          Sign In to Workstation →
+        </a>
+        <a href="index.html" class="auth-secondary-btn" style="text-decoration: none; flex: 1;">
+          Public Portal
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Authenticated Physician Workstation -->
+  <div id="authenticated-workstation" style="display: block;">
+    
+    <!-- Top Physician Navigation Bar -->
+    <header class="doc-nav-header">
+      <div class="doc-nav-inner">
+        <div class="doc-brand-group">
+          <a href="index.html" class="site-logo" aria-label="PulseCare OS Home">
+            <div class="logo-badge">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+              </svg>
+            </div>
+            <span>PulseCare</span>
+            <span class="os-tag">OS</span>
+          </a>
+          <span class="portal-role-tag">🩺 CLINICAL WORKSTATION</span>
+        </div>
+
+        <div class="doc-nav-actions">
+          <a href="index.html" class="glass-single-pill" style="text-decoration: none; color: #ffffff; font-size: 12.5px;">
+            ← Patient Portal
+          </a>
+          <a href="owner-dashboard.html" class="glass-single-pill" style="text-decoration: none; color: #60a5fa; border-color: rgba(96, 165, 250, 0.3); font-size: 12.5px;">
+            🏥 Hospital Owner Portal →
+          </a>
+          <div class="auth-active-user-strip" style="background: rgba(255,255,255,0.06); border-color: var(--accent-teal); color: #ffffff; white-space: nowrap;">
+            <span style="color: var(--accent-emerald);">●</span>
+            <span id="nav-physician-name">Dr. Sarah Chen, MD</span>
+            <button type="button" class="btn-signout" onclick="handleDoctorLogout()" title="Sign Out">Sign Out</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Clinical Dashboard Shell -->
+    <main class="doc-main-layout">
+      
+      <!-- Top Physician Profile Banner -->
+      <section class="doc-hero-card">
+        <div class="doc-hero-identity">
+          <img src="images/doctor-1.jpg" alt="Dr. Sarah Chen" class="doc-hero-avatar">
+          <div class="doc-hero-text">
+            <h1 id="physician-title">Dr. Sarah Chen, MD</h1>
+            <p>Cardiology Specialist • Mayo Clinic Health System (Lic. #MD-84920)</p>
+            <div class="doc-hero-badges">
+              <span class="doc-hero-badge">Clinical Director</span>
+              <span class="doc-hero-badge">JCI Accredited Staff</span>
+              <span class="doc-hero-badge" style="color: var(--accent-teal-light);">Mayo Clinic Pavilion 4</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="doc-status-widget">
+          <div>
+            <div style="font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.9);">Consultation Status:</div>
+            <div id="status-text" style="font-family: var(--font-mono); font-size: 11.5px; color: var(--accent-emerald);">
+              Accepting Patients
+            </div>
+          </div>
+          <div class="toggle-switch on" id="doc-status-toggle" onclick="toggleDoctorAvailability()">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Key Clinical Metrics Strip -->
+      <section class="doc-stats-grid">
+        <div class="doc-stat-box">
+          <div class="doc-stat-label">Today's Appointments</div>
+          <div class="doc-stat-val" id="stat-total-today">6 Patients</div>
+          <div class="doc-stat-sub">2 in-clinic • 4 telehealth</div>
+        </div>
+
+        <div class="doc-stat-box">
+          <div class="doc-stat-label">Telehealth Sessions</div>
+          <div class="doc-stat-val" style="color: var(--accent-teal-light);" id="stat-telehealth-count">4 Calls</div>
+          <div class="doc-stat-sub">1080p HD Encrypted</div>
+        </div>
+
+        <div class="doc-stat-box">
+          <div class="doc-stat-label">In-Clinic Consults</div>
+          <div class="doc-stat-val" id="stat-clinic-count">2 Scheduled</div>
+          <div class="doc-stat-sub">Exam Suite 302</div>
+        </div>
+
+        <div class="doc-stat-box">
+          <div class="doc-stat-label">Patient Satisfaction</div>
+          <div class="doc-stat-val" style="color: var(--accent-amber);">4.95 / 5.0</div>
+          <div class="doc-stat-sub">Based on 312 reviews</div>
+        </div>
+      </section>
+
+      <!-- Main Workspace: Queue & Live EHR Sidepanel -->
+      <div class="doc-workspace-grid">
+        
+        <!-- Left: Today's Consultation Queue -->
+        <section class="doc-card-dark">
+          <div class="doc-card-header">
+            <div class="doc-card-title">
+              <span>📋</span>
+              <span>Today's Patient Queue</span>
+            </div>
+            
+            <div class="doc-filter-pills">
+              <button type="button" class="doc-filter-btn active" onclick="filterQueue('all', this)">All (6)</button>
+              <button type="button" class="doc-filter-btn" onclick="filterQueue('Telehealth', this)">Telehealth</button>
+              <button type="button" class="doc-filter-btn" onclick="filterQueue('In-Clinic', this)">In-Clinic</button>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="doc-dark-table">
+              <thead>
+                <tr>
+                  <th>Patient Name</th>
+                  <th>Scheduled Time</th>
+                  <th>Mode</th>
+                  <th>Status</th>
+                  <th>Intake / Symptoms</th>
+                  <th>Clinical Actions</th>
+                </tr>
+              </thead>
+              <tbody id="doctor-portal-queue-tbody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Right: Active Patient EHR & Vitals Telemetry Panel -->
+        <section class="doc-card-dark">
+          <div class="doc-card-header">
+            <div class="doc-card-title">
+              <span>🩺</span>
+              <span id="active-patient-header">Active Patient EHR</span>
+            </div>
+            <span class="portal-role-tag" style="font-size: 10px;">LIVE TELEMETRY</span>
+          </div>
+
+          <!-- Real-Time Patient Vitals Monitor -->
+          <div class="vitals-monitor-strip">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <span style="font-size: 12px; font-weight: 700; color: #ffffff;" id="monitor-patient-name">Alexandra Hayes (Female, 34)</span>
+              <span style="font-family: var(--font-mono); font-size: 10.5px; color: var(--accent-emerald);">● Synchronized</span>
+            </div>
+
+            <div class="vitals-grid">
+              <div class="vital-item">
+                <div class="vital-title">BLOOD PRESSURE</div>
+                <div class="vital-value" id="vital-bp" style="color: var(--accent-teal-light);">122/78</div>
+              </div>
+              <div class="vital-item">
+                <div class="vital-title">HEART RATE</div>
+                <div class="vital-value" id="vital-hr" style="color: #60a5fa;">74 bpm</div>
+              </div>
+              <div class="vital-item">
+                <div class="vital-title">SPO2 OXYGEN</div>
+                <div class="vital-value" id="vital-spo2" style="color: var(--accent-emerald);">98%</div>
+              </div>
+              <div class="vital-item">
+                <div class="vital-title">TEMPERATURE</div>
+                <div class="vital-value" id="vital-temp">98.6°F</div>
+              </div>
+            </div>
+
+            <div class="ecg-line">
+              <span class="ecg-wave">▲▼▲---▲▼▲--- NORMAL SINUS RHYTHM ---▲▼▲---▲▼▲</span>
+            </div>
+          </div>
+
+          <!-- Clinical Progress Notes & Prescription Dispatch -->
+          <div>
+            <label for="doc-clinical-notes" style="display: block; font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.8); margin-bottom: 6px;">
+              Attending Physician Progress Notes & Impression:
+            </label>
+            <textarea 
+              id="doc-clinical-notes" 
+              style="width: 100%; height: 95px; background: rgba(12, 16, 22, 0.9); border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; padding: 10px 12px; color: #ffffff; font-size: 12.5px; resize: none; font-family: var(--font-body);"
+            >Patient presents for cardiovascular review. Vitals remain optimal. Resting pulse within target bounds. Recommend 3-month recurrence telemetry check.</textarea>
+
+            <div style="display: flex; gap: 8px; margin-top: 12px;">
+              <button type="button" class="auth-submit-btn" style="flex: 1; height: 38px; font-size: 12.5px; margin-top: 0;" onclick="saveClinicalNotes()">
+                💾 Save to Patient EHR
+              </button>
+              <button type="button" class="auth-secondary-btn" style="flex: 1; height: 38px; font-size: 12.5px;" onclick="issueRxModal()">
+                💊 Issue Prescription
+              </button>
+            </div>
+          </div>
+
+          <!-- Active Medications Strip -->
+          <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08);">
+            <div style="font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.6); margin-bottom: 8px;">Current Active Prescriptions:</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+              <span class="doc-hero-badge">Metoprolol Tartrate 25mg • 2x daily</span>
+              <span class="doc-hero-badge">Atorvastatin Calcium 20mg • bedtime</span>
+              <span class="doc-hero-badge" style="color: var(--accent-emerald);">Aspirin 81mg • morning</span>
+            </div>
+          </div>
+
+        </section>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Telehealth HD Video Room Modal Simulator -->
+  <div class="modal-overlay" id="telehealth-modal-overlay" role="dialog" aria-modal="true">
+    <div class="telehealth-modal-container">
+      <div style="padding: 14px 20px; background: #141820; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span class="status-dot"></span>
+          <span id="telehealth-modal-title" style="font-size: 14px; font-weight: 600; color: #ffffff;">PulseCare HD Clinical Session</span>
+          <span style="font-family: var(--font-mono); font-size: 11px; background: rgba(13,148,136,0.2); color: var(--accent-teal-light); padding: 2px 6px; border-radius: 4px;">256-Bit Encrypted</span>
+        </div>
+        <div style="font-family: var(--font-mono); font-size: 13px; color: rgba(255,255,255,0.7);" id="telehealth-call-timer">00:00</div>
+      </div>
+
+      <div class="video-screen-grid">
+        <div class="main-video-feed">
+          <div style="text-align: center;">
+            <div class="video-patient-avatar">👤</div>
+            <div id="telehealth-patient-name" style="font-size: 16px; font-weight: 600; margin-top: 14px; color: #ffffff;">Alexandra Hayes</div>
+            <div style="font-size: 12px; color: rgba(255,255,255,0.6); font-family: var(--font-mono); margin-top: 4px;">Patient Video Feed Connected (1080p 60fps)</div>
+          </div>
+          <div class="video-pip-doctor">
+            <img src="images/doctor-1.jpg" alt="Dr. Sarah Chen">
+          </div>
+        </div>
+
+        <div class="telehealth-notes-panel">
+          <h4 style="font-size: 13.5px; font-weight: 700; color: #ffffff; margin-bottom: 10px;">Clinical Session Progress Notes</h4>
+          <div style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-teal-light); margin-bottom: 8px;">Telemetry: BP 122/78 • HR 74 bpm • SpO2 98%</div>
+          <textarea style="flex: 1; width: 100%; background: #0c0f14; border: 1px solid rgba(255,255,255,0.14); border-radius: 8px; padding: 10px; color: #ffffff; font-size: 12px; resize: none;" id="telehealth-in-call-notes">Patient reports stable cardiovascular tolerance. Blood pressure and resting pulse remain within standard threshold. Recommend continuing daily lifestyle regimen.</textarea>
+          <button type="button" class="mini-doc-action-btn" style="margin-top: 10px; background: var(--accent-teal);" onclick="showToast('Call notes synchronized to EHR chart', 'success')">
+            Save Call Notes
+          </button>
+        </div>
+      </div>
+
+      <div class="telehealth-toolbar">
+        <button type="button" class="call-control-btn" id="btn-toggle-mute" onclick="this.classList.toggle('off'); showToast(this.classList.contains('off') ? 'Microphone Muted' : 'Microphone Active', 'info');">🎤</button>
+        <button type="button" class="call-control-btn" id="btn-toggle-cam" onclick="this.classList.toggle('off'); showToast(this.classList.contains('off') ? 'Camera Off' : 'Camera Active', 'info');">📹</button>
+        <button type="button" class="call-control-btn btn-end-call" onclick="closeTelehealthRoom()">End Consultation</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script>
+    // Doctor Portal State & Verification
+    let doctorState = {
+      user: null,
+      appointments: [],
+      currentFilter: 'all',
+      callTimer: null,
+      callSeconds: 0
+    };
+
+    // Check Authentication on Page Load
+    function checkDoctorAuth() {
+      const savedUser = localStorage.getItem('pulsecare_user');
+      if (savedUser) {
+        try {
+          const user = JSON.parse(savedUser);
+          if (user && user.role === 'doctor') {
+            doctorState.user = user;
+            document.getElementById('unauth-gate').style.display = 'none';
+            document.getElementById('authenticated-workstation').style.display = 'block';
+            document.getElementById('nav-physician-name').textContent = user.name || 'Dr. Sarah Chen, MD';
+            loadDoctorAppointments();
+            return;
+          }
+        } catch (e) {
+          console.error('Session parse error', e);
+        }
+      }
+
+      // If not authenticated, display protection gate
+      document.getElementById('unauth-gate').style.display = 'flex';
+      document.getElementById('authenticated-workstation').style.display = 'none';
+    }
+
+    // 1-Click Quick Unlock for Evaluation
+    function quickLoginAndReload() {
+      const doctorUser = {
+        name: 'Dr. Sarah Chen, MD',
+        email: 'dr.chen@mayoclinic.org',
+        role: 'doctor',
+        hospital: 'Mayo Clinic Health System',
+        specialty: 'Cardiovascular Surgery',
+        npi: 'MD-84920'
+      };
+      localStorage.setItem('pulsecare_user', JSON.stringify(doctorUser));
+      checkDoctorAuth();
+      showToast('Physician Session Authorized: Dr. Sarah Chen, MD', 'success');
+    }
+
+    function handleDoctorLogout() {
+      localStorage.removeItem('pulsecare_user');
+      showToast('You have been signed out from the physician workstation.', 'info');
+      setTimeout(() => {
+        window.location.href = 'doctor-login.html';
+      }, 400);
+    }
+
+    // Load Appointments
+    function loadDoctorAppointments() {
+      const saved = localStorage.getItem('pulsecare_appointments');
+      if (saved) {
+        try {
+          doctorState.appointments = JSON.parse(saved);
+        } catch (e) {}
+      }
+
+      // Default mock queue if empty
+      if (!doctorState.appointments || doctorState.appointments.length === 0) {
+        doctorState.appointments = [
+          {
+            id: 'PC-89421',
+            patientName: 'Alexandra Hayes',
+            patientPhone: '+1 (555) 234-8901',
+            date: 'Today, Oct 10',
+            time: '10:30 AM',
+            type: 'Telehealth',
+            status: 'Confirmed',
+            symptoms: 'Mild tachycardia episodes during workout and follow-up on echocardiogram report.',
+            vitals: { bp: '122/78', hr: '74 bpm', spo2: '98%', temp: '98.6°F' }
+          },
+          {
+            id: 'PC-78219',
+            patientName: 'Jonathan Davis',
+            patientPhone: '+1 (555) 345-6712',
+            date: 'Today, Oct 10',
+            time: '02:00 PM',
+            type: 'In-Clinic',
+            status: 'Confirmed',
+            symptoms: 'Routine 6-month hypertension review and statin prescription calibration.',
+            vitals: { bp: '130/84', hr: '68 bpm', spo2: '99%', temp: '98.4°F' }
+          },
+          {
+            id: 'PC-52109',
+            patientName: 'Sophia Ramirez',
+            patientPhone: '+1 (555) 912-3841',
+            date: 'Today, Oct 10',
+            time: '03:15 PM',
+            type: 'Telehealth',
+            status: 'Confirmed',
+            symptoms: 'Post-op mitral valve replacement progress check and anticoagulation dosage.',
+            vitals: { bp: '118/76', hr: '72 bpm', spo2: '99%', temp: '98.7°F' }
+          },
+          {
+            id: 'PC-41920',
+            patientName: 'David Kim',
+            patientPhone: '+1 (555) 492-8172',
+            date: 'Today, Oct 10',
+            time: '04:00 PM',
+            type: 'In-Clinic',
+            status: 'Pending',
+            symptoms: 'Chest tightness under moderate exertion. EKG baseline required.',
+            vitals: { bp: '138/88', hr: '82 bpm', spo2: '97%', temp: '98.6°F' }
+          }
+        ];
+      }
+
+      renderDoctorQueue();
+    }
+
+    // Render Queue Table
+    function renderDoctorQueue() {
+      const tbody = document.getElementById('doctor-portal-queue-tbody');
+      if (!tbody) return;
+
+      let filtered = doctorState.appointments;
+      if (doctorState.currentFilter !== 'all') {
+        filtered = filtered.filter(a => a.type === doctorState.currentFilter);
+      }
+
+      tbody.innerHTML = filtered.map((app, index) => `
+        <tr class="${index === 0 ? 'selected' : ''}" onclick="selectPatientChart('${app.patientName}', '${app.id}')">
+          <td>
+            <strong style="color: #ffffff; display: block;">${app.patientName}</strong>
+            <span style="font-size: 11px; color: rgba(255,255,255,0.45); font-family: var(--font-mono);">${app.patientPhone || app.id}</span>
+          </td>
+          <td>
+            <span style="font-family: var(--font-mono); font-weight: 600; color: #ffffff;">${app.time}</span>
+            <div style="font-size: 11px; color: rgba(255,255,255,0.5);">${app.date}</div>
+          </td>
+          <td>
+            <span style="font-size: 12px; display: inline-flex; align-items: center; gap: 4px;">
+              ${app.type === 'Telehealth' ? '📹 Telehealth' : '🏥 In-Clinic'}
+            </span>
+          </td>
+          <td>
+            <span class="app-status-badge ${app.status === 'Confirmed' ? 'status-confirmed' : 'status-pending'}">${app.status}</span>
+          </td>
+          <td style="max-width: 220px;">
+            <span style="font-size: 12px; color: rgba(255,255,255,0.7); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+              ${app.symptoms}
+            </span>
+          </td>
+          <td>
+            <div style="display: flex; gap: 6px;">
+              ${app.type === 'Telehealth' ? `
+                <button class="mini-doc-action-btn" style="padding: 4px 10px; font-size: 11.5px; background: var(--accent-teal);" onclick="event.stopPropagation(); launchTelehealthRoom('${app.patientName}')">Call</button>
+              ` : `
+                <button class="mini-doc-action-btn" style="padding: 4px 10px; font-size: 11.5px; background: #ffffff; color: #0b0e14;" onclick="event.stopPropagation(); showToast('Patient ${app.patientName} checked into Exam Room 302', 'success')">Check In</button>
+              `}
+              <button class="mini-doc-action-btn" style="padding: 4px 8px; font-size: 11.5px; background: rgba(255,255,255,0.1); color: #ffffff;" onclick="event.stopPropagation(); markCompleted('${app.id}')">✓</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function filterQueue(type, btn) {
+      doctorState.currentFilter = type;
+      document.querySelectorAll('.doc-filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderDoctorQueue();
+    }
+
+    function selectPatientChart(patientName, appId) {
+      document.getElementById('monitor-patient-name').textContent = `${patientName} (EHR # ${appId})`;
+      document.getElementById('active-patient-header').textContent = `EHR Chart: ${patientName}`;
+      showToast(`Selected Patient Chart: ${patientName}`, 'info');
+    }
+
+    function markCompleted(appId) {
+      const app = doctorState.appointments.find(a => a.id === appId);
+      if (app) {
+        app.status = 'Completed';
+        renderDoctorQueue();
+        showToast(`Consultation marked Completed for ${app.patientName}`, 'success');
+      }
+    }
+
+    function toggleDoctorAvailability() {
+      const toggle = document.getElementById('doc-status-toggle');
+      const text = document.getElementById('status-text');
+      toggle.classList.toggle('on');
+      const isOnline = toggle.classList.contains('on');
+      text.textContent = isOnline ? 'Accepting Patients' : 'In Surgery / Paused';
+      text.style.color = isOnline ? 'var(--accent-emerald)' : 'var(--accent-amber)';
+      showToast(isOnline ? 'Physician status set to: Accepting Patients' : 'Physician status set to: In Surgery', 'info');
+    }
+
+    function saveClinicalNotes() {
+      const notes = document.getElementById('doc-clinical-notes').value;
+      showToast('Clinical progress notes encrypted and saved to EHR record.', 'success');
+    }
+
+    function issueRxModal() {
+      const rx = prompt('Enter Prescription details (e.g. Lisinopril 10mg daily):', 'Lisinopril 10mg • 1 tablet daily');
+      if (rx) {
+        showToast(`Prescription dispatched to Mayo Clinic Outpatient Pharmacy: ${rx}`, 'success');
+      }
+    }
+
+    // Telehealth Simulator
+    function launchTelehealthRoom(patientName) {
+      const overlay = document.getElementById('telehealth-modal-overlay');
+      document.getElementById('telehealth-patient-name').textContent = patientName;
+      overlay.classList.add('open');
+      doctorState.callSeconds = 0;
+      clearInterval(doctorState.callTimer);
+      doctorState.callTimer = setInterval(() => {
+        doctorState.callSeconds++;
+        const mins = String(Math.floor(doctorState.callSeconds / 60)).padStart(2, '0');
+        const secs = String(doctorState.callSeconds % 60).padStart(2, '0');
+        document.getElementById('telehealth-call-timer').textContent = `${mins}:${secs}`;
+      }, 1000);
+      showToast(`Connecting encrypted HD telehealth feed with ${patientName}...`, 'info');
+    }
+
+    function closeTelehealthRoom() {
+      clearInterval(doctorState.callTimer);
+      document.getElementById('telehealth-modal-overlay').classList.remove('open');
+      showToast('Telehealth consultation session concluded.', 'info');
+    }
+
+    // Toast helper
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+      const color = type === 'success' ? 'var(--accent-emerald)' : type === 'error' ? '#ef4444' : 'var(--accent-teal)';
+      toast.innerHTML = `<span style="color: ${color}; font-weight: 700;">${icon}</span> <span>${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(8px)';
+        toast.style.transition = 'all 0.25s ease';
+        setTimeout(() => toast.remove(), 250);
+      }, 3000);
+    }
+
+    window.addEventListener('DOMContentLoaded', checkDoctorAuth);
+  </script>
+</body>
+</html>
