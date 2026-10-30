@@ -6,9 +6,9 @@
 ---
 
 ## 🌟 Live Demo & Deployment Links
-- **Frontend App:** [https://doctorp.vercel.app](https://doctorp.vercel.app) *(Replace with your deployed URL)*
-- **Backend API:** [https://doctorp-api.onrender.com/api](https://doctorp-api.onrender.com/api) *(Replace with your deployed Render URL)*
-- **API Health Check:** [https://doctorp-api.onrender.com/api/health](https://doctorp-api.onrender.com/api/health)
+- **Frontend & App:** [https://doctor-appointment-1-67hu.onrender.com](https://doctor-appointment-1-67hu.onrender.com)
+- **Backend API Base:** [https://doctor-appointment-1-67hu.onrender.com/api](https://doctor-appointment-1-67hu.onrender.com/api)
+- **API Health Check:** [https://doctor-appointment-1-67hu.onrender.com/api/health](https://doctor-appointment-1-67hu.onrender.com/api/health)
 
 ---
 

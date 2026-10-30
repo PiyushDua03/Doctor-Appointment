@@ -153,6 +153,6 @@ Follow this exact sequence in Postman to test the full lifecycle:
 
 ## 🌐 Running Tests Against Deployed Render Backend
 To test your deployed live API:
-1. In Postman, switch the `baseUrl` variable from `http://localhost:5000/api` to `https://<your-render-service>.onrender.com/api`.
+1. In Postman, switch the `baseUrl` variable from `http://localhost:5050/api` to `https://doctor-appointment-1-67hu.onrender.com/api`.
 2. Run the collection using the **Postman Runner**.
 3. All requests will automatically execute against the cloud server.

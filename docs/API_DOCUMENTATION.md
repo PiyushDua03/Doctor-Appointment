@@ -5,8 +5,8 @@ This document provides complete, production-grade technical specifications for a
 ---
 
 ## 📌 Base URL
-- **Local Development:** `http://localhost:5000/api`
-- **Production (Render):** `https://<your-render-app>.onrender.com/api`
+- **Production (Render):** `https://doctor-appointment-1-67hu.onrender.com/api`
+- **Local Development:** `http://localhost:5050/api`
 
 ---
 
