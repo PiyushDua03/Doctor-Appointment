@@ -17,6 +17,9 @@ const paymentRoutes = require('./routes/paymentRoutes');
 
 const app = express();
 
+// Trust reverse proxy for cloud deployments (Render, Heroku, Vercel)
+app.set('trust proxy', 1);
+
 // Security HTTP headers configured for modern web assets (images, fonts, stylesheets)
 app.use(
   helmet({

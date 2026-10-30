@@ -15,6 +15,9 @@ const { notFound, errorHandler } = require('./src/Backend/Middleware/errorMiddle
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Trust reverse proxy for cloud deployments (Render, Heroku, Vercel)
+app.set('trust proxy', 1);
+
 // Security & Parsing Middleware
 app.use(
   helmet({
