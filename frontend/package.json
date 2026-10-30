@@ -1,0 +1,9 @@
+{
+  "name": "doctor-appointment-frontend",
+  "version": "1.0.0",
+  "description": "DoctorP - Modern Healthcare Appointment Booking Frontend (HTML5, CSS3, JavaScript)",
+  "scripts": {
+    "start": "npx -y serve . -p 5173",
+    "dev": "npx -y serve . -p 5173"
+  }
+}

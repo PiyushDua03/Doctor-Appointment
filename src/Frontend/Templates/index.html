@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DoctorP — Your Health, Our Priority | Doctor Appointment Booking</title>
+  <meta name="description" content="Find trusted doctors, check real-time availability, and book verified clinical appointments instantly on DoctorP.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230d9488'><path d='M19 10.5h-5.5V5c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v5.5H5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5h5.5V19c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-5.5H19c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5z'/></svg>">
+</head>
+<body>
+
+  <!-- Dynamic Global Header Navbar -->
+  <header id="main-header"></header>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <div class="hero-tag">
+            <span>✨</span>
+            <span>24/7 Verified Healthcare Network</span>
+          </div>
+
+          <h1 class="hero-title">
+            Your Health, <br>
+            <span>Our Priority</span>
+          </h1>
+
+          <p class="hero-description">
+            Connect with certified medical specialists, check live clinic schedules, and reserve appointment slots with conflict-free instant confirmation.
+          </p>
+
+          <!-- Hero Search Box -->
+          <form id="hero-search-form" class="hero-search-box">
+            <div class="search-input-group">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" id="hero-search-query" placeholder="Doctor name or condition..." aria-label="Search Doctor">
+            </div>
+
+            <div class="search-input-group">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+              </svg>
+              <select id="hero-specialty-select" aria-label="Select Specialization">
+                <option value="">All Specializations</option>
+                <option value="Cardiology">Cardiology</option>
+                <option value="Dermatology">Dermatology</option>
+                <option value="Neurology">Neurology</option>
+                <option value="Pediatrics">Pediatrics</option>
+                <option value="Orthopedics">Orthopedics</option>
+                <option value="General Medicine">General Medicine</option>
+              </select>
+            </div>
+
+            <div class="search-input-group">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              <select id="hero-city-select" aria-label="Select City">
+                <option value="">All Cities</option>
+                <option value="New Delhi">New Delhi</option>
+                <option value="Mumbai">Mumbai</option>
+                <option value="Bangalore">Bangalore</option>
+                <option value="Kolkata">Kolkata</option>
+                <option value="Hyderabad">Hyderabad</option>
+                <option value="Chennai">Chennai</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="btn-hero-search">Find Doctors</button>
+          </form>
+
+          <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 2rem;">
+            <a href="doctors.html" class="btn btn-primary btn-lg" id="btn-find-doctor">Find a Doctor</a>
+            <a href="doctors.html" class="btn btn-secondary btn-lg" id="btn-book-appointment">Book Appointment</a>
+          </div>
+
+          <div class="hero-stats">
+            <div class="stat-item">
+              <h4>50+</h4>
+              <p>Top Doctors</p>
+            </div>
+            <div class="stat-item">
+              <h4>10k+</h4>
+              <p>Happy Patients</p>
+            </div>
+            <div class="stat-item">
+              <h4>4.9 ★</h4>
+              <p>Average Rating</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="hero-img-wrapper">
+            <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=700&q=80" alt="Doctor Consultation" width="600" height="600">
+          </div>
+
+          <!-- Floating Badges -->
+          <div class="floating-badge badge-top-left">
+            <div class="badge-icon">✓</div>
+            <div>
+              <div style="font-weight: 700; font-size: 0.9rem; color: var(--navy-dark);">Verified Doctors</div>
+              <div style="font-size: 0.75rem; color: var(--navy-muted);">100% Medical Board Certified</div>
+            </div>
+          </div>
+
+          <div class="floating-badge badge-bottom-right">
+            <div class="badge-icon" style="background: #e0f2fe; color: #0284c7;">⚡</div>
+            <div>
+              <div style="font-weight: 700; font-size: 0.9rem; color: var(--navy-dark);">Live Slot Booking</div>
+              <div style="font-size: 0.75rem; color: var(--navy-muted);">Zero Wait Time Conflict Checks</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOSPITAL NETWORK PARTNERS & LIVE TICKER RIBBON -->
+    <div style="background: #ffffff; border-bottom: 1px solid var(--border-light); padding: 1.25rem 0;">
+      <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <span style="font-size: 0.75rem; font-weight: 800; color: var(--navy-muted); text-transform: uppercase; letter-spacing: 0.5px;">Accredited Network:</span>
+          <div style="display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap; font-size: 0.85rem; font-weight: 700; color: var(--navy-slate);">
+            <span>🏥 Max Healthcare</span>
+            <span>🏥 Apollo Hospitals</span>
+            <span>🏥 Fortis Healthcare</span>
+            <span>🏥 Medanta The Medicity</span>
+            <span>🏥 Sir Ganga Ram</span>
+            <span>🏥 AIIMS Alumni</span>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 0.5rem; background: var(--navy-light); padding: 0.4rem 0.85rem; border-radius: var(--radius-full); border: 1px solid var(--border-light); font-size: 0.8rem; font-weight: 700;">
+          <span style="color: #059669;">🟢 48 Specialists Online Now</span>
+          <span style="color: #cbd5e1;">|</span>
+          <span style="color: #0284c7;">⚡ 140+ Slots Open Today</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SPECIALIZATIONS SECTION -->
+    <section class="section section-light" id="specializations">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-subtitle">Clinical Departments</div>
+          <h2 class="section-title">Explore by Specialization</h2>
+          <p>Consult top specialists across key departments tailored to your precise healthcare needs.</p>
+        </div>
+
+        <div class="specialty-grid">
+          <a href="doctors.html?specialty=Cardiology" class="specialty-card">
+            <div class="specialty-icon-box">❤️</div>
+            <h3>Cardiology</h3>
+            <p>Heart care, BP, chest pain</p>
+          </a>
+
+          <a href="doctors.html?specialty=Dermatology" class="specialty-card">
+            <div class="specialty-icon-box">✨</div>
+            <h3>Dermatology</h3>
+            <p>Skin, hair, allergies, acne</p>
+          </a>
+
+          <a href="doctors.html?specialty=Neurology" class="specialty-card">
+            <div class="specialty-icon-box">🧠</div>
+            <h3>Neurology</h3>
+            <p>Brain, headaches, nerves</p>
+          </a>
+
+          <a href="doctors.html?specialty=Pediatrics" class="specialty-card">
+            <div class="specialty-icon-box">👶</div>
+            <h3>Pediatrics</h3>
+            <p>Child health & development</p>
+          </a>
+
+          <a href="doctors.html?specialty=Orthopedics" class="specialty-card">
+            <div class="specialty-icon-box">🦴</div>
+            <h3>Orthopedics</h3>
+            <p>Joints, bones, sports injuries</p>
+          </a>
+
+          <a href="doctors.html?specialty=General+Medicine" class="specialty-card">
+            <div class="specialty-icon-box">🩺</div>
+            <h3>General Medicine</h3>
+            <p>Fever, flu, wellness exams</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- STANDOUT FEATURE 1: AI SYMPTOM CHECKER BANNER -->
+    <section class="section" id="symptom-checker">
+      <div class="container">
+        <div class="symptom-banner">
+          <div>
+            <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(13,148,136,0.3); color: #5eead4; padding: 0.35rem 0.85rem; border-radius: var(--radius-full); font-size: 0.8rem; font-weight: 700; margin-bottom: 1rem;">
+              <span>🤖</span> Standout AI Feature
+            </div>
+            <h3>Not sure which doctor to see?</h3>
+            <p>Describe your physical symptoms in plain language. Our intelligent algorithm matches symptoms to clinical departments and recommends specialists immediately.</p>
+
+            <div style="background: rgba(255,255,255,0.06); padding: 0.75rem; border-radius: var(--radius-lg); border: 1px solid rgba(255,255,255,0.15); display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <input type="text" id="symptom-input" placeholder="e.g., I have chest pain and shortness of breath..." style="flex: 1; min-width: 240px; padding: 0.75rem 1rem; border-radius: var(--radius-md); border: none; outline: none; font-family: var(--font-body); font-size: 0.95rem; background: #ffffff; color: var(--navy-dark);">
+              <button type="button" id="btn-analyze-symptoms" class="btn btn-primary">Analyze Symptoms</button>
+            </div>
+
+            <!-- Quick One-Click Symptom Chips -->
+            <div style="margin-top: 0.75rem;">
+              <span style="font-size: 0.75rem; color: #94a3b8; font-weight: 600; text-transform: uppercase;">Quick Test Symptoms:</span>
+              <div class="symptom-chips-container">
+                <button type="button" class="symptom-chip" data-query="Severe chest pain and heart palpitations">❤️ Chest Pain</button>
+                <button type="button" class="symptom-chip" data-query="Persistent migraine headache and dizziness">🧠 Migraine & Dizziness</button>
+                <button type="button" class="symptom-chip" data-query="Skin rash, itching, and red hives">✨ Skin Rash</button>
+                <button type="button" class="symptom-chip" data-query="Severe knee joint pain and stiffness">🦴 Knee & Joint Pain</button>
+                <button type="button" class="symptom-chip" data-query="Child high fever, cough, and vomiting">👶 Child Fever</button>
+                <button type="button" class="symptom-chip" data-query="Viral fever, cold, chills, and body weakness">🩺 Fever & Flu</button>
+              </div>
+            </div>
+
+            <!-- Dynamic Result Card -->
+            <div id="symptom-result-container" style="display: none;"></div>
+          </div>
+
+          <div style="text-align: center;">
+            <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-xl); padding: 2.5rem 2rem;">
+              <div style="font-size: 3rem; margin-bottom: 1rem;">🛡️</div>
+              <h4 style="color: #ffffff; margin-bottom: 0.5rem;">Intelligent Triage</h4>
+              <p style="font-size: 0.9rem; color: #94a3b8; line-height: 1.6;">Keyword taxonomy mapping to verify high-urgency vs regular consultations.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURED TOP DOCTORS -->
+    <section class="section section-light" id="featured-doctors">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-subtitle">Recommended Clinicians</div>
+          <h2 class="section-title">Featured Top-Rated Doctors</h2>
+          <p>Book verified appointments with prominent specialists holding the highest patient satisfaction ratings.</p>
+        </div>
+
+        <div id="featured-doctors-container" class="doctors-grid">
+          <!-- Populated dynamically via home.js -->
+        </div>
+
+        <div style="text-align: center; margin-top: 3.5rem;">
+          <a href="doctors.html" class="btn btn-outline btn-lg">View All Available Doctors →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS PROCESS -->
+    <section class="section" id="how-it-works">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-subtitle">Simple & Transparent</div>
+          <h2 class="section-title">How DoctorP Works</h2>
+          <p>Four effortless steps from searching symptoms to meeting your doctor in clinic or online.</p>
+        </div>
+
+        <div class="process-grid">
+          <div class="process-card">
+            <div class="process-step-num">01</div>
+            <h4>Search Doctor</h4>
+            <p>Filter by specialization, city, consultation fee, or rating to find the ideal doctor.</p>
+          </div>
+
+          <div class="process-card">
+            <div class="process-step-num">02</div>
+            <h4>Pick Available Slot</h4>
+            <p>View real-time calendar slots. Selected slots are locked to prevent duplicate bookings.</p>
+          </div>
+
+          <div class="process-card">
+            <div class="process-step-num">03</div>
+            <h4>Instant Confirmation</h4>
+            <p>Confirm consultation with one click and receive an official Appointment ID.</p>
+          </div>
+
+          <div class="process-card">
+            <div class="process-step-num">04</div>
+            <h4>Care & Review</h4>
+            <p>Attend your appointment and share honest feedback to assist fellow patients.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VERIFIED PATIENT EXPERIENCES -->
+    <section class="section section-light" id="testimonials">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-subtitle">Real Stories</div>
+          <h2 class="section-title">What Patients Say About DoctorP</h2>
+          <p>Read authentic feedback from patients who booked verified clinical and video consultations.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+          <div style="background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 1.75rem; box-shadow: var(--shadow-sm);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover;">
+                <div>
+                  <strong style="color: var(--navy-dark); font-size: 0.95rem; display: block;">Ananya Sen</strong>
+                  <span style="font-size: 0.75rem; color: #059669; font-weight: 700;">✓ Verified Cardiology Visit</span>
+                </div>
+              </div>
+              <div style="color: #f59e0b;">★★★★★</div>
+            </div>
+            <p style="color: var(--navy-slate); font-size: 0.9rem; line-height: 1.6;">
+              "Booking with Dr. Rajesh Sharma was incredibly smooth. I received my Digital OPD Hospital Pass with token #04 instantly and didn't have to wait in the hospital queue at Max Saket!"
+            </p>
+          </div>
+
+          <div style="background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 1.75rem; box-shadow: var(--shadow-sm);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover;">
+                <div>
+                  <strong style="color: var(--navy-dark); font-size: 0.95rem; display: block;">Vikram Malhotra</strong>
+                  <span style="font-size: 0.75rem; color: #0284c7; font-weight: 700;">✓ Telehealth Video Call</span>
+                </div>
+              </div>
+              <div style="color: #f59e0b;">★★★★★</div>
+            </div>
+            <p style="color: var(--navy-slate); font-size: 0.9rem; line-height: 1.6;">
+              "The video consultation room was crystal clear and HD. Dr. Priya explained my skin treatment thoroughly and the digital Rx with doctor's signature was immediately downloadable in my portal."
+            </p>
+          </div>
+
+          <div style="background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 1.75rem; box-shadow: var(--shadow-sm);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=100&q=80" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover;">
+                <div>
+                  <strong style="color: var(--navy-dark); font-size: 0.95rem; display: block;">Meera Kapoor</strong>
+                  <span style="font-size: 0.75rem; color: #059669; font-weight: 700;">✓ Pediatrics Consultation</span>
+                </div>
+              </div>
+              <div style="color: #f59e0b;">★★★★★</div>
+            </div>
+            <p style="color: var(--navy-slate); font-size: 0.9rem; line-height: 1.6;">
+              "The AI Symptom Checker helped me realize my daughter needed a pediatrician rather than general physician. Booked in 30 seconds with conflict-free slot lock. Outstanding app!"
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FREQUENTLY ASKED QUESTIONS (FAQ) -->
+    <section class="section" id="faq">
+      <div class="container" style="max-width: 860px;">
+        <div class="section-header">
+          <div class="section-subtitle">Got Questions?</div>
+          <h2 class="section-title">Frequently Asked Questions</h2>
+          <p>Everything you need to know about booking, doctor credentials, and consultations.</p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          <details style="background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.25rem; cursor: pointer;">
+            <summary style="font-weight: 700; color: var(--navy-dark); font-size: 1.05rem;">How does the Digital Hospital OPD Pass work?</summary>
+            <p style="margin-top: 0.75rem; color: var(--navy-slate); font-size: 0.9rem; line-height: 1.6;">
+              Once your booking is confirmed, an official Digital Hospital Pass is generated with your unique Appointment ID, assigned OPD Token number, and QR code. You can print or show it on your mobile device at the hospital reception for fast-track entry.
+            </p>
+          </details>
+
+          <details style="background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.25rem; cursor: pointer;">
+            <summary style="font-weight: 700; color: var(--navy-dark); font-size: 1.05rem;">Are the doctors verified by the Medical Council?</summary>
+            <p style="margin-top: 0.75rem; color: var(--navy-slate); font-size: 0.9rem; line-height: 1.6;">
+              Yes! 100% of clinicians on DoctorP are verified against their National Medical Commission (NMC) or State Medical Council registration numbers before their profiles and calendar availability are made public.
+            </p>
+          </details>
+
+          <details style="background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.25rem; cursor: pointer;">
+            <summary style="font-weight: 700; color: var(--navy-dark); font-size: 1.05rem;">How do Telehealth Online Video Consultations work?</summary>
+            <p style="margin-top: 0.75rem; color: var(--navy-slate); font-size: 0.9rem; line-height: 1.6;">
+              If you book a Video Consultation, simply click "Join Call" in your patient dashboard 5 minutes prior to your slot. The consultation runs in high-definition encrypted WebRTC video directly inside your browser without needing any third-party app.
+            </p>
+          </details>
+
+          <details style="background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.25rem; cursor: pointer;">
+            <summary style="font-weight: 700; color: var(--navy-dark); font-size: 1.05rem;">Can I cancel or reschedule my appointment?</summary>
+            <p style="margin-top: 0.75rem; color: var(--navy-slate); font-size: 0.9rem; line-height: 1.6;">
+              Yes, you can cancel an active appointment anytime directly from your dashboard. The reserved slot is automatically released in real time back to the public pool so another patient in need can book it.
+            </p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Dynamic Global Footer -->
+  <footer id="main-footer"></footer>
+
+  <!-- Core Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>

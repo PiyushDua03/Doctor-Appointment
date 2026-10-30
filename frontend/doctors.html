@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find Trusted Doctors & Specialists | DoctorP</title>
+  <meta name="description" content="Browse and filter board-certified medical doctors by department, city, fee, and patient ratings.">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Leaflet.js Interactive Map CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230d9488'><path d='M19 10.5h-5.5V5c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v5.5H5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5h5.5V19c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-5.5H19c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5z'/></svg>">
+</head>
+<body>
+
+  <!-- Dynamic Header Navbar -->
+  <header id="main-header"></header>
+
+  <main style="padding: 2.5rem 0 5rem;">
+    <div class="container">
+      
+      <!-- Page Header -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h1 style="font-size: 2.25rem; margin-bottom: 0.35rem;">Find Your Doctor</h1>
+          <p style="color: var(--navy-muted);">Search top hospital specialists, check live clinic slots, or explore by interactive map.</p>
+        </div>
+
+        <!-- View Mode Switcher -->
+        <div class="view-mode-tabs">
+          <button type="button" class="view-tab-btn active" id="btn-view-cards" onclick="switchView('cards')">
+            📋 Grid View
+          </button>
+          <button type="button" class="view-tab-btn" id="btn-view-map" onclick="switchView('map')">
+            🗺️ Interactive Map
+          </button>
+        </div>
+      </div>
+
+      <!-- Comprehensive Filter Bar -->
+      <div style="background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-xl); padding: 1.5rem; box-shadow: var(--shadow-sm); margin-bottom: 2rem;">
+        <form id="doctors-filter-form" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)) auto auto; gap: 1rem; align-items: end;">
+          
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="filter-search">Doctor Name / Keyword</label>
+            <input type="text" id="filter-search" class="form-control" placeholder="Search doctor, hospital...">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="filter-specialty">Specialization</label>
+            <select id="filter-specialty" class="form-control">
+              <option value="">All Specializations</option>
+              <option value="Cardiology">Cardiology</option>
+              <option value="Dermatology">Dermatology</option>
+              <option value="Neurology">Neurology</option>
+              <option value="Pediatrics">Pediatrics</option>
+              <option value="Orthopedics">Orthopedics</option>
+              <option value="General Medicine">General Medicine</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="filter-city">City</label>
+            <select id="filter-city" class="form-control">
+              <option value="">All Cities</option>
+              <option value="New Delhi">New Delhi</option>
+              <option value="Mumbai">Mumbai</option>
+              <option value="Bangalore">Bangalore</option>
+              <option value="Kolkata">Kolkata</option>
+              <option value="Hyderabad">Hyderabad</option>
+              <option value="Chennai">Chennai</option>
+              <option value="Gurugram">Gurugram</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="filter-min-rating">Minimum Rating</label>
+            <select id="filter-min-rating" class="form-control">
+              <option value="">Any Rating</option>
+              <option value="4.8">4.8+ Stars</option>
+              <option value="4.5">4.5+ Stars</option>
+              <option value="4.0">4.0+ Stars</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="filter-max-fee">Max Fee (₹)</label>
+            <input type="number" id="filter-max-fee" class="form-control" placeholder="e.g. 800" min="0" step="50">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="filter-sort">Sort By</label>
+            <select id="filter-sort" class="form-control">
+              <option value="rating">Highest Rated</option>
+              <option value="experience">Most Experienced</option>
+              <option value="fee_asc">Fee: Low to High</option>
+              <option value="fee_desc">Fee: High to Low</option>
+              <option value="name">Name (A-Z)</option>
+            </select>
+          </div>
+
+          <div style="display: flex; gap: 0.5rem;">
+            <button type="submit" class="btn btn-primary" id="btn-apply-filters">Filter</button>
+            <button type="button" id="btn-reset-filters" class="btn btn-secondary">Reset</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- INTERACTIVE MAP VIEW CONTAINER (Hidden by default) -->
+      <div id="doctor-map-section" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <p style="font-size: 0.9rem; color: var(--navy-slate); font-weight: 600;">
+            📍 Click any doctor clinic pin on the map to inspect consultation fees and book an appointment.
+          </p>
+          <span id="map-doctor-count" style="font-size: 0.8rem; font-weight: 700; color: var(--primary);">Loading clinic pins...</span>
+        </div>
+        <div id="doctor-map-container" style="height: 540px; width: 100%; min-height: 540px; border-radius: var(--radius-xl); border: 1px solid var(--border-light); box-shadow: var(--shadow-md); position: relative; z-index: 1; background: #f8fafc; overflow: hidden;">
+          <div id="map-loading-spinner" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--navy-muted);">
+            <div style="width: 38px; height: 38px; border: 3px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+            <p style="margin-top: 0.75rem; font-size: 0.9rem; font-weight: 600;">Initializing Interactive Doctor Map...</p>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Quick Specialty & Availability Filter Chips -->
+      <div class="filter-chips-scroll" id="quick-filter-chips">
+        <button type="button" class="filter-chip-btn active" data-filter="all">🏥 All Specialists</button>
+        <button type="button" class="filter-chip-btn" data-filter="today">⚡ Available Today</button>
+        <button type="button" class="filter-chip-btn" data-filter="video">📹 Video Consult</button>
+        <button type="button" class="filter-chip-btn" data-filter="Cardiology">❤️ Cardiology</button>
+        <button type="button" class="filter-chip-btn" data-filter="Dermatology">✨ Dermatology</button>
+        <button type="button" class="filter-chip-btn" data-filter="Neurology">🧠 Neurology</button>
+        <button type="button" class="filter-chip-btn" data-filter="Orthopedics">🦴 Orthopedics</button>
+        <button type="button" class="filter-chip-btn" data-filter="Pediatrics">👶 Pediatrics</button>
+        <button type="button" class="filter-chip-btn" data-filter="General Medicine">🩺 General Medicine</button>
+        <button type="button" class="filter-chip-btn" data-filter="rating48">⭐ 4.8+ Stars</button>
+        <button type="button" class="filter-chip-btn" data-filter="under800">💰 Under ₹800</button>
+      </div>
+
+      <!-- Results Count Bar -->
+      <div id="results-count-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <p id="doctors-count-text" style="font-weight: 700; color: var(--navy-dark); font-size: 0.95rem;">Loading doctors...</p>
+      </div>
+
+      <!-- Doctors Grid Cards -->
+      <div id="doctors-list-container" class="doctors-grid">
+        <!-- Rendered dynamically via doctors.js -->
+      </div>
+
+      <!-- Pagination -->
+      <div id="pagination-container"></div>
+    </div>
+  </main>
+
+  <!-- Dynamic Footer -->
+  <footer id="main-footer"></footer>
+
+  <!-- Leaflet.js Library -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/doctors.js"></script>
+</body>
+</html>

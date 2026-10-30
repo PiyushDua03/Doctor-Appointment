@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create an Account | DoctorP</title>
+  <meta name="description" content="Register as a patient or medical doctor to manage appointments effortlessly.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230d9488'><path d='M19 10.5h-5.5V5c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v5.5H5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5h5.5V19c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-5.5H19c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5z'/></svg>">
+</head>
+<body>
+
+  <!-- Dynamic Header Navbar -->
+  <header id="main-header"></header>
+
+  <main class="auth-wrapper">
+    <div class="auth-card" style="max-width: 580px;">
+      <div class="auth-header">
+        <h2 style="color: var(--navy-dark);">Join DoctorP</h2>
+        <p style="color: var(--navy-muted); font-size: 0.95rem;">Create your healthcare account in less than a minute</p>
+      </div>
+
+      <form id="register-form">
+        <!-- Account Type -->
+        <div class="form-group">
+          <label class="form-label" for="reg-role">I want to register as a:</label>
+          <select id="reg-role" class="form-control" style="font-weight: 700; color: var(--primary);">
+            <option value="patient">👤 Patient (Find doctors & book appointments)</option>
+            <option value="doctor">👨‍⚕️ Medical Doctor (Manage schedule & consultations)</option>
+          </select>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label" for="reg-name">Full Name *</label>
+            <input type="text" id="reg-name" class="form-control" placeholder="e.g. John Doe" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="reg-email">Email Address *</label>
+            <input type="email" id="reg-email" class="form-control" placeholder="john@example.com" required>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label" for="reg-password">Password *</label>
+            <input type="password" id="reg-password" class="form-control" placeholder="Min. 6 characters" required minlength="6">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="reg-phone">Phone Number</label>
+            <input type="tel" id="reg-phone" class="form-control" placeholder="+91 98765 43210">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label" for="reg-gender">Gender</label>
+            <select id="reg-gender" class="form-control">
+              <option value="Not specified">Not specified</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="reg-age">Age</label>
+            <input type="number" id="reg-age" class="form-control" placeholder="e.g. 28" min="1" max="120">
+          </div>
+        </div>
+
+        <!-- DOCTOR-SPECIFIC PROFILE FIELDS (Visible only when role = doctor) -->
+        <div id="doctor-specific-fields" style="display: none; background: var(--navy-light); padding: 1.25rem; border-radius: var(--radius-lg); border: 1px solid var(--border-light); margin: 1.25rem 0;">
+          <div style="font-weight: 700; color: var(--navy-dark); font-size: 0.95rem; margin-bottom: 0.75rem;">
+            👨‍⚕️ Doctor Professional Credentials
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="reg-specialty">Specialization *</label>
+              <select id="reg-specialty" class="form-control">
+                <option value="General Medicine">General Medicine</option>
+                <option value="Cardiology">Cardiology</option>
+                <option value="Dermatology">Dermatology</option>
+                <option value="Neurology">Neurology</option>
+                <option value="Pediatrics">Pediatrics</option>
+                <option value="Orthopedics">Orthopedics</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="reg-qualifications">Qualifications</label>
+              <input type="text" id="reg-qualifications" class="form-control" placeholder="MBBS, MD, MS">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="reg-experience">Years Exp.</label>
+              <input type="number" id="reg-experience" class="form-control" placeholder="e.g. 8" min="0">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="reg-fee">Fee (₹)</label>
+              <input type="number" id="reg-fee" class="form-control" placeholder="e.g. 600" min="0" step="50">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="reg-city">City</label>
+              <input type="text" id="reg-city" class="form-control" placeholder="e.g. New Delhi">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="reg-clinic">Clinic / Hospital Name</label>
+            <input type="text" id="reg-clinic" class="form-control" placeholder="e.g. Apollo Clinic">
+          </div>
+        </div>
+
+        <button type="submit" id="btn-submit-register" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+          Create Account
+        </button>
+      </form>
+
+      <div style="text-align: center; margin-top: 1.75rem; padding-top: 1.5rem; border-top: 1px solid var(--border-light); font-size: 0.9rem;">
+        <span style="color: var(--navy-muted);">Already registered?</span>
+        <a href="login.html" style="font-weight: 700; margin-left: 0.3rem;">Sign In</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Dynamic Footer -->
+  <footer id="main-footer"></footer>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/register.js"></script>
+</body>
+</html>

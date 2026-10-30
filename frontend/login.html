@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In | DoctorP Healthcare Portal</title>
+  <meta name="description" content="Sign in to your patient, doctor, or administrator account on DoctorP.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230d9488'><path d='M19 10.5h-5.5V5c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v5.5H5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5h5.5V19c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-5.5H19c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5z'/></svg>">
+</head>
+<body>
+
+  <!-- Dynamic Header Navbar -->
+  <header id="main-header"></header>
+
+  <main class="auth-wrapper">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h2 style="color: var(--navy-dark);">Welcome Back</h2>
+        <p style="color: var(--navy-muted); font-size: 0.95rem;">Sign in to manage your healthcare appointments</p>
+      </div>
+
+      <!-- Quick Demo Login Tabs for Presentation / Evaluation -->
+      <div style="margin-bottom: 1.5rem;">
+        <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--navy-muted); margin-bottom: 0.4rem; text-align: center;">
+          ⚡ Quick Demo Autofill (1-Click)
+        </div>
+        <div class="demo-tabs">
+          <button type="button" class="demo-tab-btn" data-role="patient">👤 Patient</button>
+          <button type="button" class="demo-tab-btn" data-role="doctor">👨‍⚕️ Doctor</button>
+          <button type="button" class="demo-tab-btn" data-role="admin">👑 Admin</button>
+        </div>
+      </div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label" for="login-email">Email Address</label>
+          <input type="email" id="login-email" class="form-control" placeholder="name@example.com" required autocomplete="email">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="login-password">Password</label>
+          <input type="password" id="login-password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+
+        <button type="submit" id="btn-submit-login" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">
+          Sign In
+        </button>
+      </form>
+
+      <div style="text-align: center; margin-top: 1.75rem; padding-top: 1.5rem; border-top: 1px solid var(--border-light); font-size: 0.9rem;">
+        <span style="color: var(--navy-muted);">Don't have an account?</span>
+        <a href="register.html" style="font-weight: 700; margin-left: 0.3rem;">Register here</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Dynamic Footer -->
+  <footer id="main-footer"></footer>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

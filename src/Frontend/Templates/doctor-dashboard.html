@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor Dashboard | DoctorP</title>
+  <meta name="description" content="Manage patient consultation requests, clinic schedule, and professional profile.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230d9488'><path d='M19 10.5h-5.5V5c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v5.5H5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5h5.5V19c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-5.5H19c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5z'/></svg>">
+</head>
+<body>
+
+  <!-- Dynamic Header Navbar -->
+  <header id="main-header"></header>
+
+  <main>
+    <div class="container">
+      
+      <!-- Top Title -->
+      <div style="padding-top: 2.5rem; margin-bottom: 1.5rem;">
+        <h1 style="font-size: 2rem; color: var(--navy-dark); margin-bottom: 0.25rem;">
+          Doctor Workspace — <span id="doctor-welcome-name">Doctor</span>
+        </h1>
+        <p style="color: var(--navy-muted);">Review patient appointments, conduct video consultations, issue prescriptions, and set clinic hours.</p>
+      </div>
+
+      <div class="dashboard-grid">
+        
+        <!-- SIDEBAR -->
+        <aside class="dashboard-sidebar">
+          <ul class="dash-menu">
+            <li>
+              <div class="dash-menu-link active" data-target="sec-doctor-appointments">
+                <span>📅</span>
+                <span>Appointments</span>
+              </div>
+            </li>
+            <li>
+              <div class="dash-menu-link" data-target="sec-doctor-availability">
+                <span>⏰</span>
+                <span>Manage Slots</span>
+              </div>
+            </li>
+            <li>
+              <div class="dash-menu-link" data-target="sec-doctor-profile">
+                <span>⚙️</span>
+                <span>Profile Settings</span>
+              </div>
+            </li>
+          </ul>
+        </aside>
+
+        <!-- MAIN PANEL -->
+        <section style="flex: 1;">
+          
+          <!-- Metric Overview Cards -->
+          <div class="metric-cards-grid">
+            <div class="metric-card">
+              <div class="metric-icon-box">📋</div>
+              <div class="metric-info">
+                <h3 id="stat-doc-total">0</h3>
+                <p>Total Consultations</p>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon-box" style="background: #fef3c7; color: #d97706;">⏳</div>
+              <div class="metric-info">
+                <h3 id="stat-doc-pending">0</h3>
+                <p>Pending Requests</p>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon-box" style="background: #e0f2fe; color: #0284c7;">✓</div>
+              <div class="metric-info">
+                <h3 id="stat-doc-confirmed">0</h3>
+                <p>Confirmed Visits</p>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon-box" style="background: #d1fae5; color: #059669;">💰</div>
+              <div class="metric-info">
+                <h3 id="stat-doc-revenue">₹0</h3>
+                <p>Completed Revenue</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- OPD LIVE QUEUE MONITOR -->
+          <div class="opd-live-queue-card">
+            <div class="opd-queue-stat">
+              <div class="opd-queue-stat-label">OPD Status & Cabin</div>
+              <div class="opd-queue-stat-val" style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.15rem;">
+                <span class="live-pulse"></span> Active OPD Cabin 304
+              </div>
+            </div>
+
+            <div class="opd-queue-stat">
+              <div class="opd-queue-stat-label">Currently Consulting</div>
+              <div class="opd-queue-stat-val highlight" id="queue-current-patient">Token #01 — Rahul Sharma</div>
+            </div>
+
+            <div class="opd-queue-stat">
+              <div class="opd-queue-stat-label">Next Waiting in OPD</div>
+              <div class="opd-queue-stat-val" id="queue-next-patient" style="font-size: 1.15rem; color: #cbd5e1;">Token #02 — Anita Roy</div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem;">
+              <button type="button" class="btn btn-primary btn-sm" onclick="callNextOPDPatient()" style="background: #0d9488;">
+                🔔 Call Next Token
+              </button>
+            </div>
+          </div>
+
+          <!-- SECTION 1: APPOINTMENTS TABLE -->
+          <div id="sec-doctor-appointments" class="dash-section">
+            <div style="background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-xl); padding: 1.5rem; box-shadow: var(--shadow-sm);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+                <h3 style="font-size: 1.25rem;">Scheduled Patient Consultations</h3>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                  <button onclick="exportDoctorAppointmentsCSV()" class="btn btn-outline btn-sm" style="display: inline-flex; align-items: center; gap: 4px; font-weight: 700; border-color: var(--primary); color: var(--primary);" title="Download Consultations as Excel/CSV">
+                    📥 Export CSV
+                  </button>
+                  <button onclick="loadDoctorAppointments('all')" class="btn btn-secondary btn-sm">All</button>
+                  <button onclick="loadDoctorAppointments('pending')" class="btn btn-secondary btn-sm">Pending</button>
+                  <button onclick="loadDoctorAppointments('confirmed')" class="btn btn-secondary btn-sm">Confirmed</button>
+                  <button onclick="loadDoctorAppointments('completed')" class="btn btn-secondary btn-sm">Completed</button>
+                </div>
+              </div>
+
+              <div class="table-responsive">
+                <table class="custom-table">
+                  <thead>
+                    <tr>
+                      <th>Booking ID</th>
+                      <th>Patient Name</th>
+                      <th>Schedule</th>
+                      <th>Mode</th>
+                      <th>Reason</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="doctor-appointments-tbody">
+                    <!-- Rendered dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 2: AVAILABILITY & SLOTS CONFIGURATION -->
+          <div id="sec-doctor-availability" class="dash-section" style="display: none;">
+            <div style="background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-xl); padding: 2rem; box-shadow: var(--shadow-sm);">
+              <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Configure Clinic Schedule & Slots</h3>
+              <p style="color: var(--navy-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+                Patients can only reserve appointments during your selected working days and time slots.
+              </p>
+
+              <form id="doctor-availability-form">
+                <div class="form-group">
+                  <label class="form-label">Available Consultation Days</label>
+                  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.75rem; margin-top: 0.5rem;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                      <input type="checkbox" name="avail-days" value="Monday" checked> Monday
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                      <input type="checkbox" name="avail-days" value="Tuesday" checked> Tuesday
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                      <input type="checkbox" name="avail-days" value="Wednesday" checked> Wednesday
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                      <input type="checkbox" name="avail-days" value="Thursday" checked> Thursday
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                      <input type="checkbox" name="avail-days" value="Friday" checked> Friday
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                      <input type="checkbox" name="avail-days" value="Saturday"> Saturday
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                      <input type="checkbox" name="avail-days" value="Sunday"> Sunday
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 1.5rem;">
+                  <label class="form-label" for="avail-slots-input">Daily Slot Times (Comma-separated 24hr format)</label>
+                  <input type="text" id="avail-slots-input" class="form-control" value="09:00, 10:00, 11:00, 12:00, 14:00, 15:00, 16:00, 17:00">
+                  <small style="color: var(--navy-muted); display: block; margin-top: 0.25rem;">
+                    Format: HH:mm (e.g. 09:00, 10:00, 11:00, 14:00, 15:00)
+                  </small>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">
+                  Save Schedule & Slots
+                </button>
+              </form>
+            </div>
+
+            <!-- RECURRING BATCH SLOT GENERATOR WIZARD -->
+            <div style="background: linear-gradient(135deg, #f0fdfa 0%, #ffffff 100%); border: 1.5px solid #99f6e4; border-radius: var(--radius-xl); padding: 2rem; box-shadow: var(--shadow-sm); margin-top: 2rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                <div style="width: 40px; height: 40px; border-radius: 10px; background: #ccfbf1; color: #0f766e; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
+                  ⚡
+                </div>
+                <div>
+                  <h3 style="font-size: 1.25rem; color: #0f172a; margin: 0;">Recurring Batch Slot Generator Wizard</h3>
+                  <p style="color: #64748b; font-size: 0.85rem; margin: 0;">Automatically generate and publish multiple consultation slots across date ranges in 1-click.</p>
+                </div>
+              </div>
+
+              <form id="doctor-wizard-form" style="margin-top: 1.25rem;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+                  <div class="form-group">
+                    <label class="form-label" for="wizard-start-date">Start Date</label>
+                    <input type="date" id="wizard-start-date" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="wizard-end-date">End Date</label>
+                    <input type="date" id="wizard-end-date" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="wizard-duration">Slot Duration</label>
+                    <select id="wizard-duration" class="form-control">
+                      <option value="15">15 Minutes / Slot</option>
+                      <option value="20">20 Minutes / Slot</option>
+                      <option value="30" selected>30 Minutes / Slot (Standard)</option>
+                      <option value="45">45 Minutes / Slot</option>
+                      <option value="60">60 Minutes / Slot</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem; background: #ffffff; padding: 1rem; border-radius: 12px; border: 1px solid #e2e8f0;">
+                  <div>
+                    <h5 style="margin: 0 0 0.5rem; font-size: 0.85rem; color: #0f766e; text-transform: uppercase;">🌅 Morning Shift Hours</h5>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                      <input type="time" id="wizard-shift1-start" class="form-control" value="09:00">
+                      <span style="font-size: 0.85rem; color: #64748b; align-self: center;">to</span>
+                      <input type="time" id="wizard-shift1-end" class="form-control" value="13:00">
+                    </div>
+                  </div>
+                  <div>
+                    <h5 style="margin: 0 0 0.5rem; font-size: 0.85rem; color: #0f766e; text-transform: uppercase;">🌆 Evening Shift Hours</h5>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                      <input type="time" id="wizard-shift2-start" class="form-control" value="17:00">
+                      <span style="font-size: 0.85rem; color: #64748b; align-self: center;">to</span>
+                      <input type="time" id="wizard-shift2-end" class="form-control" value="20:00">
+                    </div>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="background: #0d9488; display: inline-flex; align-items: center; gap: 6px; font-weight: 700;">
+                  ⚡ Generate & Publish Slots
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- SECTION 3: EDIT DOCTOR PROFILE -->
+          <div id="sec-doctor-profile" class="dash-section" style="display: none;">
+            <div style="background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-xl); padding: 2rem; box-shadow: var(--shadow-sm);">
+              <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Profile & Hospital Credentials</h3>
+              <p style="color: var(--navy-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+                Keep your consultation fee, medical registration number, hospital location, and bio up to date.
+              </p>
+
+              <form id="doctor-profile-form">
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                  <div class="form-group">
+                    <label class="form-label" for="edit-fee">Consultation Fee (₹)</label>
+                    <input type="number" id="edit-fee" class="form-control" min="0" step="50" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="edit-reg">Medical Council Reg. No</label>
+                    <input type="text" id="edit-reg" class="form-control" placeholder="e.g. DMC-24819">
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="edit-city">City</label>
+                    <input type="text" id="edit-city" class="form-control" placeholder="e.g. New Delhi">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="edit-clinic">Hospital / Clinic Facility Name</label>
+                  <input type="text" id="edit-clinic" class="form-control" placeholder="e.g. Max Super Speciality Hospital, Saket">
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="edit-bio">Clinical Biography & Speciality Procedures</label>
+                  <textarea id="edit-bio" class="form-control" rows="4"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">
+                  Save Profile Changes
+                </button>
+              </form>
+            </div>
+          </div>
+
+        </section>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- COMPLETE CONSULTATION & PRESCRIBE RX MODAL -->
+  <div class="modal-overlay" id="doctor-prescribe-modal">
+    <div class="modal-content" style="max-width: 560px;">
+      <button class="modal-close-btn" id="btn-close-prescribe-modal">✕</button>
+
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
+        <div style="width: 44px; height: 44px; border-radius: 50%; background: #d1fae5; color: #059669; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+          🩺
+        </div>
+        <div>
+          <h3 style="font-size: 1.25rem; color: var(--navy-dark); margin: 0;">Complete Consultation & Issue Rx</h3>
+          <p style="font-size: 0.85rem; color: var(--navy-muted); margin: 0;">Patient: <strong id="rx-patient-name">Patient</strong></p>
+        </div>
+      </div>
+
+      <form id="prescribe-form">
+        <div class="form-group">
+          <label class="form-label" for="doc-notes-input">Clinical Diagnosis & Consultation Notes</label>
+          <textarea id="doc-notes-input" class="form-control" placeholder="e.g. Blood pressure 125/82 mmHg. Patient shows clear symptomatic recovery. Recommended 2L daily water intake..." rows="3"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="doc-prescription-input">Prescribed Medications (Rx)</label>
+          <textarea id="doc-prescription-input" class="form-control" placeholder="e.g. Tab. Paracetamol 650mg SOS after meals&#10;Tab. Pantoprazole 40mg once daily before breakfast (5 days)" rows="3" style="font-family: monospace;"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+          Complete Visit & Save Prescription
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: PATIENT MEDICAL RECORDS & LAB VAULT (DOCTOR INSPECTION) -->
+  <div class="modal-overlay" id="doctor-patient-records-modal">
+    <div class="modal-content" style="max-width: 680px; max-height: 85vh; overflow-y: auto;">
+      <button class="modal-close-btn" onclick="closeDoctorRecordsModal()">✕</button>
+
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
+        <div style="width: 44px; height: 44px; border-radius: 50%; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
+          📁
+        </div>
+        <div>
+          <h3 style="font-size: 1.25rem; color: var(--navy-dark); margin: 0;">Patient Health Records & Diagnostic Vault</h3>
+          <p style="font-size: 0.85rem; color: var(--navy-muted); margin: 0;">Patient: <strong id="doc-rec-patient-name">Patient</strong></p>
+        </div>
+      </div>
+
+      <div id="doc-patient-records-list">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Dynamic Footer -->
+  <footer id="main-footer"></footer>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/telehealth.js"></script>
+  <script src="js/calendar.js"></script>
+  <script src="js/prescription.js"></script>
+  <script src="js/doctor-dashboard.js"></script>
+</body>
+</html>

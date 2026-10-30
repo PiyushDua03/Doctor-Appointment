@@ -242,6 +242,174 @@ For quick evaluation during college demos, use these accounts (or click the **1-
 
 ---
 
+## 📡 Complete REST API Reference
+
+Base URL: `http://localhost:5050/api` *(or deployed `/api`)*  
+Authentication Header: `Authorization: Bearer <jwt_token>`
+
+### 📑 Endpoints Overview Table
+
+| Module | Method | Endpoint | Access | Description |
+|---|---|---|---|---|
+| **Health** | `GET` | `/health` | Public | System uptime & service health check |
+| **Auth** | `POST` | `/auth/register` | Public | Register new patient or doctor account |
+| **Auth** | `POST` | `/auth/login` | Public | Authenticate credentials & return JWT |
+| **Auth** | `GET` | `/auth/me` | Protected | Fetch current logged-in user profile |
+| **Auth** | `POST` | `/auth/logout` | Public | Logout confirmation |
+| **Doctors** | `GET` | `/doctors` | Public | Search, specialty filter, sort & pagination |
+| **Doctors** | `GET` | `/doctors/:id` | Public | Doctor profile, hospital details & reviews |
+| **Doctors** | `GET` | `/doctors/:id/availability` | Public | Live time slots (Morning, Afternoon, Evening) |
+| **Doctors** | `POST` | `/doctors/slots/lock` | Protected | 5-minute atomic checkout hold |
+| **Doctors** | `PATCH` | `/doctors/profile` | Doctor | Update clinical profile, fee & experience |
+| **Doctors** | `PUT` | `/doctors/availability` | Doctor | Configure consultation days & custom slots |
+| **Appointments** | `POST` | `/appointments` | Protected | Book appointment (Atomic conflict check) |
+| **Appointments** | `GET` | `/appointments/my` | Protected | Patient/Doctor consultation schedule |
+| **Appointments** | `GET` | `/appointments/:id` | Protected | Single appointment pass details |
+| **Appointments** | `PATCH` | `/appointments/:id/cancel` | Protected | Cancel consultation |
+| **Appointments** | `PATCH` | `/appointments/:id/status` | Doctor/Admin | Confirm, complete, or reject booking |
+| **Payments** | `GET` | `/payments/config` | Public | Supported payment gateway config & modes |
+| **Payments** | `POST` | `/payments/create-order` | Protected | Initialize checkout order intent |
+| **Payments** | `POST` | `/payments/process` | Protected | Process UPI/QR, Card, Net Banking, or Clinic |
+| **Payments** | `POST` | `/payments/verify` | Protected | HMAC signature & verification check |
+| **Payments** | `GET` | `/payments/my` | Protected | Patient transaction history & receipts |
+| **Payments** | `GET` | `/payments/:id` | Protected | View single payment receipt details |
+| **Payments** | `POST` | `/payments/:id/refund` | Doctor/Admin | Process refund on cancellation |
+| **Symptoms** | `POST` | `/symptoms/check` | Public | AI clinical keyword analysis & triage |
+| **Reviews** | `POST` | `/reviews` | Patient | Submit rating & review after consultation |
+| **Reviews** | `GET` | `/reviews/doctor/:id` | Public | Verified patient reviews for a doctor |
+| **Admin** | `GET` | `/admin/dashboard` | Admin | Aggregate platform metrics & analytics |
+| **Admin** | `GET` | `/admin/doctors` | Admin | Review registered doctor verification status |
+| **Admin** | `PATCH` | `/admin/doctors/:id/approval`| Admin | Approve / reject doctor credentials |
+| **Admin** | `GET` | `/admin/patients` | Admin | Registered patients directory |
+| **Admin** | `GET` | `/admin/appointments` | Admin | Master booking oversight |
+| **Telehealth** | `POST` | `/telehealth/signal` | Public | Store WebRTC offer/answer/ICE candidate |
+| **Telehealth** | `GET` | `/telehealth/signal/:appointmentId` | Public | Poll active WebRTC peer signals |
+| **Telehealth** | `DELETE` | `/telehealth/signal/:appointmentId` | Public | Clear signaling session on call end |
+
+---
+
+### 🔍 Key API Request & Response Samples
+
+#### 1. Payment Order Creation
+```http
+POST /api/payments/create-order
+Authorization: Bearer <jwt_token>
+Content-Type: application/json
+
+{
+  "amount": 600,
+  "doctorId": "6ae1b9f49d59257264d32b0c",
+  "currency": "INR",
+  "notes": "Consultation booking"
+}
+```
+**Response (201 Created):**
+```json
+{
+  "success": true,
+  "order": {
+    "orderId": "ORD-1730294800000-8421",
+    "amount": 600,
+    "currency": "INR",
+    "paymentId": "6ae...",
+    "status": "pending"
+  }
+}
+```
+
+#### 2. Payment Execution & Receipt
+```http
+POST /api/payments/process
+Authorization: Bearer <jwt_token>
+Content-Type: application/json
+
+{
+  "orderId": "ORD-1730294800000-8421",
+  "doctorId": "6ae1b9f49d59257264d32b0c",
+  "amount": 600,
+  "paymentMethod": "UPI / QR",
+  "paymentDetails": {
+    "upiId": "rahul.sharma@okhdfcbank"
+  }
+}
+```
+**Response (200 OK):**
+```json
+{
+  "success": true,
+  "message": "Payment captured and receipt issued successfully",
+  "payment": {
+    "orderId": "ORD-1730294800000-8421",
+    "transactionId": "TXN-M7G9K2-8492",
+    "receiptNumber": "REC-M7G9K2",
+    "amount": 600,
+    "currency": "INR",
+    "paymentMethod": "UPI / QR",
+    "status": "paid"
+  }
+}
+```
+
+#### 3. Appointment Booking (Conflict Protected)
+```http
+POST /api/appointments
+Authorization: Bearer <jwt_token>
+Content-Type: application/json
+
+{
+  "doctorId": "6ae1b9f49d59257264d32b0c",
+  "appointmentDate": "2026-10-31",
+  "startTime": "10:00",
+  "consultationType": "In-Clinic Visit",
+  "reason": "Chest pain follow-up",
+  "paymentMethod": "UPI / QR",
+  "paymentStatus": "paid",
+  "transactionId": "TXN-M7G9K2-8492"
+}
+```
+**Response (201 Created):**
+```json
+{
+  "success": true,
+  "message": "Appointment booked successfully",
+  "appointment": {
+    "appointmentId": "APT-20261031-8421",
+    "doctorId": "6ae1b9f49d59257264d32b0c",
+    "patientId": "6ae48...",
+    "appointmentDate": "2026-10-31",
+    "startTime": "10:00",
+    "status": "pending",
+    "paymentStatus": "paid",
+    "transactionId": "TXN-M7G9K2-8492"
+  }
+}
+```
+
+#### 4. AI Symptom Checker & Specialty Triage
+```http
+POST /api/symptoms/check
+Content-Type: application/json
+
+{
+  "text": "I have shortness of breath and chest pain"
+}
+```
+**Response (200 OK):**
+```json
+{
+  "success": true,
+  "recommendation": {
+    "specialty": "Cardiology",
+    "description": "Your symptoms might indicate cardiac strain. Please consult a Cardiologist promptly.",
+    "urgency": "high",
+    "color": "#DC2626"
+  },
+  "suggestedDoctors": [...]
+}
+```
+
+---
+
 ## ☁️ MongoDB Atlas Cloud Setup
 
 1. Create a free account at [mongodb.com/atlas](https://www.mongodb.com/cloud/atlas).
@@ -290,29 +458,50 @@ For quick evaluation during college demos, use these accounts (or click the **1-
 
 To run all automated API tests:
 ```bash
-cd backend
 npm test
 ```
 Result:
 ```
   ✅ PASS: Health endpoint returns 200 OK
+  ✅ PASS: Health status is ok
   ✅ PASS: Patient registration returns 201 Created
+  ✅ PASS: Registration response indicates success
+  ✅ PASS: Registration returns JWT token
   ✅ PASS: Login returns 200 OK & JWT
+  ✅ PASS: Admin login returns 200 OK
+  ✅ PASS: Doctor login returns 200 OK
   ✅ PASS: Invalid credentials return 401 Unauthorized
   ✅ PASS: GET /doctors returns 200 OK
+  ✅ PASS: Doctor list is not empty
   ✅ PASS: Doctor ID matches requested ID
   ✅ PASS: GET /doctors/:id/availability returns 200 OK
+  ✅ PASS: Availability contains slots array
   ✅ PASS: Booking returns 201 Created
+  ✅ PASS: Appointment has generated unique ID
   ✅ PASS: Duplicate booking returns 409 Conflict
   ✅ PASS: GET /appointments/my returns 200 OK
+  ✅ PASS: User appointments list is returned
   ✅ PASS: Appointment cancellation returns 200 OK
+  ✅ PASS: Appointment status is marked cancelled
   ✅ PASS: Patient forbidden on doctor endpoint returns 403
   ✅ PASS: Patient forbidden on admin dashboard returns 403
   ✅ PASS: Admin can access admin dashboard (200 OK)
+  ✅ PASS: Admin stats contain doctor counts
   ✅ PASS: Symptom check returns 200 OK (Cardiology, High Urgency)
+  ✅ PASS: Matches Cardiology specialty
+  ✅ PASS: Urgency correctly identified as high
   ✅ PASS: Malformed input returns 400 Bad Request
+  ✅ PASS: GET /payments/config returns 200 OK
+  ✅ PASS: Payment config returns INR currency
+  ✅ PASS: POST /payments/create-order returns 201 Created
+  ✅ PASS: Payment order returns valid orderId
+  ✅ PASS: POST /payments/process returns 200 OK
+  ✅ PASS: Processed payment status is marked paid
+  ✅ PASS: Payment generates receipt
+  ✅ PASS: GET /payments/my returns 200 OK
+  ✅ PASS: User payment history is returned
 ──────────────────────────────────────────────────
-📊 Test Summary: 31 PASSED, 0 FAILED
+📊 Test Summary: 40 PASSED, 0 FAILED
 🎉 ALL API TESTS PASSED SUCCESSFULLY!
 ```
 

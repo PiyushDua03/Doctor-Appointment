@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Dashboard | DoctorP</title>
+  <meta name="description" content="View and manage your upcoming healthcare appointments, digital passes, and consultation history.">
+  <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/custom.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230d9488'><path d='M19 10.5h-5.5V5c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v5.5H5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5h5.5V19c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-5.5H19c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5z'/></svg>">
+</head>
+<body>
+
+  <!-- Dynamic Header Navbar -->
+  <header id="main-header"></header>
+
+  <main style="padding: 2.5rem 0 5rem;">
+    <div class="container">
+      
+      <!-- Welcome Header -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h1 style="font-size: 2rem; color: var(--navy-dark); margin-bottom: 0.25rem;">
+            Hello, <span id="patient-welcome-name">Patient</span> 👋
+          </h1>
+          <p style="color: var(--navy-muted);">Track your scheduled consultations, digital check-in passes, and prescriptions.</p>
+        </div>
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+          <button type="button" onclick="openAiRxExplainerDemo()" class="btn btn-sm" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: #ffffff; border: none; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; padding: 0.55rem 1rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(99,102,241,0.3); cursor: pointer;">
+            ✨ Explain My Rx (AI Copilot)
+          </button>
+          <a href="doctors.html" class="btn btn-primary">Book New Appointment +</a>
+        </div>
+      </div>
+
+      <!-- Quick Vitals & Metrics Grid -->
+      <div class="metric-cards-grid">
+        <div class="metric-card">
+          <div class="metric-icon-box" style="background: #e0f2fe; color: #0284c7;">📅</div>
+          <div class="metric-info">
+            <h3 id="stat-upcoming">0</h3>
+            <p>Upcoming Visits</p>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon-box" style="background: #d1fae5; color: #059669;">✓</div>
+          <div class="metric-info">
+            <h3 id="stat-completed">0</h3>
+            <p>Completed Visits</p>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon-box">📊</div>
+          <div class="metric-info">
+            <h3 id="stat-total">0</h3>
+            <p>Total Bookings</p>
+          </div>
+        </div>
+
+        <!-- Patient Health Profile Card -->
+        <div class="metric-card" style="background: linear-gradient(135deg, #f0fdfa 0%, #ffffff 100%); border-color: #99f6e4;">
+          <div class="metric-icon-box" style="background: #ccfbf1; color: #0f766e;">❤️</div>
+          <div class="metric-info" style="flex: 1;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 0.8rem; font-weight: 700; color: #0f766e; text-transform: uppercase;">Health Vitals</span>
+              <button type="button" onclick="openVitalsModal()" style="background: none; border: none; color: var(--primary); font-size: 0.75rem; font-weight: 700; cursor: pointer; text-decoration: underline;">✏️ Edit</button>
+            </div>
+            <div style="font-size: 0.85rem; color: var(--navy-dark); font-weight: 600; margin-top: 0.2rem;">
+              Blood: <span id="vital-blood-group" style="color: #dc2626;">O+</span> &nbsp;|&nbsp; BP: <span id="vital-bp">120/80</span> &nbsp;|&nbsp; Pulse: <span id="vital-pulse">72 bpm</span>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--navy-muted);">Sugar: <span id="vital-sugar">98 mg/dL</span> &nbsp;|&nbsp; Allergies: <span id="vital-allergies">None Known</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FEATURE HIGHLIGHT: AI PRESCRIPTION & LAB REPORT EXPLAINER BANNER -->
+      <div style="background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); border: 1.5px solid #c4b5fd; border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; margin-top: 1.75rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; box-shadow: 0 4px 14px rgba(139, 92, 246, 0.1);">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <div style="width: 48px; height: 48px; border-radius: 12px; background: #7c3aed; color: #ffffff; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3); flex-shrink: 0;">
+            ✨
+          </div>
+          <div>
+            <h3 style="font-size: 1.05rem; color: #4c1d95; margin: 0; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+              AI Prescription & Lab Report Explainer ("Explain in Simple Words")
+              <span style="font-size: 0.7rem; background: #7c3aed; color: #ffffff; padding: 0.15rem 0.5rem; border-radius: 12px; font-weight: 700;">NEW FEATURE</span>
+            </h3>
+            <p style="font-size: 0.85rem; color: #5b21b6; margin: 0.25rem 0 0;">
+              Medical jargon jaise <em>"Tab. Telmisartan 40mg OD"</em>, <em>"Essential Hypertension"</em>, ya lab reports ko Hindi & English mein simple bhasha mein samjhein.
+            </p>
+          </div>
+        </div>
+        <button type="button" onclick="openAiRxExplainerDemo()" class="btn btn-sm" style="background: #7c3aed; color: #ffffff; border: none; font-weight: 700; padding: 0.55rem 1.1rem; border-radius: 8px; box-shadow: 0 3px 10px rgba(124, 58, 237, 0.35); cursor: pointer; white-space: nowrap;">
+          ✨ Open AI Rx Explainer
+        </button>
+      </div>
+
+      <!-- Appointments List Section -->
+      <div style="margin-top: 2rem;">
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+          <h2 style="font-size: 1.4rem; color: var(--navy-dark);">My Scheduled Consultations</h2>
+          <span style="font-size: 0.85rem; color: var(--navy-muted);">Real-time status & clinic desk passes</span>
+        </div>
+
+        <!-- Filters & Search Toolbar -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+          <div class="tabs-filter-bar">
+            <button type="button" class="tab-filter-btn active" onclick="window.filterAppointments('all', this)" id="tab-all">
+              All Visits <span class="tab-filter-count" id="count-all">0</span>
+            </button>
+            <button type="button" class="tab-filter-btn" onclick="window.filterAppointments('upcoming', this)" id="tab-upcoming">
+              Upcoming <span class="tab-filter-count" id="count-upcoming">0</span>
+            </button>
+            <button type="button" class="tab-filter-btn" onclick="window.filterAppointments('completed', this)" id="tab-completed">
+              Completed <span class="tab-filter-count" id="count-completed">0</span>
+            </button>
+            <button type="button" class="tab-filter-btn" onclick="window.filterAppointments('cancelled', this)" id="tab-cancelled">
+              Cancelled <span class="tab-filter-count" id="count-cancelled">0</span>
+            </button>
+          </div>
+
+          <div style="position: relative; min-width: 280px; flex: 1; max-width: 360px;">
+            <input type="text" id="appointment-search-input" oninput="window.searchAppointments(this.value)" placeholder="🔍 Search doctor, clinic, or ID..." class="form-control" style="font-size: 0.85rem; padding: 0.55rem 0.95rem; border-radius: 8px; width: 100%;">
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Booking ID</th>
+                <th>Doctor & Hospital</th>
+                <th>Schedule</th>
+                <th>Mode</th>
+                <th>Fee</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="patient-appointments-table-body">
+              <!-- Rendered dynamically via patient-dashboard.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION: MEDICAL RECORDS & LAB VAULT -->
+      <div style="margin-top: 3rem; background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-xl); padding: 1.75rem; box-shadow: var(--shadow-sm);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+          <div>
+            <h2 style="font-size: 1.35rem; color: var(--navy-dark); margin: 0; display: flex; align-items: center; gap: 8px;">
+              <span>📁</span> Medical Records & Diagnostic Lab Vault
+            </h2>
+            <p style="font-size: 0.85rem; color: var(--navy-muted); margin: 0.25rem 0 0;">
+              Securely store, organize, and share blood tests, digital X-rays, and diagnostic reports with your doctors.
+            </p>
+          </div>
+          <button type="button" onclick="openUploadRecordModal()" class="btn btn-primary btn-sm" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 700; background: #0284c7;">
+            ➕ Upload Medical Record
+          </button>
+        </div>
+
+        <!-- Filter category pills -->
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
+          <button type="button" class="btn btn-secondary btn-sm rec-filter-btn active" onclick="window.filterRecordsByCategory('all', this)" style="border-radius: 9999px; padding: 0.35rem 0.85rem; font-size: 0.8rem; background: #0284c7; color: #fff;">All Records</button>
+          <button type="button" class="btn btn-secondary btn-sm rec-filter-btn" onclick="window.filterRecordsByCategory('Lab Report', this)" style="border-radius: 9999px; padding: 0.35rem 0.85rem; font-size: 0.8rem;">🧪 Lab Reports</button>
+          <button type="button" class="btn btn-secondary btn-sm rec-filter-btn" onclick="window.filterRecordsByCategory('Radiology / Scan', this)" style="border-radius: 9999px; padding: 0.35rem 0.85rem; font-size: 0.8rem;">🩻 Radiology / X-Rays</button>
+          <button type="button" class="btn btn-secondary btn-sm rec-filter-btn" onclick="window.filterRecordsByCategory('Prescription', this)" style="border-radius: 9999px; padding: 0.35rem 0.85rem; font-size: 0.8rem;">💊 Prescriptions</button>
+        </div>
+
+        <!-- Records Grid -->
+        <div id="patient-records-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem;">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- PRINTABLE DIGITAL HOSPITAL PASS MODAL -->
+  <div class="modal-overlay" id="hospital-pass-modal">
+    <div class="modal-content" style="max-width: 580px;">
+      <button class="modal-close-btn" onclick="closePassModal()">✕</button>
+
+      <div class="hospital-pass">
+        <div class="hospital-pass-header">
+          <div>
+            <h3 style="font-size: 1.25rem; color: var(--navy-dark); margin: 0;" id="pass-hospital-name">Super Speciality Hospital</h3>
+            <p style="font-size: 0.8rem; color: var(--navy-muted); margin: 0;" id="pass-hospital-address">Medical Enclave, New Delhi</p>
+          </div>
+          <div class="pass-qr-box">
+            <div>
+              <div style="font-size: 1.6rem; line-height: 1;">▦</div>
+              <div style="font-size: 0.65rem; margin-top: 0.2rem; font-weight: 700;">CHECK-IN</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; font-size: 0.85rem;">
+          <div>
+            <div style="color: var(--navy-muted); font-size: 0.75rem; text-transform: uppercase;">Appointment ID</div>
+            <strong style="color: var(--primary); font-family: monospace; font-size: 1rem;" id="pass-apt-id">APT-20261025-0000</strong>
+          </div>
+          <div>
+            <div style="color: var(--navy-muted); font-size: 0.75rem; text-transform: uppercase;">Consultation Mode</div>
+            <strong style="color: var(--navy-dark);" id="pass-mode">In-Clinic Visit</strong>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; font-size: 0.85rem; border-top: 1px dashed var(--border-light); padding-top: 0.75rem;">
+          <div>
+            <div style="color: var(--navy-muted); font-size: 0.75rem; text-transform: uppercase;">Patient Name</div>
+            <strong style="color: var(--navy-dark);" id="pass-patient-name">Rahul Sharma</strong>
+            <div style="font-size: 0.75rem; color: var(--navy-muted);" id="pass-patient-demographics">Male • 28 yrs</div>
+          </div>
+          <div>
+            <div style="color: var(--navy-muted); font-size: 0.75rem; text-transform: uppercase;">Attending Clinician</div>
+            <strong style="color: var(--navy-dark);" id="pass-doc-name">Dr. Rajesh Sharma</strong>
+            <div style="font-size: 0.75rem; color: var(--navy-muted);" id="pass-doc-reg">Cardiology</div>
+          </div>
+        </div>
+
+        <div style="background: var(--navy-light); padding: 0.85rem; border-radius: var(--radius-sm); margin-bottom: 1rem; font-size: 0.85rem;">
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--navy-muted);">Appointment Schedule:</span>
+            <strong style="color: var(--navy-dark);" id="pass-schedule">2026-10-30 at 10:00</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-top: 0.35rem;">
+            <span style="color: var(--navy-muted);">Consultation Fee Status:</span>
+            <strong style="color: #059669;" id="pass-fee">₹850 (Confirmed)</strong>
+          </div>
+        </div>
+
+        <div style="font-size: 0.75rem; color: var(--navy-muted); line-height: 1.5; border-top: 1px solid var(--border-light); padding-top: 0.75rem;">
+          ℹ️ <strong>Instructions:</strong> Present this pass at the reception desk 15 minutes prior to appointment. If it is a Video Consultation, join from the dashboard 5 minutes before scheduled time.
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 0.75rem; justify-content: center; margin-top: 1.5rem; flex-wrap: wrap;">
+        <button onclick="window.print()" class="btn btn-primary">🖨️ Print / Save Pass (PDF)</button>
+        <button type="button" onclick="window.sharePassToWhatsApp()" class="btn btn-sm" style="background: #25D366; color: #ffffff; border: none; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; padding: 0.45rem 0.85rem; cursor: pointer; border-radius: 6px;">
+          📲 WhatsApp Pass
+        </button>
+        <button type="button" onclick="window.downloadIcsCalendar()" class="btn btn-sm" style="background: #0284c7; color: #ffffff; border: none; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; padding: 0.45rem 0.85rem; cursor: pointer; border-radius: 6px;">
+          📅 Add to Calendar (.ics)
+        </button>
+        <button onclick="closePassModal()" class="btn btn-secondary">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTHENTIC HOSPITAL PRESCRIPTION (Rx) SLIP MODAL -->
+  <div class="modal-overlay" id="rx-modal">
+    <div class="modal-content" style="max-width: 720px; padding: 0; overflow: hidden;">
+      <button class="modal-close-btn" onclick="closeRxModal()" style="top: 1rem; right: 1rem; z-index: 10;">✕</button>
+
+      <div class="hospital-prescription-slip" id="hospital-rx-slip">
+        <!-- Hospital Header -->
+        <div class="rx-letterhead">
+          <div>
+            <div class="rx-hospital-name" id="rx-hospital-header">Max Super Speciality Hospital</div>
+            <div class="rx-hospital-tagline">NABH Accredited Tertiary Healthcare & Research Centre</div>
+            <div style="font-size: 0.75rem; color: var(--navy-muted); margin-top: 0.2rem;" id="rx-hospital-addr">1, 2, Press Enclave Marg, Saket, New Delhi</div>
+          </div>
+          <div class="rx-doctor-credentials">
+            <h4 style="font-size: 1.1rem; color: var(--navy-dark); margin: 0;" id="rx-doc-name">Dr. Rajesh Sharma</h4>
+            <div style="font-size: 0.8rem; color: var(--primary); font-weight: 700;" id="rx-doc-qual">MBBS, MD, DM (Cardiology - AIIMS)</div>
+            <div style="font-size: 0.75rem; color: var(--navy-muted); font-family: monospace;" id="rx-doc-reg">Reg: DMC-24819-A</div>
+          </div>
+        </div>
+
+        <!-- Patient Info Bar -->
+        <div class="rx-patient-bar">
+          <div>
+            <span style="color: var(--navy-muted); font-size: 0.75rem; text-transform: uppercase;">Patient Name:</span>
+            <div style="font-weight: 700;" id="rx-patient-name-val">Rahul Sharma</div>
+          </div>
+          <div>
+            <span style="color: var(--navy-muted); font-size: 0.75rem; text-transform: uppercase;">Age / Gender:</span>
+            <div style="font-weight: 700;" id="rx-patient-age-val">28 Yrs / Male</div>
+          </div>
+          <div>
+            <span style="color: var(--navy-muted); font-size: 0.75rem; text-transform: uppercase;">Date & Slip No:</span>
+            <div style="font-weight: 700;" id="rx-slip-date-val">2026-10-25</div>
+          </div>
+          <div>
+            <span style="color: var(--navy-muted); font-size: 0.75rem; text-transform: uppercase;">Recorded BP:</span>
+            <div style="font-weight: 700; color: #dc2626;" id="rx-patient-bp-val">120/80 mmHg</div>
+          </div>
+        </div>
+
+        <!-- Diagnosis & Chief Complaints -->
+        <div style="margin-bottom: 1.25rem;">
+          <div style="font-size: 0.8rem; font-weight: 700; color: var(--navy-muted); text-transform: uppercase; margin-bottom: 0.25rem;">
+            Clinical Assessment & Diagnosis
+          </div>
+          <div style="font-size: 0.95rem; font-weight: 600; color: var(--navy-dark);" id="rx-notes-text">
+            Essential Hypertension • Mild Retrosternal Chest Discomfort on Exertion
+          </div>
+        </div>
+
+        <!-- Rx Prescription Content -->
+        <div class="rx-symbol">℞</div>
+        <div style="background: #fafafa; border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 1rem; margin-bottom: 1.25rem;">
+          <div style="font-size: 0.95rem; line-height: 1.7; color: var(--navy-dark); font-family: 'Courier New', monospace; white-space: pre-wrap;" id="rx-prescription-text">
+1. Tab. Ecosprin 75mg — 0 - 1 - 0 (After Lunch) — 30 Days
+2. Tab. Telmisartan 40mg — 1 - 0 - 0 (After Breakfast) — 30 Days
+3. Tab. Atorvastatin 20mg — 0 - 0 - 1 (At Bedtime) — 30 Days
+          </div>
+        </div>
+
+        <!-- Advice & Followup -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.85rem; border-top: 1px dashed var(--border-light); padding-top: 0.75rem; margin-bottom: 2rem;">
+          <div>
+            <span style="font-weight: 700; color: var(--navy-dark);">Advised Lab Tests:</span>
+            <div style="color: var(--navy-muted); margin-top: 0.2rem;">Lipid Profile, 12-Lead ECG, Serum Creatinine</div>
+          </div>
+          <div>
+            <span style="font-weight: 700; color: var(--navy-dark);">Review Follow-Up:</span>
+            <div style="color: var(--navy-muted); margin-top: 0.2rem;">Review with blood work after 2 weeks or SOS</div>
+          </div>
+        </div>
+
+        <!-- Doctor Signature & Stamp -->
+        <div style="display: flex; justify-content: flex-end; align-items: flex-end; margin-top: 1rem;">
+          <div style="text-align: center;">
+            <div style="font-family: 'Brush Script MT', cursive; font-size: 1.6rem; color: #0284c7; transform: rotate(-3deg);">
+              Dr. R. Sharma
+            </div>
+            <div style="border-top: 1px solid var(--navy-slate); width: 140px; margin-top: 0.2rem;"></div>
+            <div style="font-size: 0.7rem; color: var(--navy-muted); font-weight: 700; margin-top: 0.2rem;">
+              Verified Digital Signature
+            </div>
+          </div>
+        </div>
+
+        <div class="rx-stamp-seal">
+          HOSPITAL OPD<br>VERIFIED & DISPENSED
+        </div>
+      </div>
+
+      <!-- AI PRESCRIPTION & LAB REPORT EXPLAINER CARD -->
+      <div id="rx-ai-explainer-card" style="display: none; background: #f8fafc; border-top: 2px solid #8b5cf6; padding: 1.25rem 1.5rem; max-height: 380px; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span style="font-size: 1.25rem;">✨</span>
+            <strong style="color: #6b21a8; font-size: 1rem;">AI Medical Copilot (Explain in Simple Words)</strong>
+          </div>
+          <div style="display: flex; gap: 0.4rem;">
+            <button type="button" id="btn-ai-lang-en" onclick="window.setAiExplainerLang('en')" class="btn btn-sm" style="background: #7c3aed; color: #fff; font-size: 0.75rem; padding: 0.2rem 0.6rem; border: none; cursor: pointer;">English</button>
+            <button type="button" id="btn-ai-lang-hi" onclick="window.setAiExplainerLang('hi')" class="btn btn-sm" style="background: #e2e8f0; color: #334155; font-size: 0.75rem; padding: 0.2rem 0.6rem; border: none; cursor: pointer;">हिंदी (Hinglish)</button>
+          </div>
+        </div>
+
+        <div id="ai-explainer-content" style="font-size: 0.85rem; line-height: 1.6; color: #334155;"></div>
+
+        <div style="margin-top: 1rem; border-top: 1px solid #e2e8f0; padding-top: 0.75rem; display: flex; gap: 0.5rem;">
+          <input type="text" id="ai-user-rx-question" class="form-control" placeholder="Ask AI: e.g. Can I take this with food? Or any precautions?" style="font-size: 0.8rem; flex: 1;">
+          <button type="button" onclick="window.askAiRxQuestion()" class="btn btn-primary btn-sm" style="background: #7c3aed; border: none; cursor: pointer;">Ask Copilot</button>
+        </div>
+      </div>
+
+      <div style="background: #f8fafc; border-top: 1px solid var(--border-light); padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+        <button type="button" onclick="window.toggleAiRxExplainer()" class="btn btn-sm" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: #ffffff; border: none; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; padding: 0.45rem 0.85rem; cursor: pointer; border-radius: 6px; box-shadow: 0 2px 6px rgba(124,58,237,0.3);">
+          ✨ Explain My Rx in Simple Words (AI)
+        </button>
+        <div style="display: flex; gap: 0.75rem;">
+          <button onclick="window.print()" class="btn btn-primary btn-sm">🖨️ Print Prescription (PDF)</button>
+          <button onclick="closeRxModal()" class="btn btn-secondary btn-sm">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SMART REVIEW MODAL (Feature 4) -->
+  <div class="modal-overlay" id="review-modal">
+    <div class="modal-content">
+      <button class="modal-close-btn" id="btn-close-review-modal">✕</button>
+
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
+        <div style="width: 44px; height: 44px; border-radius: 50%; background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+          ⭐
+        </div>
+        <div>
+          <h3 style="font-size: 1.25rem; color: var(--navy-dark); margin: 0;">Review Your Visit</h3>
+          <p style="font-size: 0.85rem; color: var(--navy-muted); margin: 0;">With <strong id="review-doc-name">Dr. Name</strong></p>
+        </div>
+      </div>
+
+      <form id="review-form">
+        <div class="form-group">
+          <label class="form-label" for="review-rating">Overall Rating</label>
+          <select id="review-rating" class="form-control" required style="font-size: 1.05rem;">
+            <option value="5">★★★★★ — 5 Stars (Exceptional Care)</option>
+            <option value="4">★★★★☆ — 4 Stars (Very Good)</option>
+            <option value="3">★★★☆☆ — 3 Stars (Average)</option>
+            <option value="2">★★☆☆☆ — 2 Stars (Below Expectations)</option>
+            <option value="1">★☆☆☆☆ — 1 Star (Poor)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="review-text">Written Feedback</label>
+          <textarea id="review-text" class="form-control" placeholder="Describe the doctor's communication, diagnosis, and medical advice..." rows="4"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+          Submit Review
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- PATIENT VITALS EDITOR MODAL -->
+  <div class="modal-overlay" id="vitals-modal">
+    <div class="modal-content" style="max-width: 440px;">
+      <button class="modal-close-btn" onclick="closeVitalsModal()">✕</button>
+
+      <h3 style="font-size: 1.25rem; color: var(--navy-dark); margin-bottom: 0.5rem;">Update Health Vitals</h3>
+      <p style="font-size: 0.85rem; color: var(--navy-muted); margin-bottom: 1.25rem;">Keep your physiological records current for your attending doctor.</p>
+
+      <form id="vitals-form">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div class="form-group">
+            <label class="form-label" for="edit-blood-group">Blood Group</label>
+            <select id="edit-blood-group" class="form-control">
+              <option value="O+">O+</option>
+              <option value="A+">A+</option>
+              <option value="B+">B+</option>
+              <option value="AB+">AB+</option>
+              <option value="O-">O-</option>
+              <option value="A-">A-</option>
+              <option value="B-">B-</option>
+              <option value="AB-">AB-</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit-bp">Blood Pressure</label>
+            <input type="text" id="edit-bp" class="form-control" placeholder="e.g. 120/80">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div class="form-group">
+            <label class="form-label" for="edit-pulse">Pulse (bpm)</label>
+            <input type="text" id="edit-pulse" class="form-control" placeholder="e.g. 72">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit-sugar">Fasting Sugar</label>
+            <input type="text" id="edit-sugar" class="form-control" placeholder="e.g. 98 mg/dL">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="edit-allergies">Known Allergies</label>
+          <input type="text" id="edit-allergies" class="form-control" placeholder="e.g. Penicillin, Peanuts (or None)">
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Save Vitals</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: UPLOAD NEW MEDICAL RECORD -->
+  <div class="modal-overlay" id="upload-record-modal">
+    <div class="modal-content" style="max-width: 540px;">
+      <button class="modal-close-btn" onclick="closeUploadRecordModal()">✕</button>
+
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
+        <div style="width: 44px; height: 44px; border-radius: 50%; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
+          📄
+        </div>
+        <div>
+          <h3 style="font-size: 1.25rem; color: var(--navy-dark); margin: 0;">Upload Medical Document</h3>
+          <p style="font-size: 0.85rem; color: var(--navy-muted); margin: 0;">Add diagnostic reports, blood test scans, or past prescriptions.</p>
+        </div>
+      </div>
+
+      <form id="form-upload-record">
+        <div class="form-group">
+          <label class="form-label" for="rec-title">Document / Report Title</label>
+          <input type="text" id="rec-title" class="form-control" placeholder="e.g. Complete Blood Count (CBC) Panel" required>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div class="form-group">
+            <label class="form-label" for="rec-type">Record Category</label>
+            <select id="rec-type" class="form-control">
+              <option value="Lab Report">Lab Report (Blood, Urine, etc.)</option>
+              <option value="Radiology / Scan">Radiology / X-Ray / MRI</option>
+              <option value="Prescription">Prescription</option>
+              <option value="Discharge Summary">Discharge Summary</option>
+              <option value="Vaccination">Vaccination Record</option>
+              <option value="Other">Other Medical File</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="rec-date">Test Date</label>
+            <input type="date" id="rec-date" class="form-control" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="rec-facility">Diagnostic Lab / Hospital Facility</label>
+          <input type="text" id="rec-facility" class="form-control" placeholder="e.g. Dr. Lal PathLabs, Max Healthcare" value="Apollo Diagnostics & Health Labs">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="rec-summary">Key Diagnostic Findings / Summary</label>
+          <textarea id="rec-summary" class="form-control" rows="2" placeholder="e.g. Cholesterol within normal range, HbA1c 5.4%, Normal sinus rhythm"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem; background: #0284c7;">
+          Save to Medical Vault
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Dynamic Footer -->
+  <footer id="main-footer"></footer>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/telehealth.js"></script>
+  <script src="js/prescription.js"></script>
+  <script src="js/calendar.js"></script>
+  <script src="js/patient-dashboard.js"></script>
+</body>
+</html>
